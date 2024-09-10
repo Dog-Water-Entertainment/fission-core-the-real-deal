@@ -6,8 +6,9 @@
 
 struct Global
 {
-    MainWindow main_window;
-    Input input;
+    Global();
+    MainWindow *main_window;
+    Input *input;
 };
 
 extern Global g;

@@ -2,6 +2,7 @@
 #include <thread>
 #include <assert.h>
 #include <X11/Xlib.h>
+#include <iostream>
 #include "Globals.h"
 
 Input::Input()
@@ -18,9 +19,8 @@ void Input::start()
     if (m_started)
         throw "The input manager has already started.";
 
-    XEvent event;
-
-    while (XNextEvent(g.main_window.display, &event) == 0)
+    while (XPending(g.main_window->display))
     {
+        // do stuff
     }
 }

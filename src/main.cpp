@@ -10,14 +10,17 @@
 #include "MainWindow.h"
 #include "Input.h"
 #include "Globals.h"
-
-Global globals;
+#include <unistd.h>
 
 int main()
 {
-    g.main_window = MainWindow();
-    g.input = Input();
-    g.input.start();
+    g.input->start();
+
+    // TODO: Remove me.
+
+    while (true)
+    {
+    }
 
     return EXIT_SUCCESS;
 }
