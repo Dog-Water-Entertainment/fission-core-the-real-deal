@@ -1,5 +1,12 @@
+
 # fission-core-the-real-deal
-This is da game file stuff
 
+Welcome to the fission-core-the-real-deal repository! 
+This repository contains the source code for an excruciating game.
 
-Brian Martinez, Michael Guillory, Elias, Enrique Medrano
+## Contributors
+    - Brian Martinez
+    - Michael Guillory
+    - Elias
+    - Enrique Medrano
+
