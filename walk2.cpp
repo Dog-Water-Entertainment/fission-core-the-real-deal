@@ -211,7 +211,7 @@ public:
 	void setTitle() {
 		//Set the window title bar.
 		XMapWindow(dpy, win);
-		XStoreName(dpy, win, "3350 - Walk Cycle");
+		XStoreName(dpy, win, "Fission Core");
 	}
 	void setupScreenRes(const int w, const int h) {
 		gl.xres = w;
@@ -623,7 +623,7 @@ Flt VecNormalize(Vec vec)
 
 void physics(void)
 {
-	if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left]) {
+	if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_Up]) {
 		//man is walking...
 		//when time is up, advance the frame.
 		timers.recordTime(&timers.timeCurrent);
@@ -643,6 +643,28 @@ void physics(void)
 				gl.camera[0] -= 2.0/lev.tilesize[0] * (0.05 / gl.delay);
 				if (gl.camera[0] < 0.0)
 					gl.camera[0] = 0.0;
+
+			// Michael's added shit
+			} else if(gl.keys[XK_Up]) {
+
+
+
+				gl.box[i][1] -= 1.0 * (0.05 / gl.delay);
+				if (gl.box[i][1] < -10.0)
+					gl.box[i][1] += gl.yres + 10.0;
+				gl.camera[1] += 2.0/lev.tilesize[1] * (0.05 / gl.delay);
+				if (gl.camera[1] < 0.0)
+					gl.camera[1] = 0.0;
+
+
+
+			} else if (gl.keys[XK_Down]) {
+				gl.box[i][1] += 1.0 * (0.05 / gl.delay);
+				if (gl.box[i][1] > gl.yres + 10.0)
+					gl.box[i][1] -= gl.yres + 10.0;
+				gl.camera[1] -= 2.0/lev.tilesize[1] * (0.05 / gl.delay);
+				if (gl.camera[1] < 0.0)
+					gl.camera[1] = 0.0;
 			} else {
 				gl.box[i][0] -= 1.0 * (0.05 / gl.delay);
 				if (gl.box[i][0] < -10.0)
@@ -733,10 +755,16 @@ void render(void)
 		glVertex2i(0,         0);
 	glEnd();
 	//
-	//show boxes as background
+	// Here is where background is being handled
 	for (int i=0; i<20; i++) {
 		glPushMatrix();
-		glTranslated(gl.box[i][0],gl.box[i][1],gl.box[i][2]);
+		// 
+
+		// Problem area
+
+		//
+		glTranslated(gl.box[i][0], gl.box[i][1], gl.box[i][2]);
+		glTranslated(gl.box[0][i], gl.box[1][i], gl.box[2][i]);
 		glColor3f(0.2, 0.2, 0.2);
 		glBegin(GL_QUADS);
 			glVertex2i( 0,  0);
@@ -755,27 +783,34 @@ void render(void)
 	Flt dd = lev.ftsz[0];
 	Flt offy = lev.tile_base;
 	int ncols_to_render = gl.xres / lev.tilesize[0] + 2;
+	int nrows_to_render = gl.yres / lev.tilesize[1] + 2;
 	int col = (int)(gl.camera[0] / dd);
+	int row = (int)(gl.camera[1] / lev.ftsz[1]);
 	col = col % lev.ncols;
+	row = row % lev.nrows;
 	//Partial tile offset must be determined here.
 	//The leftmost tile might be partially off-screen.
 	//cdd: camera position in terms of tiles.
 	Flt cdd = gl.camera[0] / dd;
+	Flt cdd_y = gl.camera[1] / lev.ftsz[1];
 	//flo: just the integer portion
 	Flt flo = floor(cdd);
+	Flt flo_y = floor(cdd_y);
 	//dec: just the decimal portion
 	Flt dec = (cdd - flo);
+	Flt dec_y = (cdd_y - flo_y);
 	//offx: the offset to the left of the screen to start drawing tiles
 	Flt offx = -dec * dd;
+	Flt offy_y = -dec_y * lev.ftsz[1];
 	//Log("gl.camera[0]: %lf   offx: %lf\n",gl.camera[0],offx);
 	for (int j=0; j<ncols_to_render; j++) {
-		int row = lev.nrows-1;
-		for (int i=0; i<lev.nrows; i++) {
-			if (lev.arr[row][col] == 'w') {
+		int r = row;
+		for (int i=0; i<nrows_to_render; i++) {
+			if (lev.arr[r][col] == 'w') {
 				glColor3f(0.8, 0.8, 0.6);
 				glPushMatrix();
 				//put tile in its place
-				glTranslated((Flt)j*dd+offx, (Flt)i*lev.ftsz[1]+offy, 0);
+				glTranslated((Flt)j*dd+offx, (Flt)i*lev.ftsz[1]+offy_y, 0);
 				glBegin(GL_QUADS);
 					glVertex2i( 0,  0);
 					glVertex2i( 0, ty);
@@ -784,10 +819,10 @@ void render(void)
 				glEnd();
 				glPopMatrix();
 			}
-			if (lev.arr[row][col] == 'b') {
+			if (lev.arr[r][col] == 'b') {
 				glColor3f(0.9, 0.2, 0.2);
 				glPushMatrix();
-				glTranslated((Flt)j*dd+offx, (Flt)i*lev.ftsz[1]+offy, 0);
+				glTranslated((Flt)j*dd+offx, (Flt)i*lev.ftsz[1]+offy_y, 0);
 				glBegin(GL_QUADS);
 					glVertex2i( 0,  0);
 					glVertex2i( 0, ty);
@@ -796,9 +831,9 @@ void render(void)
 				glEnd();
 				glPopMatrix();
 			}
-			--row;
+			r = (r + 1) % lev.nrows;
 		}
-		col = (col+1) % lev.ncols;
+		col = (col + 1) % lev.ncols;
 	}
 	glColor3f(1.0, 1.0, 0.1);
 	glPushMatrix();
