@@ -21,6 +21,7 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+#include <set>
 #include "log.h"
 //#include "ppm.h"
 #include "fonts.h"
@@ -48,6 +49,7 @@ const float gravity = -0.2f;
 void initOpengl();
 void checkMouse(XEvent *e);
 int checkKeys(XEvent *e);
+bool is_movement_key(int key);
 void init();
 void physics();
 void render();
@@ -98,7 +100,12 @@ public:
 
 class Global {
 public:
+	std::set<int> move_keys;
+	std::set<int> pressed_move_keys;
+
 	unsigned char keys[65536];
+	bool walking_left;
+	bool walking;
 	int xres, yres;
 	int movie, movieStep;
 	int walk;
@@ -117,6 +124,10 @@ public:
 		logClose();
 	}
 	Global() {
+		pressed_move_keys = {};
+		move_keys = {XK_Up, XK_Down, XK_Left, XK_Right};
+		walking = false;
+		walking_left = false;
 		logOpen();
 		camera[0] = camera[1] = 0.0;
 		movie=0;
@@ -497,6 +508,12 @@ void checkMouse(XEvent *e)
 	}
 }
 
+bool is_movement_key(int key)
+{
+	return gl.move_keys.find(key) != gl.move_keys.end();
+}
+
+
 void screenCapture()
 {
 	return;
@@ -542,17 +559,31 @@ int checkKeys(XEvent *e)
 		return 0;
 	int key = XLookupKeysym(&e->xkey, 0);
 	gl.keys[key]=1;
+	bool move_key = is_movement_key(key);
+
 	if (e->type == KeyRelease) {
+		if (move_key)
+		{
+			gl.pressed_move_keys.erase(key);
+		}
+
 		gl.keys[key]=0;
 		if (key == XK_Shift_L || key == XK_Shift_R)
 			shift=0;
 		return 0;
 	}
+
+	if (move_key)
+	{
+		gl.pressed_move_keys.insert(key);
+	}
+
 	gl.keys[key]=1;
 	if (key == XK_Shift_L || key == XK_Shift_R) {
 		shift=1;
 		return 0;
 	}
+
 	(void)shift;
 	switch (key) {
 		case XK_s:
@@ -623,6 +654,11 @@ Flt VecNormalize(Vec vec)
 
 void physics(void)
 {
+	if (!gl.pressed_move_keys.empty())
+	{
+		gl.walking_left = gl.keys[XK_Left];
+	}
+
 	if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_Up]) {
 		//man is walking...
 		//when time is up, advance the frame.
@@ -876,7 +912,7 @@ void render(void)
 	float fx = (float)ix / 8.0;
 	float fy = (float)iy / 2.0;
 	glBegin(GL_QUADS);
-		if (gl.keys[XK_Left]) {
+		if (gl.walking_left) {
 			glTexCoord2f(fx+.125, fy+.5); glVertex2i(cx-w, cy-h);
 			glTexCoord2f(fx+.125, fy);    glVertex2i(cx-w, cy+h);
 			glTexCoord2f(fx,      fy);    glVertex2i(cx+w, cy+h);
@@ -887,6 +923,8 @@ void render(void)
 			glTexCoord2f(fx+.125, fy);    glVertex2i(cx+w, cy+h);
 			glTexCoord2f(fx+.125, fy+.5); glVertex2i(cx+w, cy-h);
 		}
+
+	
 	glEnd();
 	glPopMatrix();
 	glBindTexture(GL_TEXTURE_2D, 0);
