@@ -654,12 +654,16 @@ Flt VecNormalize(Vec vec)
 
 void physics(void)
 {
-	if (!gl.pressed_move_keys.empty())
+	if (!gl.walk && gl.pressed_move_keys.empty())
 	{
-		gl.walking_left = gl.keys[XK_Left];
+		gl.walkFrame = 4;
 	}
+	else {
+		if (gl.keys[XK_Right])
+			gl.walking_left = false;
+		else if (gl.keys[XK_Left])
+			gl.walking_left = true;
 
-	if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_Up]) {
 		//man is walking...
 		//when time is up, advance the frame.
 		timers.recordTime(&timers.timeCurrent);
