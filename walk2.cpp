@@ -25,6 +25,7 @@
 #include "log.h"
 //#include "ppm.h"
 #include "fonts.h"
+#include "elias.h"
 
 //defined types
 typedef double Flt;
@@ -664,6 +665,9 @@ void physics(void)
 		else if (gl.keys[XK_Left])
 			gl.walking_left = true;
 
+		if (gl.keys[XK_Escape])
+			PauseMenu::pause();
+
 		//man is walking...
 		//when time is up, advance the frame.
 		timers.recordTime(&timers.timeCurrent);
@@ -778,6 +782,8 @@ void physics(void)
 
 void render(void)
 {
+	PauseMenu::render();
+	
 	Rect r;
 	//Clear the screen
 	glClearColor(0.1, 0.1, 0.1, 1.0);
