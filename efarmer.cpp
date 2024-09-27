@@ -1,5 +1,5 @@
 #include <iostream>
-#include "elias.h"
+#include "efarmer.h"
 
 PauseMenu* PauseMenu::m_instance = nullptr;
 
@@ -22,7 +22,6 @@ PauseMenu::PauseMenuOption PauseMenu::getSelectedOption()
 {
         return PauseMenu::get()->m_selectedOption;
 }
-
 
 PauseMenu::PauseMenu()
 {

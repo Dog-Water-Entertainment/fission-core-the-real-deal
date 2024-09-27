@@ -25,7 +25,7 @@
 #include "log.h"
 //#include "ppm.h"
 #include "fonts.h"
-#include "elias.h"
+#include "efarmer.h"
 
 //defined types
 typedef double Flt;
@@ -366,6 +366,7 @@ int main(void)
 		x11.swapBuffers();
 	}
 	cleanup_fonts();
+
 	return 0;
 }
 
