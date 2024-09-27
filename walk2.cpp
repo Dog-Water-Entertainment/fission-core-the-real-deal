@@ -629,7 +629,11 @@ int checkKeys(XEvent *e)
 			gl.delay += 0.005;
 			break;
 		case XK_Escape:
-			return 1;
+			if (!PauseMenu::isPaused())
+				PauseMenu::pause();
+			else
+				PauseMenu::resume();
+
 			break;
 	}
 	return 0;
@@ -665,9 +669,6 @@ void physics(void)
 			gl.walking_left = false;
 		else if (gl.keys[XK_Left])
 			gl.walking_left = true;
-
-		if (gl.keys[XK_Escape])
-			PauseMenu::pause();
 
 		//man is walking...
 		//when time is up, advance the frame.

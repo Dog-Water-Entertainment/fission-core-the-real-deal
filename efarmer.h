@@ -1,4 +1,5 @@
 #include <iostream>
+#include <set>
 
 #ifndef EFARMER_H
 #define EFARMER_H
@@ -29,5 +30,24 @@ private:
 	
 	static PauseMenu* m_instance;
 };
+
+class InputManager
+{
+public:
+	static bool isKeyPressed(int key);
+	static bool isKeyTriggered(int key);
+	static void registerInputTriggerEvent();
+	static void registerInputPressedEvent();
+	static void render();
+	static InputManager* get(); 
+
+private:
+	InputManager();
+	
+	static InputManager* m_instance;
+	std::set<int> pressedKeys;
+
+};
+
 
 #endif
