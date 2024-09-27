@@ -1,5 +1,8 @@
 #include <iostream>
 
+#ifndef EFARMER_H
+#define EFARMER_H
+
 class PauseMenu
 {
 public:
@@ -26,3 +29,5 @@ private:
 	
 	static PauseMenu* m_instance;
 };
+
+#endif
