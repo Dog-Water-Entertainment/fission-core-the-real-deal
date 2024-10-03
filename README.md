@@ -2,7 +2,7 @@
 # fission-core-the-real-deal
 
 Welcome to the fission-core-the-real-deal repository! 
-This repository contains the source code for an excruciating game.
+This repository contains the source code for an excruciating game.  
 
 ## Contributors
     - Brian Martinez
