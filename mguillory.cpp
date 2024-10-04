@@ -29,6 +29,6 @@ MapLoader::~MapLoader()
 void MapLoader::LoadMapFile(const char* filename)
 {
     mapFileName = filename;
-    ifstream mapFile;
+    std::ifstream mapFile;
     mapFile.open(filename);
 }
