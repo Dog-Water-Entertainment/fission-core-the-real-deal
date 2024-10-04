@@ -22,6 +22,7 @@
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include <set>
+#include <chrono>
 #include "log.h"
 //#include "ppm.h"
 #include "fonts.h"
@@ -104,6 +105,8 @@ public:
 	std::set<int> move_keys;
 	std::set<int> pressed_move_keys;
 
+	const unsigned int TARGET_FPS = 60;
+	unsigned int fps;
 	unsigned char keys[65536];
 	bool walking_left;
 	bool walking;
@@ -351,6 +354,12 @@ Image img[3] = {
 
 int main(void)
 {
+
+	auto startTime = std::chrono::high_resolution_clock::now();
+    int frameCount = 0;
+
+	const int FRAME_TIME = 1000.0 / gl.TARGET_FPS;
+
 	initOpengl();
 	init();
 	int done = 0;
@@ -361,9 +370,30 @@ int main(void)
 			checkMouse(&e);
 			done = checkKeys(&e);
 		}
+
 		physics();
 		render();
 		x11.swapBuffers();
+
+		auto endTime = std::chrono::high_resolution_clock::now();
+		auto msDuration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+
+		auto elapsedTime = msDuration.count() / 1000.0;
+
+
+		// TODO: Implement a config file to set fram rate
+		//       and bool for should cap frame rate.
+		if(elapsedTime < FRAME_TIME ) {
+			usleep((FRAME_TIME - elapsedTime) * 1000);
+		}
+
+        if (elapsedTime >= 1.0) {
+            double fps = frameCount / elapsedTime;
+            gl.fps = (int)fps;
+
+            frameCount = 0;
+            startTime = endTime;
+        }
 	}
 	cleanup_fonts();
 

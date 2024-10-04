@@ -62,7 +62,7 @@ void MapLoader::LoadMapFile(const char* filename)
     int i = 0, j = 0;
 
     std::string line;
-    while (cin >> line) {
+    while (std::cin >> line) {
         if(i < tilex && j < tiley) {
             if (line == "e") {
                 map[i][j] = new EmptyTile();
