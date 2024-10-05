@@ -229,8 +229,10 @@ void MapLoader::LoadMapFile()
         if(i < tilex && j < tiley) {
             if (line == "e") {
                 map[i][j] = new EmptyTile();
+                map[i][j]->id = 'e';
             } else if (line == "b") {
                 map[i][j] = new BlockTile();
+                map[i][j]->id = 'b';
             } else {
                 std::cerr << "Error: Invalid character in map file " 
                          << mapFileName << std::endl;
@@ -251,6 +253,13 @@ void MapLoader::LoadMapFile()
         }
     }
 
+    for (int i = 0; i < 50; i++) {
+        for (int j = 0; j < 50; j++) {
+            std::cout << map[i][j]->id << " ";
+        }
+        std::cout << "\n";
+    }
+
     mapFile.close();
 }
 
@@ -263,16 +272,19 @@ void MapLoader::render()
     // I would be drawing a buffer around the screen that is 2 tiles larger
     // than the screen size so 20x16 tiles would be rendered
 
-    Vec2 tileCenter = Vec2(floor(playerPos.x), floor(playerPos.y));
+    Vec2 tileCenter = Vec2(floor(playerPos.x + center.x), floor(playerPos.y + center.y));
     int startingTileX = tileCenter.x - 10;
     int startingTileY = tileCenter.y - 8;
 
-    Vec2 offset = Vec2(playerPos.x - tileCenter.x, playerPos.y - tileCenter.y);
+    Vec2 offset = Vec2(playerPos.x - floor(playerPos.x), playerPos.y - floor(playerPos.y));
 
     Vec2 screenCenter = Vec2(400, 300);
 
-    Vec2 currentRenderPos = Vec2(screenCenter.x - 500 - offset.x * 50,
-                                screenCenter.y + 400 - offset.y * 50);
+    //Vec2 currentRenderPos = Vec2(screenCenter.x - 500 - offset.x * 50,
+    //                            screenCenter.y + 400 - offset.y * 50);
+                                
+    Vec2 currentRenderPos = Vec2(-100 - offset.x * 50,
+                                700 - offset.y * 50);
 
     for (int i = startingTileX; i < startingTileX + 20; i++) {
         for (int j = startingTileY; j < startingTileY + 16; j++) {
@@ -281,7 +293,7 @@ void MapLoader::render()
             }
             currentRenderPos.x += 50;
         }
-        currentRenderPos.x = screenCenter.x - 600 - offset.x * 50;
+        currentRenderPos.x = -100 - offset.x * 50;
         currentRenderPos.y -= 50;
     }
 }

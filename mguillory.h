@@ -74,6 +74,7 @@ public:
 class Tile 
 {
 public:
+    char id;
     virtual void render(Vec2 &pos) = 0;
     virtual ~Tile() {};
 };
