@@ -27,6 +27,7 @@
 //#include "ppm.h"
 #include "fonts.h"
 #include "efarmer.h"
+#include "mguillory.h"
 
 //defined types
 typedef double Flt;
@@ -104,6 +105,9 @@ class Global {
 public:
 	std::set<int> move_keys;
 	std::set<int> pressed_move_keys;
+
+	// Added Things
+	MapLoader mapCtx;
 
 	const unsigned int TARGET_FPS = 60;
 	unsigned int fps;
@@ -507,8 +511,11 @@ void initOpengl(void)
 	free(xData);
 }
 
-void init() {
 
+// Another Useful thing
+void init() {
+	gl.mapCtx.setFileName("test.map");
+	gl.mapCtx.LoadMapFile();
 }
 
 void checkMouse(XEvent *e)
@@ -824,8 +831,12 @@ void render(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	float cx = gl.xres/2.0;
 	float cy = gl.yres/2.0;
+
+
+	gl.mapCtx.render();
 	//
 	//show ground
+	/*
 	glBegin(GL_QUADS);
 		glColor3f(0.2, 0.2, 0.2);
 		glVertex2i(0,       220);
@@ -834,8 +845,10 @@ void render(void)
 		glVertex2i(gl.xres,   0);
 		glVertex2i(0,         0);
 	glEnd();
+	*/
 	//
 	// Here is where background is being handled
+	/*
 	for (int i=0; i<20; i++) {
 		glPushMatrix();
 		// 
@@ -854,10 +867,12 @@ void render(void)
 		glEnd();
 		glPopMatrix();
 	}
+	*/
 	//
 	//========================
 	//Render the tile system
 	//========================
+	/*
 	int tx = lev.tilesize[0];
 	int ty = lev.tilesize[1];
 	Flt dd = lev.ftsz[0];
@@ -926,6 +941,8 @@ void render(void)
 		glVertex2i( 10, 0);
 	glEnd();
 	glPopMatrix();
+
+	*/
 	//--------------------------------------
 	//
 	//#define SHOW_FAKE_SHADOW
@@ -939,7 +956,7 @@ void render(void)
 	glEnd();
 	#endif
 	//
-	//
+	// Walk texture
 	float h = 200.0;
 	float w = h * 0.5;
 	glPushMatrix();

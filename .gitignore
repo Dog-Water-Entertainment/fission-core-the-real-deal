@@ -41,3 +41,4 @@ libggfonts.a
 ./vscode/*
 *.swo
 *.swp
+libggfonts.a
