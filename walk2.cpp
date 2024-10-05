@@ -161,6 +161,8 @@ public:
 	}
 } gl;
 
+
+// I Hate your Level Design class So I will make my own - MGuillory
 class Level {
 public:
 	unsigned char arr[16][80];
