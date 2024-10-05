@@ -55,6 +55,7 @@ public:
 
 class ScreenCoord 
 {
+public:
     Vec2 coord;
     Vec2 worldSpace;
 
@@ -64,6 +65,7 @@ class ScreenCoord
 
     void setWorldSpace(float x, float y);
     void setWorldSpace(Vec2 space);
+    Vec2 getWorldCoord();
 };
 
 
@@ -72,19 +74,22 @@ class ScreenCoord
 class Tile 
 {
 public:
-    virtual void render() = 0;
+    virtual void render(Vec2 &pos) = 0;
+    virtual ~Tile() {};
 };
 
 class BlockTile : public Tile 
 {
 public:
-    void render();
+    void render(Vec2 &pos);
+    ~BlockTile() {};
 };
 
 class EmptyTile : public Tile 
 {
 public:
-    void render();
+    void render(Vec2 &pos);
+    ~EmptyTile() {};
 };
 
 class MapLoader
@@ -93,12 +98,15 @@ private:
     std::string mapFileName;
     Tile * map[50][50];
     Vec2 center;
+    Vec2 playerPos;
 public:
     MapLoader();
     MapLoader(const char* filename);
     ~MapLoader();
 
-    void LoadMapFile(const char* filename);
+    void setFileName(const char* filename);
+
+    void LoadMapFile();
     void render();
 };
 

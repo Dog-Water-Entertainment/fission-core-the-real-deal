@@ -7,3 +7,7 @@ a 50x50 grid where each char is seperated by a space.
 
 e => emptyTile
 b => blockTile
+
+# Rendering
+
+It is rendered from the bottom left coordinate and is 50x50 pixels

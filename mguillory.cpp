@@ -9,6 +9,8 @@
 #include "mguillory.h"
 #include <fstream>
 #include <iostream>
+#include <GL/glx.h>
+#include <cmath>
 
 
 /*
@@ -140,6 +142,12 @@ void ScreenCoord::setWorldSpace(Vec2 space)
     worldSpace = space;
 }
 
+Vec2 ScreenCoord::getWorldCoord()
+{
+    return Vec2(coord.x + worldSpace.x / 2,
+                coord.y + worldSpace.y / 2);
+}
+
 ScreenCoord::~ScreenCoord()
 {
     coord = Vec2(0, 0);
@@ -169,13 +177,15 @@ MapLoader::MapLoader()
             map[i][j] = new EmptyTile();
         }
     }
-    center = NormalizedCoord(0, 0).getCoord();
+    center = Vec2(25, 25);
+    playerPos = Vec2(0, 0);
 }
 
 MapLoader::MapLoader(const char* filename)
 {
     mapFileName = filename;
-    LoadMapFile(filename);
+    center = Vec2(25, 25);
+    playerPos = Vec2(0, 0);
 }
 
 MapLoader::~MapLoader()
@@ -188,17 +198,27 @@ MapLoader::~MapLoader()
     }
 }
 
-void MapLoader::LoadMapFile(const char* filename)
+void MapLoader::setFileName(const char* filename)
 {
+    mapFileName = filename;
+}
+
+void MapLoader::LoadMapFile()
+{
+    if (mapFileName == "") {
+        std::cerr << "Error: No map file specified" << std::endl;
+        return;
+    }
+
     int tilex = 50;
     int tiley = 50;
 
-    mapFileName = filename;
+
     std::ifstream mapFile;
-    mapFile.open(filename);
+    mapFile.open(mapFileName.c_str());
 
     if (!mapFile.is_open()) {
-        std::cerr << "Error: Could not open file " << filename << std::endl;
+        std::cerr << "Error: Could not open file " << mapFileName << std::endl;
         return;
     }
 
@@ -212,7 +232,8 @@ void MapLoader::LoadMapFile(const char* filename)
             } else if (line == "b") {
                 map[i][j] = new BlockTile();
             } else {
-                std::cerr << "Error: Invalid character in map file " << filename << std::endl;
+                std::cerr << "Error: Invalid character in map file " 
+                         << mapFileName << std::endl;
                 return;
             }
             i++;
@@ -220,10 +241,12 @@ void MapLoader::LoadMapFile(const char* filename)
             i = 0;
             j++;
         } else if(i == tilex && j == tiley) {
-            std::cout << "Error: Map file " << filename << " is too large" << std::endl;
+            std::cout << "Error: Map file " << mapFileName << " is too large" 
+                      << std::endl;
             break;
         } else {
-            std::cerr << "Error: Unknown error reading file " << filename << std::endl;
+            std::cerr << "Error: Unknown error reading file " << mapFileName 
+                      << std::endl;
             break;
         }
     }
@@ -239,10 +262,27 @@ void MapLoader::render()
     // Each tile should be 50x50 pixels on the screen and only 16x12 tiles
     // I would be drawing a buffer around the screen that is 2 tiles larger
     // than the screen size so 20x16 tiles would be rendered
-    for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 12; j++) {
-            map[i][j]->render();
+
+    Vec2 tileCenter = Vec2(floor(playerPos.x), floor(playerPos.y));
+    int startingTileX = tileCenter.x - 10;
+    int startingTileY = tileCenter.y - 8;
+
+    Vec2 offset = Vec2(playerPos.x - tileCenter.x, playerPos.y - tileCenter.y);
+
+    Vec2 screenCenter = Vec2(400, 300);
+
+    Vec2 currentRenderPos = Vec2(screenCenter.x - 600 - offset.x * 50,
+                                screenCenter.y + 500 - offset.y * 50);
+
+    for (int i = startingTileX; i < startingTileX + 20; i++) {
+        for (int j = startingTileY; j < startingTileY + 16; j++) {
+            if (i >= 0 && i < 50 && j >= 0 && j < 50) {
+                map[i][j]->render(currentRenderPos);
+            }
+            currentRenderPos.x += 50;
         }
+        currentRenderPos.x = screenCenter.x - 600 - offset.x * 50;
+        currentRenderPos.y -= 50;
     }
 }
 
@@ -259,12 +299,54 @@ void MapLoader::render()
  * ========================================
  */
 
-void BlockTile::render()
+void BlockTile::render(Vec2 &pos)
 {
-    std::cout << "Block";
+    // TODO: Add textures
+    //glEnable(GL_TEXTURE_2D);
+	//glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+	glPushMatrix();
+	//glEnable(GL_ALPHA_TEST);
+	//glAlphaFunc(GL_GREATER, 0.0f);
+	//glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+	glColor4f(1.0f, 0.2f, 0.0f, 0.8f);
+	glBegin(GL_QUADS);
+		//glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+		//glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
+		//glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
+		//glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
+        glVertex2i(pos.x, pos.y);
+        glVertex2i(pos.x, pos.y + 50);
+        glVertex2i(pos.x + 50, pos.y + 50);
+        glVertex2i(pos.x, pos.y + 50);
+	glEnd();
+	//glBindTexture(GL_TEXTURE_2D, 0);
+	//glDisable(GL_ALPHA_TEST);
+	//glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
 }
 
-void EmptyTile::render()
+void EmptyTile::render(Vec2 &pos)
 {
-    std::cout << "Empty";
+    // TODO: Add textures
+    //glEnable(GL_TEXTURE_2D);
+	//glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+	glPushMatrix();
+	//glEnable(GL_ALPHA_TEST);
+	//glAlphaFunc(GL_GREATER, 0.0f);
+	//glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+	glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
+	glBegin(GL_QUADS);
+		//glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+		//glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
+		//glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
+		//glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
+        glVertex2i(pos.x, pos.y);
+        glVertex2i(pos.x, pos.y + 50);
+        glVertex2i(pos.x + 50, pos.y + 50);
+        glVertex2i(pos.x, pos.y + 50);
+	glEnd();
+	//glBindTexture(GL_TEXTURE_2D, 0);
+	//glDisable(GL_ALPHA_TEST);
+	//glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
 }
