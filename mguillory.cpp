@@ -271,8 +271,8 @@ void MapLoader::render()
 
     Vec2 screenCenter = Vec2(400, 300);
 
-    Vec2 currentRenderPos = Vec2(screenCenter.x - 600 - offset.x * 50,
-                                screenCenter.y + 500 + offset.y * 50);
+    Vec2 currentRenderPos = Vec2(screenCenter.x - 500 - offset.x * 50,
+                                screenCenter.y + 400 - offset.y * 50);
 
     for (int i = startingTileX; i < startingTileX + 20; i++) {
         for (int j = startingTileY; j < startingTileY + 16; j++) {
@@ -317,7 +317,7 @@ void BlockTile::render(Vec2 &pos)
         glVertex2f(pos.x, pos.y);
         glVertex2f(pos.x, pos.y + 50);
         glVertex2f(pos.x + 50, pos.y + 50);
-        glVertex2f(pos.x, pos.y + 50);
+        glVertex2f(pos.x + 50, pos.y);
 	glEnd();
 	//glBindTexture(GL_TEXTURE_2D, 0);
 	//glDisable(GL_ALPHA_TEST);
@@ -340,10 +340,10 @@ void EmptyTile::render(Vec2 &pos)
 		//glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
 		//glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
 		//glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glVertex2i(pos.x, pos.y);
-        glVertex2i(pos.x, pos.y + 50);
-        glVertex2i(pos.x + 50, pos.y + 50);
-        glVertex2i(pos.x, pos.y + 50);
+        glVertex2f(pos.x, pos.y);
+        glVertex2f(pos.x, pos.y + 50);
+        glVertex2f(pos.x + 50, pos.y + 50);
+        glVertex2f(pos.x + 50, pos.y);
 	glEnd();
 	//glBindTexture(GL_TEXTURE_2D, 0);
 	//glDisable(GL_ALPHA_TEST);
