@@ -38,46 +38,9 @@ public:
 
 // Should be a value from -1 to 1
 // 
-class NormalizedCoord 
-{
-public:
-    Vec2 coord;
-    Vec2 worldSpace;
-
-    NormalizedCoord();
-    NormalizedCoord(Vec2 coord);
-    NormalizedCoord(float x, float y);
-
-    Vec2 getWorldCoord();
-    Vec2 getCoord();
-    void setCoord(Vec2 coord);
-    void setCoord(float x, float y);
-    void setWorldSpace(float x, float y);
-    void setWorldSpace(Vec2 space);
-
-
-
-    ~NormalizedCoord();
-};
-
-class ScreenCoord 
-{
-public:
-    Vec2 coord;
-    Vec2 worldSpace;
-
-    ScreenCoord(float x, float y);
-    ScreenCoord(Vec2 coord);
-    ~ScreenCoord();
-
-    void setWorldSpace(float x, float y);
-    void setWorldSpace(Vec2 space);
-    Vec2 getWorldCoord();
-};
 
 
 // Tile-Map Stuff
-
 class Tile 
 {
 public:
@@ -112,6 +75,8 @@ public:
     MapLoader(const char* filename);
     ~MapLoader();
 
+    void loadTextures();
+
     void setFileName(const char* filename);
 
     void LoadMapFile();
@@ -121,6 +86,9 @@ public:
     void setPlayerPos(float x, float y);
 
     Vec2 getPlayerPos();
+
+    void movePlayer(Vec2 pos);
+    void movePlayer(float x, float y);
 };
 
 #endif // _MGUILLORY_H_

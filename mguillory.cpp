@@ -6,11 +6,30 @@
 //  e => empty space
 //  b => block
 //
+
 #include "mguillory.h"
 #include <fstream>
+#include <stdlib.h>
+#include <string.h>
 #include <iostream>
 #include <GL/glx.h>
 #include <cmath>
+#include <X11/Xlib.h>
+#include <set>
+#include "Image.h"
+
+static Image img[1] = {
+	"./images/map_textures/grass.jpg"
+};
+
+class global 
+{
+public:
+    GLuint grassTexture;
+    global() {
+        //nothing
+    }
+} static g;
 
 /*
  * ========================================
@@ -84,91 +103,6 @@ Vec3 Vec3::operator*(float rhs)
     return Vec3(x * rhs, y * rhs, z * rhs);
 }
 
-// NormalizedCoord
-NormalizedCoord::NormalizedCoord()
-{
-    coord = Vec2(0, 0);
-}
-
-NormalizedCoord::NormalizedCoord(Vec2 coord)
-{
-    this->coord = coord;
-}
-
-NormalizedCoord::NormalizedCoord(float x, float y)
-{
-    coord = Vec2(x, y);
-}
-
-Vec2 NormalizedCoord::getWorldCoord()
-{
-    // TODO: Return (x * xres/2) + xres/2, (y * yres/2) + yres/2
-    return Vec2((coord.x * worldSpace.x / 2) + worldSpace.x / 2,
-                (coord.y * worldSpace.y / 2) + worldSpace.y / 2);
-}
-
-void NormalizedCoord::setWorldSpace(float x, float y)
-{
-    worldSpace = Vec2(x, y);
-}
-
-void NormalizedCoord::setWorldSpace(Vec2 space)
-{
-    worldSpace = Vec2((space.x * 2) + 2, (space.y * 2) + 2);
-}
-
-Vec2 NormalizedCoord::getCoord()
-{
-    return coord;
-}
-
-void NormalizedCoord::setCoord(Vec2 coord)
-{
-    this->coord = coord;
-}
-
-void NormalizedCoord::setCoord(float x, float y)
-{
-    coord = Vec2(x, y);
-}
-
-NormalizedCoord::~NormalizedCoord()
-{
-    coord = Vec2(0, 0);
-}
-
-// ScreenCoord
-ScreenCoord::ScreenCoord(float x, float y)
-{
-    coord = Vec2(x, y);
-}
-
-ScreenCoord::ScreenCoord(Vec2 coord)
-{
-    this->coord = coord;
-}
-
-void ScreenCoord::setWorldSpace(float x, float y)
-{
-    worldSpace = Vec2(x, y);
-}
-
-void ScreenCoord::setWorldSpace(Vec2 space)
-{
-    worldSpace = space;
-}
-
-Vec2 ScreenCoord::getWorldCoord()
-{
-    return Vec2(coord.x + worldSpace.x / 2,
-                coord.y + worldSpace.y / 2);
-}
-
-ScreenCoord::~ScreenCoord()
-{
-    coord = Vec2(0, 0);
-    worldSpace = Vec2(0, 0);
-}
 
 /*
  * ========================================
@@ -219,6 +153,27 @@ MapLoader::~MapLoader()
 void MapLoader::setFileName(const char *filename)
 {
     mapFileName = filename;
+}
+
+void MapLoader::loadTextures()
+{
+    glGenTextures(1, &g.grassTexture);
+
+
+    // For grass
+    int w = img[0].width;
+	int h = img[0].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.grassTexture);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	//
+	//must build a new set of data...
+	unsigned char *grassData = buildAlphaData(&img[0]);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, grassData);
+	free(grassData);
 }
 
 void MapLoader::LoadMapFile()
@@ -338,6 +293,17 @@ Vec2 MapLoader::getPlayerPos()
     return playerPos;
 }
 
+void MapLoader::movePlayer(Vec2 pos)
+{
+    playerPos = pos;
+}
+
+void MapLoader::movePlayer(float x, float y)
+{
+    playerPos.x = x;
+    playerPos.y = y;
+}
+
 /*
  * ========================================
  *
@@ -380,25 +346,23 @@ void BlockTile::render(Vec2 &pos)
 void EmptyTile::render(Vec2 &pos)
 {
     // TODO: Add textures
-    // glEnable(GL_TEXTURE_2D);
-    // glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+    glEnable(GL_TEXTURE_2D);
+    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
     glPushMatrix();
-    // glEnable(GL_ALPHA_TEST);
-    // glAlphaFunc(GL_GREATER, 0.0f);
-    // glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glBindTexture(GL_TEXTURE_2D, g.grassTexture);
     glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
     glBegin(GL_QUADS);
         // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
         // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
         // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
         // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-    glVertex2f(pos.x, pos.y);
-    glVertex2f(pos.x, pos.y + 50);
-    glVertex2f(pos.x + 50, pos.y + 50);
-    glVertex2f(pos.x + 50, pos.y);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
     glEnd();
-    // glBindTexture(GL_TEXTURE_2D, 0);
-    // glDisable(GL_ALPHA_TEST);
-    // glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
 }
