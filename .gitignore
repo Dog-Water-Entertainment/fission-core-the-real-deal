@@ -38,7 +38,7 @@ libggfonts.a
 
 
 # others
-./vscode/*
+.vscode/*
 *.swo
 *.swp
 libggfonts.a

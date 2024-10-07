@@ -732,7 +732,7 @@ void render(void)
 	gl.mapCtx.render();
 	gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x + 0.01, gl.mapCtx.getPlayerPos().y));
 
-
+	
 	
 	//--------------------------------------
 	//

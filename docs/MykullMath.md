@@ -4,9 +4,16 @@
 ## Vectors
 
 Vec2: x, y
+
+    Allowing addition and multiplication as of currently
+
 Vec3: x, y, z
 
-## NormalizedCoord
+    Allowing addition and multiplication as of currently
 
-Must Specify its setWorldSpace(x, y) || setWorldSpace(Vec2) value
-will accept 
+    
+## Map Loader
+
+First create an instance and set the file name. To initialize use the LoadMapFile() function. 
+
+Must be rendered through the render function. 
