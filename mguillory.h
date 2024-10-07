@@ -109,6 +109,11 @@ public:
 
     void LoadMapFile();
     void render();
+
+    void setPlayerPos(Vec2 pos);
+    void setPlayerPos(float x, float y);
+
+    Vec2 getPlayerPos();
 };
 
 #endif // _MGUILLORY_H_

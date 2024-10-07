@@ -273,8 +273,8 @@ void MapLoader::render()
     // than the screen size so 20x16 tiles would be rendered
 
     Vec2 tileCenter = Vec2(floor(playerPos.x + center.x), floor(playerPos.y + center.y));
-    int startingTileX = tileCenter.x - 10;
-    int startingTileY = tileCenter.y - 8;
+    int startingTileY = tileCenter.x - 8;
+    int startingTileX = tileCenter.y - 10;
 
     Vec2 offset = Vec2(playerPos.x - floor(playerPos.x), playerPos.y - floor(playerPos.y));
 
@@ -286,8 +286,8 @@ void MapLoader::render()
     Vec2 currentRenderPos = Vec2(-100 - offset.x * 50,
                                 700 - offset.y * 50);
 
-    for (int i = startingTileX; i < startingTileX + 20; i++) {
-        for (int j = startingTileY; j < startingTileY + 16; j++) {
+    for (int i = startingTileY; i < startingTileY + 16; i++) {
+        for (int j = startingTileX; j < startingTileX + 20; j++) {
             if (i >= 0 && i < 50 && j >= 0 && j < 50) {
                 map[i][j]->render(currentRenderPos);
             }
@@ -297,6 +297,23 @@ void MapLoader::render()
         currentRenderPos.y -= 50;
     }
 }
+
+void MapLoader::setPlayerPos(float x, float y)
+{
+    playerPos = Vec2(x, y);
+}
+
+void MapLoader::setPlayerPos(Vec2 pos)
+{
+    playerPos = pos;
+}
+
+Vec2 MapLoader::getPlayerPos()
+{
+    return playerPos;
+}
+
+
 
 /*
  * ========================================
