@@ -236,16 +236,6 @@ void MapLoader::LoadMapFile()
         i++;
     }
 
-    // cout  the whole map to the console
-    for (int i = 0; i < tilex; i++)
-    {
-        for (int j = 0; j < tiley; j++)
-        {
-            std::cout << map[i][j]->id;
-        }
-        std::cout << std::endl;
-    }
-
     mapFile.close();
 }
 

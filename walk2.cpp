@@ -47,6 +47,10 @@ typedef Flt	Matrix[4][4];
 //constants
 const float timeslice = 1.0f;
 const float gravity = -0.2f;
+
+// TODO: Implement a config file to set movement rate
+const float movement_speed = 0.01f;
+
 #define ALPHA 1
 
 //function prototypes
@@ -583,16 +587,28 @@ void physics(void)
 				gl.walkFrame -= 16;
 			timers.recordTime(&timers.walkTime);
 		}
-		for (int i=0; i<20; i++) {
-			if (gl.keys[XK_Left]) {
-				// nothing
-			} else if(gl.keys[XK_Up]) {
-				// nothing
-			} else if (gl.keys[XK_Down]) {
-				// Nothing
-			} else {
-			}
+
+		//
+		// Check for movement keys to move map
+		//
+		if(gl.keys[XK_Left]) {
+			gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x - movement_speed,
+										gl.mapCtx.getPlayerPos().y));
 		}
+		if(gl.keys[XK_Right]) {
+			gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x + movement_speed,
+										gl.mapCtx.getPlayerPos().y));
+		}
+		if(gl.keys[XK_Up]) {
+			gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x,
+										gl.mapCtx.getPlayerPos().y + movement_speed));
+		}
+		if(gl.keys[XK_Down]) {
+			gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x,
+										gl.mapCtx.getPlayerPos().y - movement_speed));
+		}
+
+
 		if (gl.exp.onoff) {
 			gl.exp.pos[0] -= 2.0 * (0.05 / gl.delay);
 		}
@@ -647,8 +663,6 @@ void render(void)
 
 	// Map Rendering
 	gl.mapCtx.render();
-	gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x + 0.01, gl.mapCtx.getPlayerPos().y));
-
 	
 	
 	//--------------------------------------
