@@ -44,6 +44,16 @@ Vec2::~Vec2()
     y = 0;
 }
 
+Vec2 Vec2::operator+(float rhs)
+{
+    return Vec2(x + rhs, y + rhs);
+}
+
+Vec2 Vec2::operator*(float rhs)
+{
+    return Vec2(x * rhs, y * rhs);
+}
+
 Vec3::Vec3()
 {
     x = 0;
@@ -63,6 +73,16 @@ Vec3::~Vec3()
     x = 0;
     y = 0;
     z = 0;
+}
+
+Vec3 Vec3::operator+(float rhs)
+{
+    return Vec3(x + rhs, y + rhs, z + rhs);
+}
+
+Vec3 Vec3::operator*(float rhs)
+{
+    return Vec3(x * rhs, y * rhs, z * rhs);
 }
 
 
@@ -205,6 +225,8 @@ void MapLoader::setFileName(const char* filename)
 
 void MapLoader::LoadMapFile()
 {
+
+    // TODO: This function doesn't work so I need to fix it
     if (mapFileName == "") {
         std::cerr << "Error: No map file specified" << std::endl;
         return;
@@ -251,13 +273,6 @@ void MapLoader::LoadMapFile()
                       << std::endl;
             break;
         }
-    }
-
-    for (int i = 0; i < 50; i++) {
-        for (int j = 0; j < 50; j++) {
-            std::cout << map[i][j]->id << " ";
-        }
-        std::cout << "\n";
     }
 
     mapFile.close();

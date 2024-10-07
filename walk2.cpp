@@ -165,60 +165,6 @@ public:
 	}
 } gl;
 
-
-// I Hate your Level Design class So I will make my own - MGuillory
-class Level {
-public:
-	unsigned char arr[16][80];
-	int nrows, ncols;
-	int tilesize[2];
-	Flt ftsz[2];
-	Flt tile_base;
-	Level() {
-		//Log("Level constructor\n");
-		tilesize[0] = 32;
-		tilesize[1] = 32;
-		ftsz[0] = (Flt)tilesize[0];
-		ftsz[1] = (Flt)tilesize[1];
-		tile_base = 220.0;
-		//read level
-		FILE *fpi = fopen("level1.txt","r");
-		if (fpi) {
-			nrows=0;
-			char line[100];
-			while (fgets(line, 100, fpi) != NULL) {
-				removeCrLf(line);
-				int slen = strlen(line);
-				ncols = slen;
-				//Log("line: %s\n", line);
-				for (int j=0; j<slen; j++) {
-					arr[nrows][j] = line[j];
-				}
-				++nrows;
-			}
-			fclose(fpi);
-			//printf("nrows of background data: %i\n", nrows);
-		}
-		for (int i=0; i<nrows; i++) {
-			for (int j=0; j<ncols; j++) {
-				printf("%c", arr[i][j]);
-			}
-			printf("\n");
-		}
-	}
-	void removeCrLf(char *str) {
-		//remove carriage return and linefeed from a Cstring
-		char *p = str;
-		while (*p) {
-			if (*p == 10 || *p == 13) {
-				*p = '\0';
-				break;
-			}
-			++p;
-		}
-	}
-} lev;
-
 //X Windows variables
 class X11_wrapper {
 private:
@@ -722,41 +668,12 @@ void physics(void)
 		}
 		for (int i=0; i<20; i++) {
 			if (gl.keys[XK_Left]) {
-				gl.box[i][0] += 1.0 * (0.05 / gl.delay);
-				if (gl.box[i][0] > gl.xres + 10.0)
-					gl.box[i][0] -= gl.xres + 10.0;
-				gl.camera[0] -= 2.0/lev.tilesize[0] * (0.05 / gl.delay);
-				if (gl.camera[0] < 0.0)
-					gl.camera[0] = 0.0;
-
-			// Michael's added shit
+				// nothing
 			} else if(gl.keys[XK_Up]) {
-
-
-
-				gl.box[i][1] -= 1.0 * (0.05 / gl.delay);
-				if (gl.box[i][1] < -10.0)
-					gl.box[i][1] += gl.yres + 10.0;
-				gl.camera[1] += 2.0/lev.tilesize[1] * (0.05 / gl.delay);
-				if (gl.camera[1] < 0.0)
-					gl.camera[1] = 0.0;
-
-
-
+				// nothing
 			} else if (gl.keys[XK_Down]) {
-				gl.box[i][1] += 1.0 * (0.05 / gl.delay);
-				if (gl.box[i][1] > gl.yres + 10.0)
-					gl.box[i][1] -= gl.yres + 10.0;
-				gl.camera[1] -= 2.0/lev.tilesize[1] * (0.05 / gl.delay);
-				if (gl.camera[1] < 0.0)
-					gl.camera[1] = 0.0;
+				// Nothing
 			} else {
-				gl.box[i][0] -= 1.0 * (0.05 / gl.delay);
-				if (gl.box[i][0] < -10.0)
-					gl.box[i][0] += gl.xres + 10.0;
-				gl.camera[0] += 2.0/lev.tilesize[0] * (0.05 / gl.delay);
-				if (gl.camera[0] < 0.0)
-					gl.camera[0] = 0.0;
 			}
 		}
 		if (gl.exp.onoff) {
@@ -798,27 +715,6 @@ void physics(void)
 			}
 		}
 	}
-	//====================================
-	//Adjust position of ball.
-	//Height of highest tile when ball is?
-	//====================================
-	Flt dd = lev.ftsz[0];
-	int col = (int)((gl.camera[0]+gl.ball_pos[0]) / dd);
-	col = col % lev.ncols;
-	int hgt = 0;
-	for (int i=0; i<lev.nrows; i++) {
-		if (lev.arr[i][col] != ' ') {
-			hgt = (lev.nrows-i) * lev.tilesize[1];
-			break;
-		}
-	}
-	if (gl.ball_pos[1] < (Flt)hgt) {
-		gl.ball_pos[1] = (Flt)hgt;
-		MakeVector(gl.ball_vel, 0, 0, 0);
-	} else {
-		gl.ball_vel[1] -= 0.9;
-	}
-	gl.ball_pos[1] += gl.ball_vel[1];
 }
 
 void render(void)
@@ -836,115 +732,8 @@ void render(void)
 	gl.mapCtx.render();
 	gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x + 0.01, gl.mapCtx.getPlayerPos().y));
 
-	//
-	//show ground
-	/*
-	glBegin(GL_QUADS);
-		glColor3f(0.2, 0.2, 0.2);
-		glVertex2i(0,       220);
-		glVertex2i(gl.xres, 220);
-		glColor3f(0.4, 0.4, 0.4);
-		glVertex2i(gl.xres,   0);
-		glVertex2i(0,         0);
-	glEnd();
-	*/
-	//
-	// Here is where background is being handled
-	/*
-	for (int i=0; i<20; i++) {
-		glPushMatrix();
-		// 
 
-		// Problem area
-
-		//
-		glTranslated(gl.box[i][0], gl.box[i][1], gl.box[i][2]);
-		glTranslated(gl.box[0][i], gl.box[1][i], gl.box[2][i]);
-		glColor3f(0.2, 0.2, 0.2);
-		glBegin(GL_QUADS);
-			glVertex2i( 0,  0);
-			glVertex2i( 0, 30);
-			glVertex2i(20, 30);
-			glVertex2i(20,  0);
-		glEnd();
-		glPopMatrix();
-	}
-	*/
-	//
-	//========================
-	//Render the tile system
-	//========================
-	/*
-	int tx = lev.tilesize[0];
-	int ty = lev.tilesize[1];
-	Flt dd = lev.ftsz[0];
-	Flt offy = lev.tile_base;
-	int ncols_to_render = gl.xres / lev.tilesize[0] + 2;
-	int nrows_to_render = gl.yres / lev.tilesize[1] + 2;
-	int col = (int)(gl.camera[0] / dd);
-	int row = (int)(gl.camera[1] / lev.ftsz[1]);
-	col = col % lev.ncols;
-	row = row % lev.nrows;
-	//Partial tile offset must be determined here.
-	//The leftmost tile might be partially off-screen.
-	//cdd: camera position in terms of tiles.
-	Flt cdd = gl.camera[0] / dd;
-	Flt cdd_y = gl.camera[1] / lev.ftsz[1];
-	//flo: just the integer portion
-	Flt flo = floor(cdd);
-	Flt flo_y = floor(cdd_y);
-	//dec: just the decimal portion
-	Flt dec = (cdd - flo);
-	Flt dec_y = (cdd_y - flo_y);
-	//offx: the offset to the left of the screen to start drawing tiles
-	Flt offx = -dec * dd;
-	Flt offy_y = -dec_y * lev.ftsz[1];
-	//Log("gl.camera[0]: %lf   offx: %lf\n",gl.camera[0],offx);
-	for (int j=0; j<ncols_to_render; j++) {
-		int r = row;
-		for (int i=0; i<nrows_to_render; i++) {
-			if (lev.arr[r][col] == 'w') {
-				glColor3f(0.8, 0.8, 0.6);
-				glPushMatrix();
-				//put tile in its place
-				glTranslated((Flt)j*dd+offx, (Flt)i*lev.ftsz[1]+offy_y, 0);
-				glBegin(GL_QUADS);
-					glVertex2i( 0,  0);
-					glVertex2i( 0, ty);
-					glVertex2i(tx, ty);
-					glVertex2i(tx,  0);
-				glEnd();
-				glPopMatrix();
-			}
-			if (lev.arr[r][col] == 'b') {
-				glColor3f(0.9, 0.2, 0.2);
-				glPushMatrix();
-				glTranslated((Flt)j*dd+offx, (Flt)i*lev.ftsz[1]+offy_y, 0);
-				glBegin(GL_QUADS);
-					glVertex2i( 0,  0);
-					glVertex2i( 0, ty);
-					glVertex2i(tx, ty);
-					glVertex2i(tx,  0);
-				glEnd();
-				glPopMatrix();
-			}
-			r = (r + 1) % lev.nrows;
-		}
-		col = (col + 1) % lev.ncols;
-	}
-	glColor3f(1.0, 1.0, 0.1);
-	glPushMatrix();
-	//put ball in its place
-	glTranslated(gl.ball_pos[0], lev.tile_base+gl.ball_pos[1], 0);
-	glBegin(GL_QUADS);
-		glVertex2i(-10, 0);
-		glVertex2i(-10, 20);
-		glVertex2i( 10, 20);
-		glVertex2i( 10, 0);
-	glEnd();
-	glPopMatrix();
-
-	*/
+	
 	//--------------------------------------
 	//
 	//#define SHOW_FAKE_SHADOW
