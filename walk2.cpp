@@ -49,7 +49,7 @@ const float timeslice = 1.0f;
 const float gravity = -0.2f;
 
 // TODO: Implement a config file to set movement rate
-const float movement_speed = 0.01f;
+const float movement_speed = 0.1f;
 
 #define ALPHA 1
 

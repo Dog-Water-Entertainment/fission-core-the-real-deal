@@ -255,9 +255,10 @@ void MapLoader::render()
     // Render only the visible tiles plus a buffer
     for (int i = startingTileY; i < startingTileY + 16; i++)
     {
+        if (i < 0 || i >= 50) continue; // Skip out-of-bounds rows
         for (int j = startingTileX; j < startingTileX + 20; j++)
         {
-            if (i >= 0 && i < 50 && j >= 0 && j < 50)
+            if (j >= 0 && j < 50)
             {
                 map[i][j]->render(currentRenderPos);
             }
