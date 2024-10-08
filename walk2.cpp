@@ -258,7 +258,7 @@ int main(void)
 {
 
 	auto startTime = std::chrono::high_resolution_clock::now();
-    int frameCount = 0;
+        int frameCount = 0;
 
 	const int FRAME_TIME = 1000.0 / gl.TARGET_FPS;
 
@@ -270,7 +270,7 @@ int main(void)
 			XEvent e = x11.getXNextEvent();
 			x11.checkResize(&e);
 			checkMouse(&e);
-			done = checkKeys(&e);
+			checkKeys(&e);
 		}
 
 		physics();
@@ -424,7 +424,6 @@ bool is_movement_key(int key)
 
 void screenCapture()
 {
-	return;
 	static int fnum = 0;
 	static int vid = 0;
 	if (!vid) {
@@ -494,6 +493,10 @@ int checkKeys(XEvent *e)
 
 	(void)shift;
 	switch (key) {
+		case XK_Return:
+			if (PauseMenu::isPaused())
+				PauseMenu::selectOption(PauseMenu::getSelectedOption());
+			break;
 		case XK_s:
 			screenCapture();
 			break;
@@ -523,8 +526,38 @@ int checkKeys(XEvent *e)
 		case XK_Right:
 			break;
 		case XK_Up:
+			using option = PauseMenu::PauseMenuOption;
+			if (PauseMenu::isPaused()) {
+				switch (PauseMenu::getSelectedOption()) {
+					case option::OPTIONS:
+						PauseMenu::setSelectedOption(option::RESUME);
+						break;
+					case option::QUIT:
+						PauseMenu::setSelectedOption(option::OPTIONS);
+						break;
+					default:
+						break;
+				}
+
+			}
 			break;
 		case XK_Down:
+			using option = PauseMenu::PauseMenuOption;
+
+			if (PauseMenu::isPaused()) {
+				switch (PauseMenu::getSelectedOption()) {
+					case option::RESUME:
+						PauseMenu::setSelectedOption(option::OPTIONS);
+						break;
+					case option::OPTIONS:
+						PauseMenu::setSelectedOption(option::QUIT);
+						break;
+					default:
+						break;
+				}
+
+			}
+
 			break;
 		case XK_equal:
 			gl.delay -= 0.005;
@@ -566,7 +599,12 @@ Flt VecNormalize(Vec vec)
 
 void physics(void)
 {
-	if (!gl.walk && gl.pressed_move_keys.empty())
+	if (PauseMenu::isPaused())
+	{
+		return;
+	}
+
+	else if (!gl.walk && gl.pressed_move_keys.empty())
 	{
 		gl.walkFrame = 4;
 	}
@@ -652,8 +690,8 @@ void physics(void)
 
 void render(void)
 {
-	PauseMenu::render();
-	
+	PauseMenu::render(gl.xres, gl.yres);	
+
 	Rect r;
 	//Clear the screen
 	glClearColor(0.1, 0.1, 0.1, 1.0);

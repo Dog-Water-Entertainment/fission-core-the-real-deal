@@ -1,5 +1,7 @@
 #include <iostream>
 #include <set>
+#include <vector>
+#include <functional>
 
 #ifndef EFARMER_H
 #define EFARMER_H
@@ -16,13 +18,13 @@ public:
 	};
 
 	static PauseMenu* get();
-	static void render();
+	static void render(int xRes, int yRes);
 	static PauseMenu::PauseMenuOption getSelectedOption();
 	static void setSelectedOption(PauseMenu::PauseMenuOption);
 	static bool isPaused();
 	static void pause();
 	static void resume();
-
+	static void selectOption(PauseMenu::PauseMenuOption);
 private:
 	PauseMenu();
 	PauseMenu::PauseMenuOption m_selectedOption;
@@ -30,24 +32,4 @@ private:
 	
 	static PauseMenu* m_instance;
 };
-
-class InputManager
-{
-public:
-	static bool isKeyPressed(int key);
-	static bool isKeyTriggered(int key);
-	static void registerInputTriggerEvent();
-	static void registerInputPressedEvent();
-	static void render();
-	static InputManager* get(); 
-
-private:
-	InputManager();
-	
-	static InputManager* m_instance;
-	std::set<int> pressedKeys;
-
-};
-
-
 #endif
