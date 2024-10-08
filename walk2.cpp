@@ -261,7 +261,7 @@ int main(void)
 {
 
 	auto startTime = std::chrono::high_resolution_clock::now();
-    int frameCount = 0;
+        int frameCount = 0;
 
 	const int FRAME_TIME = 1000.0 / gl.TARGET_FPS;
 
@@ -273,7 +273,7 @@ int main(void)
 			XEvent e = x11.getXNextEvent();
 			x11.checkResize(&e);
 			checkMouse(&e);
-			done = checkKeys(&e);
+			checkKeys(&e);
 		}
 
 		physics();
@@ -294,7 +294,9 @@ int main(void)
 
         if (elapsedTime >= 1.0) {
             double fps = frameCount / elapsedTime;
-            gl.fps = (int)fps;
+            gl.fps = fps;
+
+
 
             frameCount = 0;
             startTime = endTime;
@@ -427,7 +429,6 @@ bool is_movement_key(int key)
 
 void screenCapture()
 {
-	return;
 	static int fnum = 0;
 	static int vid = 0;
 	if (!vid) {
@@ -497,6 +498,10 @@ int checkKeys(XEvent *e)
 
 	(void)shift;
 	switch (key) {
+		case XK_Return:
+			if (PauseMenu::isPaused())
+				PauseMenu::selectOption(PauseMenu::getSelectedOption());
+			break;
 		case XK_s:
 			screenCapture();
 			break;
@@ -529,8 +534,38 @@ int checkKeys(XEvent *e)
 		case XK_Right:
 			break;
 		case XK_Up:
+			using option = PauseMenu::PauseMenuOption;
+			if (PauseMenu::isPaused()) {
+				switch (PauseMenu::getSelectedOption()) {
+					case option::OPTIONS:
+						PauseMenu::setSelectedOption(option::RESUME);
+						break;
+					case option::QUIT:
+						PauseMenu::setSelectedOption(option::OPTIONS);
+						break;
+					default:
+						break;
+				}
+
+			}
 			break;
 		case XK_Down:
+			using option = PauseMenu::PauseMenuOption;
+
+			if (PauseMenu::isPaused()) {
+				switch (PauseMenu::getSelectedOption()) {
+					case option::RESUME:
+						PauseMenu::setSelectedOption(option::OPTIONS);
+						break;
+					case option::OPTIONS:
+						PauseMenu::setSelectedOption(option::QUIT);
+						break;
+					default:
+						break;
+				}
+
+			}
+
 			break;
 		case XK_equal:
 			gl.delay -= 0.005;
@@ -572,7 +607,12 @@ Flt VecNormalize(Vec vec)
 
 void physics(void)
 {
-	if (!gl.walk && gl.pressed_move_keys.empty())
+	if (PauseMenu::isPaused())
+	{
+		return;
+	}
+
+	else if (!gl.walk && gl.pressed_move_keys.empty())
 	{
 		gl.walkFrame = 4;
 	}
@@ -607,11 +647,11 @@ void physics(void)
 		}
 		if(gl.keys[XK_Up]) {
 			gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x,
-										gl.mapCtx.getPlayerPos().y + movement_speed));
+										gl.mapCtx.getPlayerPos().y - movement_speed));
 		}
 		if(gl.keys[XK_Down]) {
 			gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x,
-										gl.mapCtx.getPlayerPos().y - movement_speed));
+										gl.mapCtx.getPlayerPos().y + movement_speed));
 		}
 
 
@@ -658,8 +698,8 @@ void physics(void)
 
 void render(void)
 {
-	PauseMenu::render();
-	
+	PauseMenu::render(gl.xres, gl.yres);	
+
 	Rect r;
 	//Clear the screen
 	glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -783,6 +823,7 @@ void render(void)
 	ggprint8b(&r, 16, c, "right arrow -> walk right");
 	ggprint8b(&r, 16, c, "left arrow  <- walk left");
 	ggprint8b(&r, 16, c, "frame: %i", gl.walkFrame);
+	ggprint8b(&r, 16, c, "fps: %d", gl.fps);
 	if (gl.movie) {
 		screenCapture();
 	}

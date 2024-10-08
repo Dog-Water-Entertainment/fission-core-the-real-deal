@@ -18,14 +18,16 @@
 #include <set>
 #include "Image.h"
 
-static Image img[1] = {
-	"./images/map_textures/grass.jpg"
+static Image img[2] = {
+	"./images/map_textures/grass.jpg",
+    "./images/map_textures/stone.png"
 };
 
 class global 
 {
 public:
     GLuint grassTexture;
+    GLuint stoneTexture;
     global() {
         //nothing
     }
@@ -127,15 +129,15 @@ MapLoader::MapLoader()
             map[i][j] = new EmptyTile();
         }
     }
-    center = Vec2(25, 25);
-    playerPos = Vec2(0, 0);
+    center = Vec2(0, 0);
+    playerPos = Vec2(25, 25);
 }
 
 MapLoader::MapLoader(const char *filename)
 {
     mapFileName = filename;
-    center = Vec2(25, 25);
-    playerPos = Vec2(0, 0);
+    center = Vec2(0, 0);
+    playerPos = Vec2(25, 25);
 }
 
 MapLoader::~MapLoader()
@@ -174,6 +176,20 @@ void MapLoader::loadTextures()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 		GL_RGBA, GL_UNSIGNED_BYTE, grassData);
 	free(grassData);
+
+    w = img[1].width;
+	h = img[1].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.stoneTexture);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	//
+	//must build a new set of data...
+	unsigned char *stoneData = buildAlphaData(&img[1]);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, stoneData);
+	free(stoneData);
 }
 
 void MapLoader::LoadMapFile()
@@ -189,47 +205,34 @@ void MapLoader::LoadMapFile()
 
     std::ifstream mapFile(mapFileName.c_str());
 
-    if (!mapFile.is_open())
-    {
+    if (!mapFile.is_open()) {
         std::cerr << "Error: Could not open file " << mapFileName << std::endl;
         return;
     }
 
     std::string line;
     int i = 0;
-    while (std::getline(mapFile, line) && i < tilex)
-    {
+    while (std::getline(mapFile, line) && i < tilex) {
         int j = 0;
-        for (char &ch : line)
-        {
-            if (j < tiley)
-            {
-                if (ch == 'e')
-                {
+        for (char &ch : line) {
+            if (j < tiley) {
+                if (ch == 'e') {
                     map[i][j] = new EmptyTile();
                     map[i][j]->id = 'e';
-                }
-                else if (ch == 'b')
-                {
+                } else if (ch == 'b') {
                     map[i][j] = new BlockTile();
                     map[i][j]->id = 'b';
-                }
-                else if (ch == ' ')
-                {
+                } else if (ch == ' ') {
                     continue;
-                }
-                else
-                {
+                } else {
                     std::cerr << "Error: Invalid character in map file "
                               << mapFileName << std::endl;
                     return;
                 }
                 j++;
-            }
-            else
-            {
-                std::cerr << "Error: Map file " << mapFileName << " is too large"
-                          << std::endl;
+            } else {
+                std::cerr << "Error: Map file " << mapFileName 
+                          << " is too large" << std::endl;
                 break;
             }
         }
@@ -242,24 +245,26 @@ void MapLoader::LoadMapFile()
 void MapLoader::render()
 {
     // Calculate the center tile based on the player's position
-    Vec2 tileCenter = Vec2(floor(playerPos.x + center.x), floor(playerPos.y + center.y));
+    Vec2 tileCenter = Vec2(floor(playerPos.x), 
+                           floor(playerPos.y));
     int startingTileY = tileCenter.y - 8; // Adjusted for correct axis
     int startingTileX = tileCenter.x - 10; // Adjusted for correct axis
 
     // Calculate the offset for smooth movement
-    Vec2 offset = Vec2(playerPos.x - floor(playerPos.x), playerPos.y - floor(playerPos.y));
+    Vec2 offset = Vec2(playerPos.x - floor(playerPos.x), 
+                       playerPos.y - floor(playerPos.y));
 
     // Calculate the initial render position
-    Vec2 currentRenderPos = Vec2(-100 - offset.x * 50, 700 - offset.y * 50);
+    Vec2 currentRenderPos = Vec2(-100 - offset.x * 50, 700 + offset.y * 50);
 
     // Render only the visible tiles plus a buffer
-    for (int i = startingTileY; i < startingTileY + 16; i++)
-    {
-        if (i < 0 || i >= 50) continue; // Skip out-of-bounds rows
-        for (int j = startingTileX; j < startingTileX + 20; j++)
-        {
-            if (j >= 0 && j < 50)
-            {
+    for (int i = startingTileY; i < startingTileY + 16; i++) {
+        if (i < 0 || i >= 50) {
+            currentRenderPos.y -= 50;
+            continue;
+        } // Skip out-of-bounds rows
+        for (int j = startingTileX; j < startingTileX + 20; j++) {
+            if (j >= 0 && j < 50) {
                 map[i][j]->render(currentRenderPos);
             }
             currentRenderPos.x += 50;
@@ -286,13 +291,25 @@ Vec2 MapLoader::getPlayerPos()
 
 void MapLoader::movePlayer(Vec2 pos)
 {
-    playerPos = pos;
+    playerPos.x += pos.x;
+    playerPos.y += pos.y;
 }
 
 void MapLoader::movePlayer(float x, float y)
 {
-    playerPos.x = x;
-    playerPos.y = y;
+    playerPos.x += x;
+    playerPos.y += y;
+}
+
+Tile * MapLoader::getTileAt(float x, float y)
+{
+
+    int tilex = floor(x);
+    int tiley = floor(y);
+    if (x >= 0 && x < 50 && y >= 0 && y < 50) {
+        return map[tilex][tiley];
+    }
+    return nullptr;
 }
 
 /*
@@ -310,27 +327,20 @@ void MapLoader::movePlayer(float x, float y)
 
 void BlockTile::render(Vec2 &pos)
 {
-    // TODO: Add textures
-    // glEnable(GL_TEXTURE_2D);
-    // glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+    glEnable(GL_TEXTURE_2D);
+    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
     glPushMatrix();
-    // glEnable(GL_ALPHA_TEST);
-    // glAlphaFunc(GL_GREATER, 0.0f);
-    // glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
-    glColor4f(1.0f, 0.2f, 0.0f, 0.8f);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glBindTexture(GL_TEXTURE_2D, g.stoneTexture);
+    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
     glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-    glVertex2f(pos.x, pos.y);
-    glVertex2f(pos.x, pos.y + 50);
-    glVertex2f(pos.x + 50, pos.y + 50);
-    glVertex2f(pos.x + 50, pos.y);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
     glEnd();
-    // glBindTexture(GL_TEXTURE_2D, 0);
-    // glDisable(GL_ALPHA_TEST);
-    // glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
 }
 
