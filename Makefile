@@ -1,7 +1,7 @@
 CFLAGS = -I ./include
 LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm #-lXrandr
 USELIBS = ./Image.cpp
-PERSONALFILES = ./efarmer.cpp ./mguillory.cpp
+PERSONALFILES = ./efarmer.cpp ./mguillory.cpp ./bmartinez.cpp
 
 all: walk2
 
