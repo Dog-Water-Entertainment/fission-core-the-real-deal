@@ -255,7 +255,7 @@ void MapLoader::render()
                        playerPos.y - floor(playerPos.y));
 
     // Calculate the initial render position
-    Vec2 currentRenderPos = Vec2(-100 + offset.x * 50, 700 + offset.y * 50);
+    Vec2 currentRenderPos = Vec2(-100 - offset.x * 50, 700 + offset.y * 50);
 
     // Render only the visible tiles plus a buffer
     for (int i = startingTileY; i < startingTileY + 16; i++) {
