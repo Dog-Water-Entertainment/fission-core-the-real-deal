@@ -30,6 +30,8 @@ void PauseMenu::render(int xRes, int yRes)
 
 	ggprint8b(&r, 16, 0x00fff44f, "Foobar");
 
+	// Draw pause screen overlay
+
 	glPushMatrix();
 	glEnable(GL_BLEND | GL_ALPHA);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -59,7 +61,6 @@ void PauseMenu::pause()
 {
 	std::cout << "The game is now paused\n";
         PauseMenu::get()->m_paused = true;
-        // Do pause stuff.
 }
 
 void PauseMenu::resume()
