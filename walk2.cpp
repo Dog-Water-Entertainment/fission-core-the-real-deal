@@ -29,6 +29,7 @@
 #include "fonts.h"
 #include "efarmer.h"
 #include "mguillory.h"
+#include "bmartinez.h"
 
 //defined types
 typedef double Flt;
@@ -118,6 +119,7 @@ public:
 	unsigned char keys[65536];
 	bool walking_left;
 	bool walking;
+    bool lastS;
 	int xres, yres;
 	int movie, movieStep;
 	int walk;
@@ -140,6 +142,7 @@ public:
 		move_keys = {XK_Up, XK_Down, XK_Left, XK_Right};
 		walking = false;
 		walking_left = false;
+        lastS = false;
 		logOpen();
 		camera[0] = camera[1] = 0.0;
 		movie=0;
@@ -500,6 +503,9 @@ int checkKeys(XEvent *e)
 		case XK_m:
 			gl.movie ^= 1;
 			break;
+		case XK_n:
+            gl.lastS = !gl.lastS;
+			break;
 		case XK_w:
 			timers.recordTime(&timers.walkTime);
 			gl.walk ^= 1;
@@ -664,6 +670,7 @@ void render(void)
 	// Map Rendering
 	gl.mapCtx.render();
 	
+    lastStand(gl.lastS, gl.xres, gl.yres);
 	
 	//--------------------------------------
 	//
@@ -684,6 +691,7 @@ void render(void)
 	glPushMatrix();
 	glColor3f(1.0, 1.0, 1.0);
 	glBindTexture(GL_TEXTURE_2D, gl.walkTexture);
+    lastStand(gl.lastS, gl.xres, gl.yres);
 	//
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
