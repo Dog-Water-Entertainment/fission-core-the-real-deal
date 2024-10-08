@@ -3,6 +3,7 @@
 #include <vector>
 #include <functional>
 #include "fonts.h"
+#include <GL/glx.h>
 #include "efarmer.h"
 
 PauseMenu* PauseMenu::m_instance = nullptr;
@@ -28,6 +29,19 @@ void PauseMenu::render(int xRes, int yRes)
 	r.center = 0;
 
 	ggprint8b(&r, 16, 0x00fff44f, "Foobar");
+
+	glPushMatrix();
+	glEnable(GL_BLEND | GL_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glColor4f(0, 0, 0, 0.5f);
+	glBegin(GL_QUADS);
+		glVertex2i(0, yRes);
+		glVertex2i(xRes, yRes);
+		glVertex2i(xRes, -yRes);
+		glVertex2i(0, -yRes);
+	glEnd();
+	glPopMatrix();
+	glDisable(GL_BLEND);
 }
 
 PauseMenu::PauseMenuOption PauseMenu::getSelectedOption()

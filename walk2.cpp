@@ -690,8 +690,6 @@ void physics(void)
 
 void render(void)
 {
-	PauseMenu::render(gl.xres, gl.yres);	
-
 	Rect r;
 	//Clear the screen
 	glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -816,6 +814,8 @@ void render(void)
 	if (gl.movie) {
 		screenCapture();
 	}
+
+	PauseMenu::render(gl.xres, gl.yres);	
 }
 
 
