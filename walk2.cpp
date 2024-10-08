@@ -291,7 +291,9 @@ int main(void)
 
         if (elapsedTime >= 1.0) {
             double fps = frameCount / elapsedTime;
-            gl.fps = (int)fps;
+            gl.fps = fps;
+
+
 
             frameCount = 0;
             startTime = endTime;
@@ -811,6 +813,7 @@ void render(void)
 	ggprint8b(&r, 16, c, "right arrow -> walk right");
 	ggprint8b(&r, 16, c, "left arrow  <- walk left");
 	ggprint8b(&r, 16, c, "frame: %i", gl.walkFrame);
+	ggprint8b(&r, 16, c, "fps: %d", gl.fps);
 	if (gl.movie) {
 		screenCapture();
 	}
