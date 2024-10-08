@@ -129,15 +129,15 @@ MapLoader::MapLoader()
             map[i][j] = new EmptyTile();
         }
     }
-    center = Vec2(25, 25);
-    playerPos = Vec2(0, 0);
+    center = Vec2(0, 0);
+    playerPos = Vec2(25, 25);
 }
 
 MapLoader::MapLoader(const char *filename)
 {
     mapFileName = filename;
-    center = Vec2(25, 25);
-    playerPos = Vec2(0, 0);
+    center = Vec2(0, 0);
+    playerPos = Vec2(25, 25);
 }
 
 MapLoader::~MapLoader()
@@ -245,8 +245,8 @@ void MapLoader::LoadMapFile()
 void MapLoader::render()
 {
     // Calculate the center tile based on the player's position
-    Vec2 tileCenter = Vec2(floor(playerPos.x + center.x), 
-                           floor(playerPos.y + center.y));
+    Vec2 tileCenter = Vec2(floor(playerPos.x), 
+                           floor(playerPos.y));
     int startingTileY = tileCenter.y - 8; // Adjusted for correct axis
     int startingTileX = tileCenter.x - 10; // Adjusted for correct axis
 
