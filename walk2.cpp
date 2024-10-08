@@ -601,11 +601,11 @@ void physics(void)
 		}
 		if(gl.keys[XK_Up]) {
 			gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x,
-										gl.mapCtx.getPlayerPos().y + movement_speed));
+										gl.mapCtx.getPlayerPos().y - movement_speed));
 		}
 		if(gl.keys[XK_Down]) {
 			gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x,
-										gl.mapCtx.getPlayerPos().y - movement_speed));
+										gl.mapCtx.getPlayerPos().y + movement_speed));
 		}
 
 

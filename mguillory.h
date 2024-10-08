@@ -89,6 +89,8 @@ public:
 
     void movePlayer(Vec2 pos);
     void movePlayer(float x, float y);
+
+    Tile * getTileAt(float x, float y);
 };
 
 #endif // _MGUILLORY_H_
