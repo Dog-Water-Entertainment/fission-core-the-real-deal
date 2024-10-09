@@ -5,8 +5,7 @@ a 50x50 grid where each char is seperated by a space.
 
 # Lookup Grid
 
-e => emptyTile
-b => blockTile
+e => ![Alt text](../assets/darktile.png "a title")
 
 # Rendering
 
