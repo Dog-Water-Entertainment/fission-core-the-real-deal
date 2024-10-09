@@ -18,9 +18,26 @@
 #include <set>
 #include "Image.h"
 
-static Image img[2] = {
+static Image img[19] = {
 	"./images/map_textures/grass.jpg",
-    "./images/map_textures/stone.png"
+    "./images/map_textures/stone.png",
+    "./assets/darktile.png",
+    "./assets/floor1.png",
+    "./assets/floor2.png",
+    "./assets/floor3.png",
+    "./assets/wall_bottom_left.png",
+    "./assets/wall_bottom_right.png",
+    "./assets/wall_top_left.png",
+    "./assets/wall_top_right.png",
+    "./assets/wall_bottom.png",
+    "./assets/wall_top.png",
+    "./assets/wall_corner_left.png",
+    "./assets/wall_corner_right.png",
+    "./assets/wall_t_left.png",
+    "./assets/wall_t_right.png",
+    "./assets/wall14.png",
+    "./assets/wall_edge_left.png",
+    "./assets/wall_edge_right.png"
 };
 
 class global 
@@ -28,6 +45,26 @@ class global
 public:
     GLuint grassTexture;
     GLuint stoneTexture;
+
+    GLuint darkTile;
+    GLuint floor1;
+    GLuint floor2;
+    GLuint floor3;
+    GLuint wall_bottom_left;
+    GLuint wall_bottom_right;
+    GLuint wall_top_left;
+    GLuint wall_top_right;
+    GLuint wall_bottom;
+    GLuint wall_top;
+    GLuint wall_corner_left;
+    GLuint wall_corner_right;
+    GLuint wall_t_left;
+    GLuint wall_t_right;
+    GLuint wall14;
+    GLuint wall_edge_left;
+    GLuint wall_edge_right;
+
+
     global() {
         //nothing
     }
@@ -159,10 +196,12 @@ void MapLoader::setFileName(const char *filename)
 
 void MapLoader::loadTextures()
 {
+    // This is going to be long jesus christ
     glGenTextures(1, &g.grassTexture);
 
 
     // For grass
+
     int w = img[0].width;
 	int h = img[0].height;
 
@@ -177,9 +216,11 @@ void MapLoader::loadTextures()
 		GL_RGBA, GL_UNSIGNED_BYTE, grassData);
 	free(grassData);
 
+    // Stuff right here to next comment
     w = img[1].width;
 	h = img[1].height;
 
+    glGenTextures(1, &g.stoneTexture);
     glBindTexture(GL_TEXTURE_2D, g.stoneTexture);
 	//
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -190,6 +231,287 @@ void MapLoader::loadTextures()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 		GL_RGBA, GL_UNSIGNED_BYTE, stoneData);
 	free(stoneData);
+
+    
+    // New Textures
+    // for the tile map
+    w = img[2].width;
+	h = img[2].height;
+
+    glGenTextures(1, &g.darkTile);
+    glBindTexture(GL_TEXTURE_2D, g.darkTile);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	//
+	//must build a new set of data...
+	unsigned char *darkData = buildAlphaData(&img[2]);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, darkData);
+	free(darkData);
+
+    
+    w = img[3].width;
+	h = img[3].height;
+
+    glGenTextures(1, &g.floor1);
+    glBindTexture(GL_TEXTURE_2D, g.floor1);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	//
+	//must build a new set of data...
+	unsigned char *floor1Data = buildAlphaData(&img[3]);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, floor1Data);
+	free(floor1Data);
+
+
+    // Texture Here
+    w = img[4].width;
+	h = img[4].height;
+
+    glGenTextures(1, &g.floor2);
+    glBindTexture(GL_TEXTURE_2D, g.floor2);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	//
+	//must build a new set of data...
+	unsigned char *floor2Data = buildAlphaData(&img[4]);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, floor2Data);
+	free(floor2Data);
+
+
+    // Texture Here
+    w = img[5].width;
+	h = img[5].height;
+
+    glGenTextures(1, &g.floor3);
+    glBindTexture(GL_TEXTURE_2D, g.floor3);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	//
+	//must build a new set of data...
+	unsigned char *floor3Data = buildAlphaData(&img[5]);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, floor3Data);
+	free(floor3Data);
+
+
+    // Texture Here
+    w = img[6].width;
+    h = img[6].height;
+
+    glGenTextures(1, &g.wall_bottom_left);
+    glBindTexture(GL_TEXTURE_2D, g.wall_bottom_left);
+    //
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    //
+    //must build a new set of data...
+    unsigned char *wall_bottom_leftData = buildAlphaData(&img[6]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall_bottom_leftData);
+    free(wall_bottom_leftData);
+
+
+    // Texture Here
+    w = img[7].width;
+    h = img[7].height;
+
+    glGenTextures(1, &g.wall_bottom_right);
+    glBindTexture(GL_TEXTURE_2D, g.wall_bottom_right);
+    //
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    //
+    //must build a new set of data...
+    unsigned char *wall_bottom_rightData = buildAlphaData(&img[7]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall_bottom_rightData);
+    free(wall_bottom_rightData);
+
+
+    // Texture Here
+    w = img[8].width;
+    h = img[8].height;
+
+    glGenTextures(1, &g.wall_top_left);
+    glBindTexture(GL_TEXTURE_2D, g.wall_top_left);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *wall_top_leftData = buildAlphaData(&img[8]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall_top_leftData);
+    free(wall_top_leftData);
+
+
+    // Texture Here
+    w = img[9].width;
+    h = img[9].height;
+
+    glGenTextures(1, &g.wall_top_right);
+    glBindTexture(GL_TEXTURE_2D, g.wall_top_right);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *wall_top_rightData = buildAlphaData(&img[9]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall_top_rightData);
+    free(wall_top_rightData);
+
+
+    // Texture Here
+    w = img[10].width;
+    h = img[10].height;
+
+    glGenTextures(1, &g.wall_bottom);
+    glBindTexture(GL_TEXTURE_2D, g.wall_bottom);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *wall_bottomData = buildAlphaData(&img[10]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall_bottomData);
+    free(wall_bottomData);
+
+
+    // Texture Here
+    w = img[11].width;
+    h = img[11].height;
+
+    glGenTextures(1, &g.wall_top);
+    glBindTexture(GL_TEXTURE_2D, g.wall_top);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *wall_topData = buildAlphaData(&img[11]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall_topData);
+    free(wall_topData);
+
+
+    // Texture Here
+    w = img[12].width;
+    h = img[12].height;
+
+    glGenTextures(1, &g.wall_corner_left);
+    glBindTexture(GL_TEXTURE_2D, g.wall_corner_left);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *wall_corner_leftData = buildAlphaData(&img[12]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall_corner_leftData);
+    free(wall_corner_leftData);
+
+
+    // Texture Here
+    w = img[13].width;
+    h = img[13].height;
+
+    glGenTextures(1, &g.wall_corner_right);
+    glBindTexture(GL_TEXTURE_2D, g.wall_corner_right);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *wall_corner_rightData = buildAlphaData(&img[13]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall_corner_rightData);
+    free(wall_corner_rightData);
+
+
+    // Texture Here
+    w = img[14].width;
+    h = img[14].height;
+
+    glGenTextures(1, &g.wall_t_left);
+    glBindTexture(GL_TEXTURE_2D, g.wall_t_left);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *wall_t_leftData = buildAlphaData(&img[14]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall_t_leftData);
+    free(wall_t_leftData);
+
+
+    // Texture Here
+    w = img[15].width;
+    h = img[15].height;
+
+    glGenTextures(1, &g.wall_t_right);
+    glBindTexture(GL_TEXTURE_2D, g.wall_t_right);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *wall_t_rightData = buildAlphaData(&img[15]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall_t_rightData);
+    free(wall_t_rightData);
+
+
+    // Texture Here
+    w = img[16].width;
+    h = img[16].height;
+
+    glGenTextures(1, &g.wall14);
+    glBindTexture(GL_TEXTURE_2D, g.wall14);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *wall14Data = buildAlphaData(&img[16]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall14Data);
+
+    free(wall14Data);
+
+
+    // Texture Here
+    w = img[17].width;
+    h = img[17].height;
+
+    glGenTextures(1, &g.wall_edge_left);
+    glBindTexture(GL_TEXTURE_2D, g.wall_edge_left);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *wall_edge_leftData = buildAlphaData(&img[17]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall_edge_leftData);
+    free(wall_edge_leftData);
+
+
+    // Texture Here
+    w = img[18].width;
+    h = img[18].height;
+
+    glGenTextures(1, &g.wall_edge_right);
+    glBindTexture(GL_TEXTURE_2D, g.wall_edge_right);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *wall_edge_rightData = buildAlphaData(&img[18]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, wall_edge_rightData);
+    free(wall_edge_rightData);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void MapLoader::LoadMapFile()
