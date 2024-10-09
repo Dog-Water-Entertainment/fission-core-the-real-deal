@@ -63,6 +63,112 @@ public:
     ~EmptyTile() {};
 };
 
+/*
+    "./assets/darktile.png",
+    "./assets/floor1.png",
+    "./assets/floor2.png",
+    "./assets/floor3.png",
+    "./assets/wall_bottom_left.png",
+    "./assets/wall_bottom_right.png",
+    "./assets/wall_top_left.png",
+    "./assets/wall_top_right.png",
+    "./assets/wall_bottom.png",
+    "./assets/wall_top.png",
+    "./assets/wall_corner_left.png",
+    "./assets/wall_corner_right.png",
+    "./assets/wall_t_left.png",
+    "./assets/wall_t_right.png",
+    "./assets/wall14.png",
+    "./assets/wall_edge_left.png",
+    "./assets/wall_edge_right.png"
+*/
+
+class DarkTile : public Tile {
+    void render(Vec2 &pos);
+    ~DarkTile() {};
+};
+
+class FloorOneTile : public Tile {
+    void render(Vec2 &pos);
+    ~FloorOneTile() {};
+};
+
+class FloorTwoTile : public Tile {
+    void render(Vec2 &pos);
+    ~FloorTwoTile() {};
+};
+
+class FloorThreeTile : public Tile {
+    void render(Vec2 &pos);
+    ~FloorThreeTile() {};
+};
+
+class WallBottomLeft : public Tile {
+    void render(Vec2 &pos);
+    ~WallBottomLeft() {};
+};
+
+class WallBottomRight : public Tile {
+    void render(Vec2 &pos);
+    ~WallBottomRight() {};
+};
+
+class WallTopLeft : public Tile {
+    void render(Vec2 &pos);
+    ~WallTopLeft() {};
+};
+
+class WallTopRight : public Tile {
+    void render(Vec2 &pos);
+    ~WallTopRight() {};
+};
+
+class WallBottom : public Tile {
+    void render(Vec2 &pos);
+    ~WallBottom() {};
+};
+
+class WallTop : public Tile {
+    void render(Vec2 &pos);
+    ~WallTop() {};
+};
+
+class WallCornerLeft : public Tile {
+    void render(Vec2 &pos);
+    ~WallCornerLeft() {};
+};
+
+class WallCornerRight : public Tile {
+    void render(Vec2 &pos);
+    ~WallCornerRight() {};
+};
+
+class WallTLeft : public Tile {
+    void render(Vec2 &pos);
+    ~WallTLeft() {};
+};
+
+class WallTRight : public Tile {
+    void render(Vec2 &pos);
+    ~WallTRight() {};
+};
+
+class WallFourteen : public Tile {
+    void render(Vec2 &pos);
+    ~WallFourteen() {};
+};
+
+class WallEdgeLeft : public Tile {
+    void render(Vec2 &pos);
+    ~WallEdgeLeft() {};
+};
+
+class WallEdgeRight : public Tile {
+    void render(Vec2 &pos);
+    ~WallEdgeRight() {};
+};
+
+
 class MapLoader
 {
 private:
