@@ -9,7 +9,7 @@
 using namespace std;
 void lastStand(bool click, int xres, int yres)
 {
-    cout << "status: " << click << endl;
+   // cout << "status: " << click << endl;
      if (click) {
          glEnable(GL_BLEND);
          glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA);
