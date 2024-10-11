@@ -4,9 +4,13 @@
 #include <functional>
 #include "fonts.h"
 #include <GL/glx.h>
+#include <string>
+
 #include "efarmer.h"
 
 PauseMenu* PauseMenu::m_instance = nullptr;
+const int PauseMenu::SELECTED_BUTTON_COLOR = 0x0000FF00;
+const int PauseMenu::BUTTON_COLOR = 0x00FFFF00;
 
 PauseMenu* PauseMenu::get()
 {
@@ -23,19 +27,12 @@ void PauseMenu::render(int xRes, int yRes)
         if (!PauseMenu::isPaused())
 		return;
 
-	Rect r;
-	r.bot = yRes - 50;
-	r.left = 10;
-	r.center = 0;
-
-	ggprint8b(&r, 16, 0x00fff44f, "Foobar");
-
 	// Draw pause screen overlay
 
 	glPushMatrix();
 	glEnable(GL_BLEND | GL_ALPHA);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glColor4f(0, 0, 0, 0.5f);
+	glColor4f(0, 0, 0, 0.15f);
 	glBegin(GL_QUADS);
 		glVertex2i(0, yRes);
 		glVertex2i(xRes, yRes);
@@ -44,6 +41,10 @@ void PauseMenu::render(int xRes, int yRes)
 	glEnd();
 	glPopMatrix();
 	glDisable(GL_BLEND);
+
+	PauseMenu::get()->displayButton(PauseMenu::PauseMenuOption::RESUME, yRes - 50, 50, "Resume");
+	PauseMenu::get()->displayButton(PauseMenu::PauseMenuOption::OPTIONS, yRes - 100, 50, "Options");
+	PauseMenu::get()->displayButton(PauseMenu::PauseMenuOption::QUIT, yRes - 150, 50, "Quit");
 }
 
 PauseMenu::PauseMenuOption PauseMenu::getSelectedOption()
@@ -113,3 +114,16 @@ void PauseMenu::selectOption(PauseMenu::PauseMenuOption option)
 
 }
 
+void PauseMenu::displayButton(PauseMenu::PauseMenuOption correspondingOption, int bot, int left, const std::string &text)
+{
+	Rect r;
+	r.bot = bot;
+	r.left = left;
+	r.center = 0;
+
+	int color = correspondingOption == PauseMenu::getSelectedOption() 
+		? PauseMenu::SELECTED_BUTTON_COLOR 
+		: PauseMenu::BUTTON_COLOR;
+
+	ggprint16(&r, 16, color, text.c_str());
+}
