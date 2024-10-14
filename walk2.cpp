@@ -708,7 +708,6 @@ void render(void)
 	// Map Rendering
 	gl.mapCtx.render();
 	
-    lastStand(gl.lastS, gl.xres, gl.yres);
 	
 	//--------------------------------------
 	//
@@ -729,7 +728,6 @@ void render(void)
 	glPushMatrix();
 	glColor3f(1.0, 1.0, 1.0);
 	glBindTexture(GL_TEXTURE_2D, gl.walkTexture);
-    lastStand(gl.lastS, gl.xres, gl.yres);
 	//
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
@@ -810,6 +808,7 @@ void render(void)
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_ALPHA_TEST);
 	}
+    lastStand(gl.lastS, gl.xres, gl.yres);
 	unsigned int c = 0x00ffff44;
 	r.bot = gl.yres - 20;
 	r.left = 10;
