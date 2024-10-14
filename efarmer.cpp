@@ -29,10 +29,11 @@ void PauseMenu::render(int xRes, int yRes)
 
 	// Draw pause screen overlay
 
+	glDisable(GL_TEXTURE_2D);
 	glPushMatrix();
-	glEnable(GL_BLEND | GL_ALPHA);
+	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glColor4f(0, 0, 0, 0.15f);
+	glColor4f(0, 0, 0, 0.75f);
 	glBegin(GL_QUADS);
 		glVertex2i(0, yRes);
 		glVertex2i(xRes, yRes);
@@ -41,6 +42,7 @@ void PauseMenu::render(int xRes, int yRes)
 	glEnd();
 	glPopMatrix();
 	glDisable(GL_BLEND);
+	glEnable(GL_TEXTURE_2D);
 
 	PauseMenu::get()->displayButton(PauseMenu::PauseMenuOption::RESUME, yRes - 50, 50, "Resume");
 	PauseMenu::get()->displayButton(PauseMenu::PauseMenuOption::OPTIONS, yRes - 100, 50, "Options");
