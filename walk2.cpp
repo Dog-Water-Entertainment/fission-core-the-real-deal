@@ -31,6 +31,9 @@
 #include "mguillory.h"
 #include "bmartinez.h"
 
+// Utils Include
+#include "utils/Config.h"
+
 //defined types
 typedef double Flt;
 typedef double Vec[3];
@@ -112,7 +115,9 @@ public:
 	std::set<int> pressed_move_keys;
 
 	// Added Things
-	MapLoader mapCtx;
+	MapLoader mapCtx;	
+
+	ConfigLoader cnfg = ConfigLoader("./config/main.config");
 
 	const unsigned int TARGET_FPS = 60;
 	unsigned int fps;
@@ -264,6 +269,9 @@ int main(void)
         int frameCount = 0;
 
 	const int FRAME_TIME = 1000.0 / gl.TARGET_FPS;
+
+	//Example usage of a config loading
+	std::cout << gl.cnfg.getString("key") << std::endl;
 
 	initOpengl();
 	init();
