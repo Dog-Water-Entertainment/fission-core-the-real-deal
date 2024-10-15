@@ -119,7 +119,7 @@ public:
 
 	ConfigLoader cnfg = ConfigLoader("./config/main.config");
 
-	const unsigned int TARGET_FPS = 60;
+	unsigned int TARGET_FPS = 60;
 	unsigned int fps;
 	unsigned char keys[65536];
 	bool walking_left;
@@ -266,12 +266,19 @@ int main(void)
 {
 
 	auto startTime = std::chrono::high_resolution_clock::now();
-        int frameCount = 0;
-
-	const int FRAME_TIME = 1000.0 / gl.TARGET_FPS;
+    int frameCount = 0;
 
 	//Example usage of a config loading
 	std::cout << gl.cnfg.getString("key") << std::endl;
+
+	int interFPS = gl.cnfg.getInt("targetFPS");
+	if(interFPS != -1) {
+		std::cout << "doin sum" << std::endl;
+		gl.TARGET_FPS = interFPS;
+	}
+
+
+	const int FRAME_TIME = 1000.0 / gl.TARGET_FPS;
 
 	initOpengl();
 	init();
@@ -287,6 +294,8 @@ int main(void)
 		physics();
 		render();
 		x11.swapBuffers();
+		
+		frameCount++;
 
 		auto endTime = std::chrono::high_resolution_clock::now();
 		auto msDuration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
@@ -296,7 +305,7 @@ int main(void)
 
 		// TODO: Implement a config file to set fram rate
 		//       and bool for should cap frame rate.
-		if(elapsedTime < FRAME_TIME ) {
+		if (elapsedTime < FRAME_TIME ) {
 			usleep((FRAME_TIME - elapsedTime) * 1000);
 		}
 
