@@ -12,8 +12,7 @@ SceneManager::~SceneManager()
 
 void SceneManager::ChangeScene(Scene* scene)
 {
-    if (m_pScene != nullptr)
-    {
+    if (m_pScene != nullptr) {
         m_pScene->Release();
         delete m_pScene;
     }
@@ -24,6 +23,9 @@ void SceneManager::ChangeScene(Scene* scene)
 
 void SceneManager::Update()
 {
+    if(m_pScene->GetNextScene() != nullptr) {
+        ChangeScene(m_pScene->GetNextScene());
+    }
     if(m_pScene != nullptr)
         m_pScene->Update();
 }
@@ -36,8 +38,7 @@ void SceneManager::Render()
 
 void SceneManager::Release()
 {
-    if (m_pScene != nullptr)
-    {
+    if (m_pScene != nullptr) {
         m_pScene->Release();
         delete m_pScene;
     }

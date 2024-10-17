@@ -1,13 +1,26 @@
+#ifndef SCENE_MANAGER_H
+#define SCENE_MANAGER_H
+
+
+// Virtual class for scenes
+// If we want to create a new scene, 
+// we need to inherit from this class
+// and implement the virtual functions
 class Scene 
 {
+protected:
+    int m_xres;
+    int m_yres;
 public:
-    Scene();
+    Scene(int xres, int yres);
     virtual ~Scene();
+
 
     virtual void Init() = 0;
     virtual void Update() = 0;
     virtual void Render() = 0;
     virtual void Release() = 0;
+    virtual Scene * GetNextScene() = 0;
 };
 
 class SceneManager
@@ -24,3 +37,4 @@ public:
     void Release();
 };
 
+#endif // SCENE_MANAGER_H

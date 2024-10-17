@@ -35,6 +35,9 @@
 // Utils Include
 #include "utils/Config.h"
 
+// Scene Includes
+#include "scene/SceneManager.h"
+
 //defined types
 typedef double Flt;
 typedef double Vec[3];
