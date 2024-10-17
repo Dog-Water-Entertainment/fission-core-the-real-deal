@@ -4,12 +4,19 @@ CFLAGS = -I ./include
 LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm #-lXrandr
 USELIBS = ./Image.cpp
 UTILITIES = ./utils/Config.cpp
+SCENES = ./scene/SceneManager.cpp
 PERSONALFILES = ./efarmer.cpp ./mguillory.cpp ./bmartinez.cpp ./emedrano.cpp
+MATHLIBS = ./math/Math.cpp
+
+OURFILES = $(UTILITIES) $(SCENES) $(PERSONALFILES) $(MATHLIBS)
+
+FILES = $(USELIBS) $(OURFILES)
+
 
 all: walk2
 
-walk2: walk2.cpp log.cpp $(USELIBS) $(PERSONALFILES)
-	$(CC) $(CFLAGS) walk2.cpp $(USELIBS) $(PERSONALFILES) $(UTILITIES) log.cpp libggfonts.a -Wall -Wextra $(LFLAGS) -o walk2
+walk2: walk2.cpp log.cpp $(USELIBS) $(PERSONALFILES) 
+	$(CC) $(CFLAGS) walk2.cpp $(FILES) log.cpp libggfonts.a -Wall -Wextra $(LFLAGS) -o walk2
 
 clean:
 	rm -f walk2
