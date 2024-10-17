@@ -11,6 +11,7 @@ class Scene
 protected:
     int m_xres;
     int m_yres;
+    Scene * m_pNextScene;
 public:
     Scene(int xres, int yres);
     virtual ~Scene();
@@ -20,7 +21,7 @@ public:
     virtual void Update() = 0;
     virtual void Render() = 0;
     virtual void Release() = 0;
-    virtual Scene * GetNextScene() = 0;
+    Scene * GetNextScene();
 };
 
 class SceneManager

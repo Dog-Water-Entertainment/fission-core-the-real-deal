@@ -1,5 +1,10 @@
 #include "SceneManager.h"
 
+Scene * Scene::GetNextScene()
+{
+    return m_pNextScene;
+}
+
 SceneManager::SceneManager()
 {
     m_pScene = nullptr;

@@ -15,7 +15,7 @@ FILES = $(USELIBS) $(OURFILES)
 
 all: walk2
 
-walk2: walk2.cpp log.cpp $(USELIBS) $(PERSONALFILES) 
+walk2: walk2.cpp log.cpp $(FILES) 
 	$(CC) $(CFLAGS) walk2.cpp $(FILES) log.cpp libggfonts.a -Wall -Wextra $(LFLAGS) -o walk2
 
 clean:
