@@ -8,4 +8,4 @@
 
 #endif
 
-void lastStand(bool click, int xres, int yres);
+void darkMode(bool click, int xres, int yres);

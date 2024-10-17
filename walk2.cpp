@@ -124,7 +124,7 @@ public:
 	unsigned char keys[65536];
 	bool walking_left;
 	bool walking;
-    bool lastS;
+    bool dark;
 	int xres, yres;
 	int movie, movieStep;
 	int walk;
@@ -147,7 +147,7 @@ public:
 		move_keys = {XK_Up, XK_Down, XK_Left, XK_Right};
 		walking = false;
 		walking_left = false;
-        lastS = false;
+        dark = false;
 		logOpen();
 		camera[0] = camera[1] = 0.0;
 		movie=0;
@@ -526,7 +526,7 @@ int checkKeys(XEvent *e)
 			gl.movie ^= 1;
 			break;
 		case XK_n:
-            gl.lastS = !gl.lastS;
+            gl.dark = !gl.dark;
 			break;
 		case XK_w:
 			timers.recordTime(&timers.walkTime);
@@ -825,13 +825,14 @@ void render(void)
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_ALPHA_TEST);
 	}
-    lastStand(gl.lastS, gl.xres, gl.yres);
+    darkMode(gl.dark, gl.xres, gl.yres);
 	unsigned int c = 0x00ffff44;
 	r.bot = gl.yres - 20;
 	r.left = 10;
 	r.center = 0;
 	ggprint8b(&r, 16, c, "W   Walk cycle");
 	ggprint8b(&r, 16, c, "E   Explosion");
+	ggprint8b(&r, 16, c, "N   Dim lights");
 	ggprint8b(&r, 16, c, "+   faster");
 	ggprint8b(&r, 16, c, "-   slower");
 	ggprint8b(&r, 16, c, "right arrow -> walk right");
