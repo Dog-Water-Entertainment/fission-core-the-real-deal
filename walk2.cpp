@@ -30,9 +30,13 @@
 #include "efarmer.h"
 #include "mguillory.h"
 #include "bmartinez.h"
+#include "math/Math.h"
 
 // Utils Include
 #include "utils/Config.h"
+
+// Scene Includes
+#include "scene/SceneManager.h"
 
 //defined types
 typedef double Flt;
