@@ -42,7 +42,7 @@ private:
 	
 	void displayButton(int bot, int left, const std::string& text, int color);
 	void displayPauseOptionButton(PauseMenu::PauseMenuOption option, int bot, int left, const std::string& text);
-	void displayOptionButton(PauseMenu::PauseMenuOption option, int bot, int left, const std::string& text);
+	//void displayOptionButton(PauseMenu::PauseMenuOption option, int bot, int left, const std::string& text);
 
 	void showOptionsScreen();
 	void hideOptionsScreen();

@@ -123,10 +123,10 @@ void PauseMenu::displayPauseOptionButton(PauseMenu::PauseMenuOption correspondin
     PauseMenu::get()->displayButton(bot, left, text, color);
 }
 
-void PauseMenu::displayOptionButton(PauseMenu::PauseMenuOption correspondingOption, int bot, int left, const std::string &text)
-{
+//void PauseMenu::displayOptionButton(PauseMenu::PauseMenuOption correspondingOption, int bot, int left, const std::string &text)
+//{
     // PauseMenu::get()->displayButton(bot, left, text, color);
-}
+//}
 
 
 void PauseMenu::displayButton(int bot, int left, const std::string &text, int color) {
