@@ -2,6 +2,7 @@ CC = g++
 
 CFLAGS = -I ./include
 LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm #-lXrandr
+
 USELIBS = ./Image.cpp log.cpp
 UTILITIES = ./utils/Config.cpp
 SCENES = ./scene/SceneManager.cpp
