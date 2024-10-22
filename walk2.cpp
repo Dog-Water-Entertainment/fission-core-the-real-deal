@@ -30,6 +30,7 @@
 #include "efarmer.h"
 #include "mguillory.h"
 #include "bmartinez.h"
+#include "emedrano.h"
 #include "math/Math.h"
 
 // Utils Include
@@ -118,6 +119,7 @@ class Global {
         bool gameStarted;
         std::set<int> move_keys;
         std::set<int> pressed_move_keys;
+        StartScreen startScreen;
 
         // Added Things
         MapLoader mapCtx;	
@@ -725,15 +727,6 @@ void physics(void)
     }
 }
 
-void renderStartScreen()
-{
-    Rect r;
-    unsigned int c = 0x00ffff44;
-    r.bot = gl.yres / 2;
-    r.left = gl.xres / 2 - 50;
-    r.center = 0;
-    ggprint16(&r, 16, c, "Press Enter to Start");
-}
 
 void render(void)
 {
@@ -743,7 +736,7 @@ void render(void)
     glClear(GL_COLOR_BUFFER_BIT);
 
     if (!gl.gameStarted) { //Render the start screen until game starts
-        renderStartScreen();
+        gl.startScreen.renderStartScreen(gl.xres, gl.yres);
         return;
     }
 

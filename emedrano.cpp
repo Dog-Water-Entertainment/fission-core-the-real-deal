@@ -21,7 +21,7 @@ void StartScreen::renderStartScreen(int xres, int yres) {
     unsigned int c = 0x00ffff44;
 
     // Display start screen text
-    ggprint8b(&r, 16, c, "Welcome to the Game!");
+    ggprint8b(&r, 16, c, " Welcome to the Game!");
     r.bot -= 50;
     ggprint8b(&r, 16, c, "Press Enter to Start");
 }
