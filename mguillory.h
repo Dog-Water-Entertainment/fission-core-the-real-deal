@@ -3,6 +3,8 @@
 
 
 #include <fstream>
+#include <X11/Xlib.h>
+#include <GL/glx.h>
 #include "./math/Math.h"
 
 
@@ -11,8 +13,9 @@
 class Tile 
 {
 public:
+    GLuint * texture;
     char id;
-    virtual void render(Vec2 &pos) = 0;
+    void render(Vec2 &pos);
     virtual ~Tile() {};
 };
 
@@ -51,87 +54,70 @@ public:
 */
 
 class DarkTile : public Tile {
-    void render(Vec2 &pos);
     ~DarkTile() {};
 };
 
 class FloorOneTile : public Tile {
-    void render(Vec2 &pos);
     ~FloorOneTile() {};
 };
 
 class FloorTwoTile : public Tile {
-    void render(Vec2 &pos);
     ~FloorTwoTile() {};
 };
 
 class FloorThreeTile : public Tile {
-    void render(Vec2 &pos);
     ~FloorThreeTile() {};
 };
 
 class WallBottomLeft : public Tile {
-    void render(Vec2 &pos);
     ~WallBottomLeft() {};
 };
 
 class WallBottomRight : public Tile {
-    void render(Vec2 &pos);
     ~WallBottomRight() {};
 };
 
 class WallTopLeft : public Tile {
-    void render(Vec2 &pos);
     ~WallTopLeft() {};
 };
 
 class WallTopRight : public Tile {
-    void render(Vec2 &pos);
     ~WallTopRight() {};
 };
 
 class WallBottom : public Tile {
-    void render(Vec2 &pos);
     ~WallBottom() {};
 };
 
 class WallTop : public Tile {
-    void render(Vec2 &pos);
     ~WallTop() {};
 };
 
 class WallCornerLeft : public Tile {
-    void render(Vec2 &pos);
     ~WallCornerLeft() {};
 };
 
 class WallCornerRight : public Tile {
-    void render(Vec2 &pos);
     ~WallCornerRight() {};
 };
 
 class WallTLeft : public Tile {
-    void render(Vec2 &pos);
     ~WallTLeft() {};
 };
 
 class WallTRight : public Tile {
-    void render(Vec2 &pos);
     ~WallTRight() {};
 };
 
 class WallFourteen : public Tile {
-    void render(Vec2 &pos);
     ~WallFourteen() {};
 };
 
 class WallEdgeLeft : public Tile {
-    void render(Vec2 &pos);
     ~WallEdgeLeft() {};
 };
 
 class WallEdgeRight : public Tile {
-    void render(Vec2 &pos);
     ~WallEdgeRight() {};
 };
 

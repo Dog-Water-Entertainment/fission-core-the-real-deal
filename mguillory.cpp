@@ -469,54 +469,71 @@ void MapLoader::LoadMapFile()
                 if (ch == 'a') {
                     map[i][j] = new DarkTile();
                     map[i][j]->id = 'a';
+                    map[i][j]->texture = &g.darkTile;
                 } else if (ch == 'b') {
                     map[i][j] = new FloorOneTile();
                     map[i][j]->id = 'b';
+                    map[i][j]->texture = &g.floor1;
                 } else if (ch == 'c') {
                     map[i][j] = new FloorTwoTile();
                     map[i][j]->id = 'c';
+                    map[i][j]->texture = &g.floor2;
                 } else if (ch == 'd') {
                     map[i][j] = new FloorThreeTile();
-                    map[i][j]->id = 'd';
+                    map[i][j]->id = 'd';    
+                    map[i][j]->texture = &g.floor3;
                 } else if (ch == 'e') {
                     map[i][j] = new WallFourteen();
                     map[i][j]->id = 'e';
+                    map[i][j]->texture = &g.wall14;
                 } else if (ch == 'f') {
                     map[i][j] = new WallBottom();
                     map[i][j]->id = 'f';
+                    map[i][j]->texture = &g.wall_bottom;
                 } else if (ch == 'g') {
                     map[i][j] = new WallBottomLeft();
                     map[i][j]->id = 'g';
+                    map[i][j]->texture = &g.wall_bottom_left;
                 } else if (ch == 'h') {
                     map[i][j] = new WallBottomRight();
                     map[i][j]->id = 'h';
+                    map[i][j]->texture = &g.wall_bottom_right;
                 } else if (ch == 'i') {
                     map[i][j] = new WallCornerLeft();
                     map[i][j]->id = 'i';
+                    map[i][j]->texture = &g.wall_corner_left;
                 } else if (ch == 'j') {
                     map[i][j] = new WallCornerRight();
                     map[i][j]->id = 'j';
+                    map[i][j]->texture = &g.wall_corner_right;
                 } else if (ch == 'k') {
                     map[i][j] = new WallEdgeLeft();
                     map[i][j]->id = 'k';
+                    map[i][j]->texture = &g.wall_edge_left;
                 } else if (ch == 'l') {
                     map[i][j] = new WallEdgeRight();
                     map[i][j]->id = 'l';
+                    map[i][j]->texture = &g.wall_edge_right;
                 } else if (ch == 'm') {
                     map[i][j] = new WallTLeft();
                     map[i][j]->id = 'm';
+                    map[i][j]->texture = &g.wall_t_left;
                 } else if (ch == 'n') {
                     map[i][j] = new WallTRight();
                     map[i][j]->id = 'n';
+                    map[i][j]->texture = &g.wall_t_right;
                 } else if (ch == 'o') {
                     map[i][j] = new WallTop();
                     map[i][j]->id = 'o';
+                    map[i][j]->texture = &g.wall_top;
                 } else if (ch == 'p') {
                     map[i][j] = new WallTopLeft();
                     map[i][j]->id = 'p';
+                    map[i][j]->texture = &g.wall_top_left;
                 } else if (ch == 'q') {
                     map[i][j] = new WallCornerLeft();
                     map[i][j]->id = 'q';
+                    map[i][j]->texture = &g.wall_corner_left;
                 } else if (ch == ' ') {
                     continue;
                 } else {
@@ -620,14 +637,13 @@ Tile * MapLoader::getTileAt(float x, float y)
  * ========================================
  */
 
-void BlockTile::render(Vec2 &pos)
-{
+void Tile::render(Vec2 &pos) {
     glEnable(GL_TEXTURE_2D);
     glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
     glPushMatrix();
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.stoneTexture);
+    glBindTexture(GL_TEXTURE_2D, *texture);
     glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
     glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
@@ -639,403 +655,4 @@ void BlockTile::render(Vec2 &pos)
     glPopMatrix();
 }
 
-void EmptyTile::render(Vec2 &pos)
-{
-    // TODO: Add textures
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.grassTexture);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void DarkTile::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.darkTile);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-
-void FloorOneTile::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.floor1);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-
-void FloorTwoTile::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.floor2);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void FloorThreeTile::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.floor3);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallBottomLeft::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall_bottom_left);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallBottomRight::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall_bottom_right);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallTopLeft::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall_top_left);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallTopRight::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall_top_right);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallBottom::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall_bottom);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallTop::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall_top);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallCornerLeft::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall_corner_left);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallCornerRight::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall_corner_right);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallTLeft::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall_t_left);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallTRight::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall_t_right);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallFourteen::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall14);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallEdgeLeft::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall_edge_left);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
-
-void WallEdgeRight::render(Vec2 &pos) {
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, g.wall_edge_right);
-    glColor4f(1.0f, 0.8f, 1.0f, 0.8f);
-    glBegin(GL_QUADS);
-        // glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-        // glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-        // glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-        // glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y + 50);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + 50, pos.y + 50);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + 50, pos.y);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-}
 

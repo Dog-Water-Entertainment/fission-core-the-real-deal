@@ -44,3 +44,4 @@ libggfonts.a
 *.swo
 *.swp
 libggfonts.a
+tmp/*
