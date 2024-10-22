@@ -14,10 +14,10 @@ OURFILES = $(UTILITIES) $(SCENES) $(PERSONALFILES) $(MATHLIBS)
 FILES = $(USELIBS) $(OURFILES)
 
 
-all: walk2
+all: fissioncore 
 
-walk2: walk2.cpp log.cpp $(FILES) 
-	$(CC) $(CFLAGS) walk2.cpp $(FILES) libggfonts.a -Wall -Wextra $(LFLAGS) -o walk2
+fissioncore: fissioncore.cpp log.cpp $(FILES) 
+	$(CC) $(CFLAGS) fissioncore.cpp $(FILES) libggfonts.a -Wall -Wextra $(LFLAGS) -o fissioncore 
 
 clean:
 	rm -f walk2
