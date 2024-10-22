@@ -1,7 +1,6 @@
 // Michael Guillory
 // 10/03/2024
 //
-//
 // The map file should have the following format:
 //  e => empty space
 //  b => block
