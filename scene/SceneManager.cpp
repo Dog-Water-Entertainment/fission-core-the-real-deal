@@ -1,5 +1,13 @@
 #include "SceneManager.h"
 
+Scene::Scene(int xres, int yres) 
+{
+    m_xres = xres;
+    m_yres = yres;
+}
+
+Scene::~Scene() {}
+
 Scene * Scene::GetNextScene()
 {
     return m_pNextScene;
@@ -46,5 +54,6 @@ void SceneManager::Release()
     if (m_pScene != nullptr) {
         m_pScene->Release();
         delete m_pScene;
+        m_pScene = nullptr;
     }
 }

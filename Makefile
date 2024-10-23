@@ -5,11 +5,12 @@ LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm #-lXrandr
 
 USELIBS = ./Image.cpp log.cpp
 UTILITIES = ./utils/Config.cpp
-SCENES = ./scene/SceneManager.cpp
+INPUTS = ./inputs/Inputs.cpp
+SCENES = ./scene/SceneManager.cpp ./scene/scenes/MapScreen/MapScreen.cpp
 PERSONALFILES = ./efarmer.cpp ./mguillory.cpp ./bmartinez.cpp ./emedrano.cpp
 MATHLIBS = ./math/Math.cpp
 
-OURFILES = $(UTILITIES) $(SCENES) $(PERSONALFILES) $(MATHLIBS)
+OURFILES = $(UTILITIES) $(SCENES) $(PERSONALFILES) $(MATHLIBS) $(INPUTS)
 
 FILES = $(USELIBS) $(OURFILES)
 

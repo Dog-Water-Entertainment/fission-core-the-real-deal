@@ -1,7 +1,7 @@
 #ifndef TitleScreenScene_H
 #define TitleScreenScene_H
 
-#include "../Scene.h"
+#include "../../SceneManager.h"
 
 class TitleScreenScene : public Scene
 {
@@ -13,6 +13,6 @@ class TitleScreenScene : public Scene
         void update();
         void render();
         void release();
-}
+};
 
 #endif // TitleScreenScene_H

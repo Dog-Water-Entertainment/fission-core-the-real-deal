@@ -35,6 +35,7 @@
 
 // Utils Include
 #include "utils/Config.h"
+#include "inputs/Inputs.h"
 
 // Scene Includes
 #include "scene/SceneManager.h"
@@ -496,6 +497,7 @@ int checkKeys(XEvent *e)
         return 0;
     int key = XLookupKeysym(&e->xkey, 0);
     gl.keys[key]=1;
+    set_key(key, true);
     bool move_key = is_movement_key(key);
 
     if (e->type == KeyRelease) {
@@ -505,6 +507,7 @@ int checkKeys(XEvent *e)
         }
 
         gl.keys[key]=0;
+        set_key(key, false);
         if (key == XK_Shift_L || key == XK_Shift_R)
             shift=0;
         return 0;
