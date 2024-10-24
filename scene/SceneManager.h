@@ -13,7 +13,6 @@ protected:
     int m_yres;
     Scene * m_pNextScene;
 public:
-    Scene(int xres, int yres);
     virtual ~Scene();
 
 

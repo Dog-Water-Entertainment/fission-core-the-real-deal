@@ -12,12 +12,12 @@ class MapScreen : public Scene
 
     public:
         MapScreen(int xres, int yres);
-        ~MapScreen();
+        ~MapScreen() override;
 
-        void init();
-        void update();
-        void render();
-        void release();
+        void Init() override;
+        void Update() override;
+        void Render() override;
+        void Release() override;
 };
 
 

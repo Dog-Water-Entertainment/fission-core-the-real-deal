@@ -39,6 +39,7 @@
 
 // Scene Includes
 #include "scene/SceneManager.h"
+#include "./scene/scenes/MapScreen/MapScreen.h"
 
 //defined types
 typedef double Flt;
@@ -124,6 +125,7 @@ class Global {
 
         // Added Things
         MapLoader mapCtx;	
+        SceneManager sceneManager;
 
         ConfigLoader cnfg = ConfigLoader("./config/main.config");
 
@@ -411,6 +413,9 @@ void initOpengl(void)
 
 // Another Useful thing
 void init() {
+
+    gl.sceneManager.ChangeScene(new MapScreen(gl.xres, gl.yres));
+
     gl.mapCtx.setFileName("test.map");
     gl.mapCtx.LoadMapFile();
     gl.mapCtx.loadTextures();
@@ -747,8 +752,8 @@ void render(void)
     float cy = gl.yres/2.0;
 
     // Map Rendering
-    gl.mapCtx.render();
-
+    // gl.mapCtx.render();
+    gl.sceneManager.Render();
 
     //--------------------------------------
     //

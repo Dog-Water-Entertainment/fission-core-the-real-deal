@@ -38,6 +38,7 @@ libggfonts.a
 
 .DS_Store
 
+vid/*
 
 
 # others

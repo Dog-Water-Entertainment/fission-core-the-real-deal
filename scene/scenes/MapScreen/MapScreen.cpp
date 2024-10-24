@@ -5,24 +5,27 @@
 #include <X11/keysym.h>
 
 
-MapScreen::MapScreen(int xres, int yres) : Scene(xres, yres)
+MapScreen::MapScreen(int xres, int yres)
 {
+    m_xres = xres;
+    m_yres = yres;
+    m_pNextScene = nullptr;
     map = new MapLoader();
 }
 
 MapScreen::~MapScreen()
 {
-    release();
+    Release();
 }
 
-void MapScreen::init()
+void MapScreen::Init()
 {
-    map->setFileName("../../../test.map");
+    map->setFileName("test.map");
     map->LoadMapFile();
     map->loadTextures();
 }
 
-void MapScreen::update()
+void MapScreen::Update()
 {
          if(get_key(XK_Left)) {
             map->setPlayerPos(Vec2(map->getPlayerPos().x - movement_speed,
@@ -42,12 +45,12 @@ void MapScreen::update()
         } 
 }
 
-void MapScreen::render()
+void MapScreen::Render()
 {
     map->render();
 }
 
-void MapScreen::release()
+void MapScreen::Release()
 {
     delete map;
     map = nullptr;

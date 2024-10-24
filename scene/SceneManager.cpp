@@ -1,11 +1,5 @@
 #include "SceneManager.h"
 
-Scene::Scene(int xres, int yres) 
-{
-    m_xres = xres;
-    m_yres = yres;
-}
-
 Scene::~Scene() {}
 
 Scene * Scene::GetNextScene()
