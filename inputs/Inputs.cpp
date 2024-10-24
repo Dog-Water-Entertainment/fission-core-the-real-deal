@@ -1,5 +1,4 @@
 #include "Inputs.h"
-#include <iostream>
 
 static unsigned char keys[65536] = {0};
 
