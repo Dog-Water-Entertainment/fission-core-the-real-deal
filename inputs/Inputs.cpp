@@ -1,6 +1,7 @@
 #include "Inputs.h"
+#include <iostream>
 
-unsigned char keys[65536];
+static unsigned char keys[65536] = {0};
 
 
 bool get_key(unsigned int key)

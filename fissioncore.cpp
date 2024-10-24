@@ -124,7 +124,6 @@ class Global {
         StartScreen startScreen;
 
         // Added Things
-        MapLoader mapCtx;	
         SceneManager sceneManager;
 
         ConfigLoader cnfg = ConfigLoader("./config/main.config");
@@ -413,12 +412,7 @@ void initOpengl(void)
 
 // Another Useful thing
 void init() {
-
     gl.sceneManager.ChangeScene(new MapScreen(gl.xres, gl.yres));
-
-    gl.mapCtx.setFileName("test.map");
-    gl.mapCtx.LoadMapFile();
-    gl.mapCtx.loadTextures();
 }
 
 void checkMouse(XEvent *e)
@@ -497,35 +491,37 @@ void screenCapture()
 int checkKeys(XEvent *e)
 {
     //keyboard input?
-    static int shift=0;
+    static int shift = 0;
     if (e->type != KeyPress && e->type != KeyRelease)
         return 0;
+
     int key = XLookupKeysym(&e->xkey, 0);
-    gl.keys[key]=1;
-    set_key(key, true);
+
     bool move_key = is_movement_key(key);
 
     if (e->type == KeyRelease) {
-        if (move_key)
-        {
+        if (move_key) {
             gl.pressed_move_keys.erase(key);
         }
 
-        gl.keys[key]=0;
+        gl.keys[key] = 0;
         set_key(key, false);
-        if (key == XK_Shift_L || key == XK_Shift_R)
-            shift=0;
+
+        if (key == XK_Shift_L || key == XK_Shift_R) {
+            shift = 0;
+        }
         return 0;
     }
 
-    if (move_key)
-    {
+    if (move_key) {
         gl.pressed_move_keys.insert(key);
     }
 
-    gl.keys[key]=1;
+    gl.keys[key] = 1;
+    set_key(key, true);
+
     if (key == XK_Shift_L || key == XK_Shift_R) {
-        shift=1;
+        shift = 1;
         return 0;
     }
 
@@ -554,14 +550,14 @@ int checkKeys(XEvent *e)
         case XK_e:
             gl.exp.pos[0] = 200.0;
             gl.exp.pos[1] = -60.0;
-            gl.exp.pos[2] =   0.0;
+            gl.exp.pos[2] = 0.0;
             timers.recordTime(&gl.exp.time);
             gl.exp.onoff ^= 1;
             break;
         case XK_f:
             gl.exp44.pos[0] = 200.0;
             gl.exp44.pos[1] = -60.0;
-            gl.exp44.pos[2] =   0.0;
+            gl.exp44.pos[2] = 0.0;
             timers.recordTime(&gl.exp44.time);
             gl.exp44.onoff ^= 1;
             break;
@@ -582,12 +578,10 @@ int checkKeys(XEvent *e)
                     default:
                         break;
                 }
-
             }
             break;
         case XK_Down:
             using option = PauseMenu::PauseMenuOption;
-
             if (PauseMenu::isPaused()) {
                 switch (PauseMenu::getSelectedOption()) {
                     case option::RESUME:
@@ -599,9 +593,7 @@ int checkKeys(XEvent *e)
                     default:
                         break;
                 }
-
             }
-
             break;
         case XK_equal:
             gl.delay -= 0.005;
@@ -616,7 +608,6 @@ int checkKeys(XEvent *e)
                 PauseMenu::pause();
             else
                 PauseMenu::resume();
-
             break;
     }
     return 0;
@@ -649,9 +640,7 @@ void physics(void)
     if (PauseMenu::isPaused())
     {
         return;
-    }
-
-    else if (!gl.walk && gl.pressed_move_keys.empty())
+    } else if (!gl.walk && gl.pressed_move_keys.empty())
     {
         gl.walkFrame = 4;
     }
@@ -676,24 +665,6 @@ void physics(void)
         //
         // Check for movement keys to move map
         //
-        if(gl.keys[XK_Left]) {
-            gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x - movement_speed,
-                        gl.mapCtx.getPlayerPos().y));
-        }
-        if(gl.keys[XK_Right]) {
-            gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x + movement_speed,
-                        gl.mapCtx.getPlayerPos().y));
-        }
-        if(gl.keys[XK_Up]) {
-            gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x,
-                        gl.mapCtx.getPlayerPos().y - movement_speed));
-        }
-        if(gl.keys[XK_Down]) {
-            gl.mapCtx.setPlayerPos(Vec2(gl.mapCtx.getPlayerPos().x,
-                        gl.mapCtx.getPlayerPos().y + movement_speed));
-        }
-
-
         if (gl.exp.onoff) {
             gl.exp.pos[0] -= 2.0 * (0.05 / gl.delay);
         }
@@ -733,6 +704,7 @@ void physics(void)
             }
         }
     }
+    gl.sceneManager.Update();
 }
 
 

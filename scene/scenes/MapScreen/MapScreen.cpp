@@ -27,7 +27,7 @@ void MapScreen::Init()
 
 void MapScreen::Update()
 {
-         if(get_key(XK_Left)) {
+        if(get_key(XK_Left)) {
             map->setPlayerPos(Vec2(map->getPlayerPos().x - movement_speed,
                         map->getPlayerPos().y));
         }
