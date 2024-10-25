@@ -5,30 +5,14 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 #include "bmartinez.h"
+#include "fonts.h"
 typedef int Stat;
-// Forward Declarations
+// Forward Declarations////////////////////////////////////////////////////////
 class Player;
 class Enemy;
-void darkMode(bool click, int xres, int yres)
-{
-     if (click) {
-         glEnable(GL_BLEND);
-         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-         glDisable(GL_TEXTURE_2D);
-         glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
-         glBegin(GL_QUADS);
-            glVertex2i(0, yres);
-            glVertex2i(0, 0);
-            glVertex2i(xres, 0);
-            glVertex2i(xres, yres);
-         glEnd();
-         glEnable(GL_TEXTURE_2D);
-         glDisable(GL_BLEND);
-     } else {
-         glDisable(GL_BLEND);
-     } 
-};
 //PLAYER STUFF/////////////////////////////////////////////////////////////////
 Player::Player(Stat hp, Stat dmg) : MaxHP(hp), HP(hp), dmgDeal(dmg) {}
 Player::Player() : MaxHP(50), HP(50), dmgDeal(2) {}
@@ -68,19 +52,26 @@ Item::Item(int ID) : itemID(ID)
 ///////////////////////////////////////////////////////////////////////////////
 ///
 // DEATH STUFF////////////////////////////////////////////////////////////////
-void youDied()
+int DeadHelp()
 {
-    std::vector<std::string> quips{
-    "You are trying, right?",  
+    std::srand(std::time(NULL));
+    int which = std::rand() % 11;
+    return which;
+}
+void DeadCheck(bool state, int xres, int yres, int which)
+{
+    std::cout << which << std::endl;
+    std::vector<const char *> quips{
+    "You are trying... right?",  
     "Consider Fortnite!", 
     "Consider Roblox!", 
-    "Us: 99999, you: 0", 
+    "erm", 
     "git gud...",
     "You suck.",
     "Consider the Talk-Tuah Podcast...", 
-    "on skibidi ????", 
-    "We've been trying to reach you concerning your vehicle's extended warranty.",
-    "*teleports behind you* nothing personal, kid...", 
+    "On skibidi ????", 
+    "We've been trying to reach you concerning your car's extended warranty.",
+    "*teleports behind you* nothing personal, kid...",/*
     "What the flip did you just flipping say about me, you little rascal? "
     "I'll have you know I graduated top of my class in the Navy Seals, and "
     "I've been involved in numerous secret raids on Al-Quaeda, and I have over"
@@ -102,12 +93,78 @@ void youDied()
     "comment was about to bring down upon you, maybe you would have held your "
     "flipping tongue. But you couldn't, you didn't, and now you're paying the "
     "price, you goshdarn nincompoop. I will poo fury all over you and you will "
-    "drown in it.You're frinkin dead, kiddo."
+    "drown in it.You're frinkin dead, kiddo.", */
+    "Being this bad should be punishable by jail time."
     };
+    Rect d, q, a, b;
+    if (state) {
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
+        glBegin(GL_QUADS);
+            glVertex2i(0, yres);
+            glVertex2i(0, 0);
+            glVertex2i(xres, 0);
+            glVertex2i(xres, yres);
+        glEnd();
+    int i = which;
+    if (i == which)
+        i = DeadHelp();
+    
+    //words on death screen 
+    d.bot = yres/2;
+    d.left = xres / 2 - 80;
+    d.center = 0;
+    ggprint16(&d, 16, 0x88B00000, "GAME OVER.");
+    q.bot = d.bot-10;
+    q.left = xres / 2 - 80;
+    q.center = 0;
+    ggprint10(&q, 16, 0xFFCCCCBB, quips[i]);
+    a.bot = q.bot-60;
+    a.left = xres /2 -  230;
+    a.center = 0;
+    ggprint12(&a, 16, 0x000FF000, "ESC to QUIT");
+    b.bot = q.bot-60;
+    b.left = xres/2 + 60;
+    b.center = 0;
+    ggprint12(&b, 16, 0x000FF000, "ENTER to CONTINUE");
+    }
+/*
+ggprint16(&d, 16, 0x000FF000, ); biggest
+ggprint12(&d, 16, 0x000FF000, );
+ggprint13(&d, 16, 0x000FF000, );
+ggprint10(&d, 16, 0x000FF000, ); good for quips
+ggprint08(&d, 16, 0x000FF000, );
+ggprint07(&d, 16, 0x000FF000, );
+ggprint06(&d, 16, 0x000FF000, );
+gprint8b(&d, 16, 0x000FF000, ;
+*/
     //int number = getrandomnumber(0, sizeofvector) 
     //std::cout << quips[number] << endl;
     // its supposed to write to the screen but ill figure that out once 
     // the scene loader can be used or something idk, pick a random number
     // spit out the line at that index
-}
-
+};
+///////////////////////////////////////////////////////////////////////////////
+///
+/// dark mode /////////////////////////////////////////////////////////////////
+void darkMode(bool click, int xres, int yres)
+{
+     if (click) {
+         glEnable(GL_BLEND);
+         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+         glDisable(GL_TEXTURE_2D);
+         glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
+         glBegin(GL_QUADS);
+            glVertex2i(0, yres);
+            glVertex2i(0, 0);
+            glVertex2i(xres, 0);
+            glVertex2i(xres, yres);
+         glEnd();
+         glEnable(GL_TEXTURE_2D);
+         glDisable(GL_BLEND);
+     } else {
+         glDisable(GL_BLEND);
+     } 
+};
+//////////////////////////////////////////////////////////////////////////////

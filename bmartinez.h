@@ -48,6 +48,7 @@ class Item
 
 
 void darkMode(bool click, int xres, int yres);
-void youDied();
+void DeadCheck(bool state, int xres, int yres, int which);
+int DeadHelp();
 
 #endif
