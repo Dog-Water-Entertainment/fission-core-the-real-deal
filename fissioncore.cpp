@@ -1,8 +1,6 @@
-//3350
-//program: walk2.cpp
-//author:  Gordon Griesel
-//date:    summer 2017
-//         spring 2018
+//program: fission core.
+//author:  Dogwater Entertainment
+//date:    Fall 2024
 //
 //Walk cycle using a sprite sheet.
 //images courtesy: http://games.ucla.edu/resource/walk-cycles/
@@ -11,6 +9,7 @@
 //  multiple sprite-sheet animations
 //  a level tiling system
 //  parallax scrolling of backgrounds
+//  super cool awesome features and all around aura
 //
 #include <stdio.h>
 #include <stdlib.h>
@@ -134,6 +133,7 @@ class Global {
         bool walking_left;
         bool walking;
         bool dark;
+        bool dead;
         int xres, yres;
         int movie, movieStep;
         int walk;
@@ -157,6 +157,7 @@ class Global {
             walking = false;
             walking_left = false;
             dark = false;
+            dead = false;
             gameStarted = false;
             logOpen();
             camera[0] = camera[1] = 0.0;
