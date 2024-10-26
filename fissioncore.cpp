@@ -725,13 +725,8 @@ void render(void)
     float cx = gl.xres/2.0;
     float cy = gl.yres/2.0;
 
-    // Map Rendering
-    // gl.mapCtx.render();
     gl.sceneManager.Render();
 
-    //--------------------------------------
-    //
-    //#define SHOW_FAKE_SHADOW
     // If current screen is instanceof MapScreen, render player
     if(typeid(*gl.sceneManager.GetCurrentScene()) == typeid(MapScreen)) {
         

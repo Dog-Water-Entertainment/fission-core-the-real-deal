@@ -9,7 +9,7 @@ UTILITIES = ./utils/Config.cpp
 INPUTS = ./inputs/Inputs.cpp
 SCENES = ./scene/SceneManager.cpp ./scene/scenes/MapScreen/MapScreen.cpp ./scene/scenes/BossScene/BossScene.cpp
 PERSONALFILES = ./efarmer.cpp ./mguillory.cpp ./bmartinez.cpp ./emedrano.cpp
-MATHLIBS = ./math/Math.cpp
+MATHLIBS = ./math/Math.cpp ./math/Shapes.cpp
 FONTS = libggfonts.a
 
 

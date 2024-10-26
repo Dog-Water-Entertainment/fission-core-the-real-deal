@@ -3,10 +3,12 @@
 
 #include "../../SceneManager.h"
 #include "../../../inputs/Inputs.h"
-
+#include "../../../math/Shapes.h"
 
 class BossScene : public Scene
 {
+    private:
+        Rectangle m_rectangle;
     public:
         BossScene(int xres, int yres);
         ~BossScene();
