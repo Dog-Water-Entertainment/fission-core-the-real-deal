@@ -51,3 +51,8 @@ void SceneManager::Release()
         m_pScene = nullptr;
     }
 }
+
+Scene * SceneManager::GetCurrentScene()
+{
+    return m_pScene;
+}

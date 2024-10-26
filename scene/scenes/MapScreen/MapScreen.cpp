@@ -1,6 +1,7 @@
 #include "MapScreen.h"
 #include "../../../inputs/Inputs.h"
 #include "../../SceneManager.h"
+#include "../BossScene/BossScene.h"
 
 #include <X11/keysym.h>
 
@@ -27,22 +28,25 @@ void MapScreen::Init()
 
 void MapScreen::Update()
 {
-        if(get_key(XK_Left)) {
-            map->setPlayerPos(Vec2(map->getPlayerPos().x - movement_speed,
-                        map->getPlayerPos().y));
-        }
-        if(get_key(XK_Right)) {
-            map->setPlayerPos(Vec2(map->getPlayerPos().x + movement_speed,
-                        map->getPlayerPos().y));
-        }
-        if(get_key(XK_Up)) {
-            map->setPlayerPos(Vec2(map->getPlayerPos().x,
-                        map->getPlayerPos().y - movement_speed));
-        }
-        if(get_key(XK_Down)) {
-            map->setPlayerPos(Vec2(map->getPlayerPos().x,
-                        map->getPlayerPos().y + movement_speed));
-        } 
+    if(get_key(XK_t)) {
+        m_pNextScene = new BossScene(m_xres, m_yres);
+    }
+    if(get_key(XK_Left)) {
+        map->setPlayerPos(Vec2(map->getPlayerPos().x - movement_speed,
+                    map->getPlayerPos().y));
+    }
+    if(get_key(XK_Right)) {
+        map->setPlayerPos(Vec2(map->getPlayerPos().x + movement_speed,
+                    map->getPlayerPos().y));
+    }
+    if(get_key(XK_Up)) {
+        map->setPlayerPos(Vec2(map->getPlayerPos().x,
+                    map->getPlayerPos().y - movement_speed));
+    }
+    if(get_key(XK_Down)) {
+        map->setPlayerPos(Vec2(map->getPlayerPos().x,
+                    map->getPlayerPos().y + movement_speed));
+    } 
 }
 
 void MapScreen::Render()

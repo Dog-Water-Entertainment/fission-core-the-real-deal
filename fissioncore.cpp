@@ -31,6 +31,7 @@
 #include "bmartinez.h"
 #include "emedrano.h"
 #include "math/Math.h"
+#include <typeinfo>
 
 // Utils Include
 #include "utils/Config.h"
@@ -731,118 +732,122 @@ void render(void)
     //--------------------------------------
     //
     //#define SHOW_FAKE_SHADOW
-#ifdef SHOW_FAKE_SHADOW
-    glColor3f(0.25, 0.25, 0.25);
-    glBegin(GL_QUADS);
-    glVertex2i(cx-60, 150);
-    glVertex2i(cx+50, 150);
-    glVertex2i(cx+50, 130);
-    glVertex2i(cx-60, 130);
-    glEnd();
-#endif
-    //
-    // Walk texture
-    float h = 200.0;
-    float w = h * 0.5;
-    glPushMatrix();
-    glColor3f(1.0, 1.0, 1.0);
-    glBindTexture(GL_TEXTURE_2D, gl.walkTexture);
-    //
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glColor4ub(255,255,255,255);
-    int ix = gl.walkFrame % 8;
-    int iy = 0;
-    if (gl.walkFrame >= 8)
-        iy = 1;
-    float fx = (float)ix / 8.0;
-    float fy = (float)iy / 2.0;
-    glBegin(GL_QUADS);
-    if (gl.walking_left) {
-        glTexCoord2f(fx+.125, fy+.5); glVertex2i(cx-w, cy-h);
-        glTexCoord2f(fx+.125, fy);    glVertex2i(cx-w, cy+h);
-        glTexCoord2f(fx,      fy);    glVertex2i(cx+w, cy+h);
-        glTexCoord2f(fx,      fy+.5); glVertex2i(cx+w, cy-h);
-    } else {
-        glTexCoord2f(fx,      fy+.5); glVertex2i(cx-w, cy-h);
-        glTexCoord2f(fx,      fy);    glVertex2i(cx-w, cy+h);
-        glTexCoord2f(fx+.125, fy);    glVertex2i(cx+w, cy+h);
-        glTexCoord2f(fx+.125, fy+.5); glVertex2i(cx+w, cy-h);
-    }
-
-
-    glEnd();
-    glPopMatrix();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_ALPHA_TEST);
-    //
-    //
-    if (gl.exp.onoff) {
-        h = 80.0;
-        w = 80.0;
+    // If current screen is instanceof MapScreen, render player
+    if(typeid(*gl.sceneManager.GetCurrentScene()) == typeid(MapScreen)) {
+        
+    #ifdef SHOW_FAKE_SHADOW
+        glColor3f(0.25, 0.25, 0.25);
+        glBegin(GL_QUADS);
+        glVertex2i(cx-60, 150);
+        glVertex2i(cx+50, 150);
+        glVertex2i(cx+50, 130);
+        glVertex2i(cx-60, 130);
+        glEnd();
+    #endif
+        //
+        // Walk texture
+        float h = 200.0;
+        float w = h * 0.5;
         glPushMatrix();
         glColor3f(1.0, 1.0, 1.0);
-        glBindTexture(GL_TEXTURE_2D, gl.exp.tex);
+        glBindTexture(GL_TEXTURE_2D, gl.walkTexture);
+        //
         glEnable(GL_ALPHA_TEST);
         glAlphaFunc(GL_GREATER, 0.0f);
         glColor4ub(255,255,255,255);
-        glTranslated(gl.exp.pos[0], gl.exp.pos[1], gl.exp.pos[2]);
-        int ix = gl.exp.frame % 5;
-        int iy = gl.exp.frame / 5;
-        float tx = (float)ix / 5.0;
-        float ty = (float)iy / 5.0;
+        int ix = gl.walkFrame % 8;
+        int iy = 0;
+        if (gl.walkFrame >= 8)
+            iy = 1;
+        float fx = (float)ix / 8.0;
+        float fy = (float)iy / 2.0;
         glBegin(GL_QUADS);
-        glTexCoord2f(tx,     ty+0.2); glVertex2i(cx-w, cy-h);
-        glTexCoord2f(tx,     ty);     glVertex2i(cx-w, cy+h);
-        glTexCoord2f(tx+0.2, ty);     glVertex2i(cx+w, cy+h);
-        glTexCoord2f(tx+0.2, ty+0.2); glVertex2i(cx+w, cy-h);
+        if (gl.walking_left) {
+            glTexCoord2f(fx+.125, fy+.5); glVertex2i(cx-w, cy-h);
+            glTexCoord2f(fx+.125, fy);    glVertex2i(cx-w, cy+h);
+            glTexCoord2f(fx,      fy);    glVertex2i(cx+w, cy+h);
+            glTexCoord2f(fx,      fy+.5); glVertex2i(cx+w, cy-h);
+        } else {
+            glTexCoord2f(fx,      fy+.5); glVertex2i(cx-w, cy-h);
+            glTexCoord2f(fx,      fy);    glVertex2i(cx-w, cy+h);
+            glTexCoord2f(fx+.125, fy);    glVertex2i(cx+w, cy+h);
+            glTexCoord2f(fx+.125, fy+.5); glVertex2i(cx+w, cy-h);
+        }
+
+
         glEnd();
         glPopMatrix();
         glBindTexture(GL_TEXTURE_2D, 0);
         glDisable(GL_ALPHA_TEST);
-    }
-    //
-    //
-    if (gl.exp44.onoff) {
-        h = 80.0;
-        w = 80.0;
-        glPushMatrix();
-        glColor3f(1.0, 1.0, 1.0);
-        glBindTexture(GL_TEXTURE_2D, gl.exp44.tex);
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.0f);
-        glColor4ub(255,255,255,255);
-        glTranslated(gl.exp44.pos[0], gl.exp44.pos[1], gl.exp44.pos[2]);
-        int ix = gl.exp44.frame % 4;
-        int iy = gl.exp44.frame / 4;
-        float tx = (float)ix / 4.0;
-        float ty = (float)iy / 4.0;
-        glBegin(GL_QUADS);
-        glTexCoord2f(tx,      ty+0.25); glVertex2i(cx-w, cy-h);
-        glTexCoord2f(tx,      ty);      glVertex2i(cx-w, cy+h);
-        glTexCoord2f(tx+0.25, ty);      glVertex2i(cx+w, cy+h);
-        glTexCoord2f(tx+0.25, ty+0.25); glVertex2i(cx+w, cy-h);
-        glEnd();
-        glPopMatrix();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_ALPHA_TEST);
-    }
-    darkMode(gl.dark, gl.xres, gl.yres);
-    unsigned int c = 0x00ffff44;
-    r.bot = gl.yres - 20;
-    r.left = 10;
-    r.center = 0;
-    ggprint8b(&r, 16, c, "W   Walk cycle");
-    ggprint8b(&r, 16, c, "E   Explosion");
-    ggprint8b(&r, 16, c, "N   Dim lights");
-    ggprint8b(&r, 16, c, "+   faster");
-    ggprint8b(&r, 16, c, "-   slower");
-    ggprint8b(&r, 16, c, "right arrow -> walk right");
-    ggprint8b(&r, 16, c, "left arrow  <- walk left");
-    ggprint8b(&r, 16, c, "frame: %i", gl.walkFrame);
-    ggprint8b(&r, 16, c, "fps: %d", gl.fps);
-    if (gl.movie) {
-        screenCapture();
+        //
+        //
+        if (gl.exp.onoff) {
+            h = 80.0;
+            w = 80.0;
+            glPushMatrix();
+            glColor3f(1.0, 1.0, 1.0);
+            glBindTexture(GL_TEXTURE_2D, gl.exp.tex);
+            glEnable(GL_ALPHA_TEST);
+            glAlphaFunc(GL_GREATER, 0.0f);
+            glColor4ub(255,255,255,255);
+            glTranslated(gl.exp.pos[0], gl.exp.pos[1], gl.exp.pos[2]);
+            int ix = gl.exp.frame % 5;
+            int iy = gl.exp.frame / 5;
+            float tx = (float)ix / 5.0;
+            float ty = (float)iy / 5.0;
+            glBegin(GL_QUADS);
+            glTexCoord2f(tx,     ty+0.2); glVertex2i(cx-w, cy-h);
+            glTexCoord2f(tx,     ty);     glVertex2i(cx-w, cy+h);
+            glTexCoord2f(tx+0.2, ty);     glVertex2i(cx+w, cy+h);
+            glTexCoord2f(tx+0.2, ty+0.2); glVertex2i(cx+w, cy-h);
+            glEnd();
+            glPopMatrix();
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glDisable(GL_ALPHA_TEST);
+        }
+        //
+        //
+        if (gl.exp44.onoff) {
+            h = 80.0;
+            w = 80.0;
+            glPushMatrix();
+            glColor3f(1.0, 1.0, 1.0);
+            glBindTexture(GL_TEXTURE_2D, gl.exp44.tex);
+            glEnable(GL_ALPHA_TEST);
+            glAlphaFunc(GL_GREATER, 0.0f);
+            glColor4ub(255,255,255,255);
+            glTranslated(gl.exp44.pos[0], gl.exp44.pos[1], gl.exp44.pos[2]);
+            int ix = gl.exp44.frame % 4;
+            int iy = gl.exp44.frame / 4;
+            float tx = (float)ix / 4.0;
+            float ty = (float)iy / 4.0;
+            glBegin(GL_QUADS);
+            glTexCoord2f(tx,      ty+0.25); glVertex2i(cx-w, cy-h);
+            glTexCoord2f(tx,      ty);      glVertex2i(cx-w, cy+h);
+            glTexCoord2f(tx+0.25, ty);      glVertex2i(cx+w, cy+h);
+            glTexCoord2f(tx+0.25, ty+0.25); glVertex2i(cx+w, cy-h);
+            glEnd();
+            glPopMatrix();
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glDisable(GL_ALPHA_TEST);
+        }
+        darkMode(gl.dark, gl.xres, gl.yres);
+        unsigned int c = 0x00ffff44;
+        r.bot = gl.yres - 20;
+        r.left = 10;
+        r.center = 0;
+        ggprint8b(&r, 16, c, "W   Walk cycle");
+        ggprint8b(&r, 16, c, "E   Explosion");
+        ggprint8b(&r, 16, c, "N   Dim lights");
+        ggprint8b(&r, 16, c, "+   faster");
+        ggprint8b(&r, 16, c, "-   slower");
+        ggprint8b(&r, 16, c, "right arrow -> walk right");
+        ggprint8b(&r, 16, c, "left arrow  <- walk left");
+        ggprint8b(&r, 16, c, "frame: %i", gl.walkFrame);
+        ggprint8b(&r, 16, c, "fps: %d", gl.fps);
+        if (gl.movie) {
+            screenCapture();
+        }
     }
 
     PauseMenu::render(gl.xres, gl.yres);	

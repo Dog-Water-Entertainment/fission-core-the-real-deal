@@ -35,6 +35,7 @@ public:
     void Update();
     void Render();
     void Release();
+    Scene * GetCurrentScene();
 };
 
 #endif // SCENE_MANAGER_H
