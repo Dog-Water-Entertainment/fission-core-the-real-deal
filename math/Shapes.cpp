@@ -64,8 +64,7 @@ void Rectangle::rotateAroundLocal(float angle)
     float _cos = cos(angle);
     float _sin = sin(angle);
 
-    for (int i = 0; i < 4; i++)
-    {
+    for (int i = 0; i < 4; i++) {
         float x = vertices[i].x - position.x;
         float y = vertices[i].y - position.y;
 
@@ -79,8 +78,7 @@ void Rectangle::rotateAroundGlobal(float angle)
     float _cos = cos(angle);
     float _sin = sin(angle);
 
-    for (int i = 0; i < 4; i++)
-    {
+    for (int i = 0; i < 4; i++) {
         float x = vertices[i].x - globalPosition.x;
         float y = vertices[i].y - globalPosition.y;
 
@@ -91,8 +89,7 @@ void Rectangle::rotateAroundGlobal(float angle)
 
 void Rectangle::draw()
 {
-    if(texture != nullptr)
-    {
+    if(texture != nullptr) {
         return; // Not implemented yet
         glBindTexture(GL_TEXTURE_2D, *texture);
         glPushMatrix();
