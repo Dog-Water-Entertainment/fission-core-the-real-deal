@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <iostream>
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
@@ -226,7 +227,10 @@ class X11_wrapper {
             } 
             Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
             swa.colormap = cmap;
-            swa.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask |
+            swa.event_mask =
+                ExposureMask | KeyPressMask | KeyReleaseMask |
+                ButtonPress | ButtonReleaseMask |
+                PointerMotionMask |
                 StructureNotifyMask | SubstructureNotifyMask;
             win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
                     vi->depth, InputOutput, vi->visual,
@@ -419,33 +423,51 @@ void init() {
 
 void checkMouse(XEvent *e)
 {
-    //printf("checkMouse()...\n"); fflush(stdout);
-    //Did the mouse move?
-    //Was a mouse button clicked?
-    static int savex = 0;
-    static int savey = 0;
-    //
-    if (e->type != ButtonRelease && e->type != ButtonPress &&
-            e->type != MotionNotify)
-        return;
-    if (e->type == ButtonRelease) {
-        return;
-    }
-    if (e->type == ButtonPress) {
-        if (e->xbutton.button==1) {
-            //Left button is down
-        }
-        if (e->xbutton.button==3) {
-            //Right button is down
-        }
-    }
-    if (e->type == MotionNotify) {
-        if (savex != e->xbutton.x || savey != e->xbutton.y) {
-            //Mouse moved
-            savex = e->xbutton.x;
-            savey = e->xbutton.y;
-        }
-    }
+	static int savex = 0;
+	static int savey = 0;
+
+	//Weed out non-mouse events
+	if (e->type != ButtonRelease &&
+		e->type != ButtonPress &&
+		e->type != MotionNotify) {
+		//This is not a mouse event that we care about.
+		return;
+	}
+	//
+	if (e->type == ButtonRelease) {
+
+		if (e->xbutton.button==1) {
+			//Left button was released.
+            set_mouse_pressed(false);
+            reset_first_mouse_press();
+			return;
+		}
+		return;
+	}
+	if (e->type == ButtonPress) {
+		if (e->xbutton.button==1) {
+			//Left button was pressed.
+			//int y = g.yres - e->xbutton.y;
+            set_mouse_pressed(true);
+			return;
+		}
+		if (e->xbutton.button==3) {
+			//Right button was pressed.
+			return;
+		}
+	}
+	if (e->type == MotionNotify) {
+		//The mouse moved!
+		if (savex != e->xbutton.x || savey != e->xbutton.y) {
+			savex = e->xbutton.x;
+			savey = e->xbutton.y;
+			//Code placed here will execute whenever the mouse moves.
+		    int mouseY = gl.yres - e->xbutton.y;
+			int mouseX = e->xbutton.x;
+
+            set_mouse_pos(mouseX, mouseY);
+		}
+	}
 }
 
 bool is_movement_key(int key)

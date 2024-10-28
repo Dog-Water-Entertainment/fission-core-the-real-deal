@@ -4,6 +4,7 @@
 #include "../../../math/Shapes.h"
 #include "../../../math/Math.h"
 #include <X11/keysym.h>
+#include <stdio.h>
 
 BossScene::BossScene(int xres, int yres)
 {
@@ -20,6 +21,7 @@ BossScene::~BossScene()
 
 void BossScene::Init()
 {
+
 }
 
 void BossScene::Update()
@@ -27,6 +29,13 @@ void BossScene::Update()
     if(get_key(XK_y)) {
         m_pNextScene = new MapScreen(m_xres, m_yres);
     }
+    Vec2 mousePos = get_mouse_pos();
+    printf("Mouse Pos: %f, %f\n", mousePos.x, mousePos.y);
+
+    if (get_mouse_inpulse()) {
+        printf("Mouse Pressed\n");
+    }
+
     m_rectangle.rotateAroundLocal(0.01f);
 }
 
