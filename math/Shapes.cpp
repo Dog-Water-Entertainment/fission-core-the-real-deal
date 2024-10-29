@@ -64,6 +64,11 @@ Vec2 Rectangle::getPosition()
     return position;
 }
 
+void Rectangle::setTexture(GLuint * texture)
+{
+    this->texture = texture;
+}
+
 void Rectangle::draw()
 {
     Vec2 drawingVerts[4];
@@ -80,13 +85,43 @@ void Rectangle::draw()
     }
 
     glPushMatrix();
-    glColor4f(1.0f, 0.2f, 0.2f, 0.8f);
+    if (texture != nullptr) {
+        glEnable(GL_TEXTURE_2D);
+        glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+        glBindTexture(GL_TEXTURE_2D, *texture);
+        glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+    } else {
+        glColor4f(1.0f, 0.2f, 0.2f, 0.8f);
+    }
+
     glBegin(GL_QUADS);
-        for (int i = 0; i < 4; i++)
-        {
-            glVertex2f(drawingVerts[i].x, drawingVerts[i].y);
+        if (texture != nullptr) {
+            glTexCoord2f(0.0f, 1.0f);
+            glVertex2f(drawingVerts[0].x, drawingVerts[0].y);
+
+            glTexCoord2f(1.0f, 1.0f);
+            glVertex2f(drawingVerts[1].x, drawingVerts[1].y);
+
+            glTexCoord2f(1.0f, 0.0f);
+            glVertex2f(drawingVerts[2].x, drawingVerts[2].y);
+
+            glTexCoord2f(1.0f, 1.0f);
+            glVertex2f(drawingVerts[3].x, drawingVerts[3].y);
+        } else {
+            for (int i = 0; i < 4; i++)
+            {
+                glVertex2f(drawingVerts[i].x, drawingVerts[i].y);
+            }
         }
     glEnd();
+
+    if (texture != nullptr) {
+        glDisable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
     glPopMatrix();
 }
 

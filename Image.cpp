@@ -85,3 +85,37 @@ unsigned char *buildAlphaData(Image *img) {
 	}
 	return newdata;
 }
+
+void loadTextureAlpha(const char *filename, GLuint &tex) {
+    int w, h;
+    Image *img = new Image(filename);
+    if (img == NULL)
+        return;
+    w = img->width;
+    h = img->height;
+    unsigned char *data = buildAlphaData(img);
+    if (data == NULL)
+        return;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    free(data);
+    delete img;
+}
+
+void loadTexture(const char *filename, GLuint &tex) {
+    int w, h;
+    Image *img = new Image(filename);
+    if (img == NULL)
+        return;
+    w = img->width;
+    h = img->height;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 4, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, img->data);
+    delete img;
+}

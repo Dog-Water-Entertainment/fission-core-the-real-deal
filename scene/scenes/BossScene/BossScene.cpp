@@ -3,6 +3,7 @@
 #include "../../../inputs/Inputs.h"
 #include "../../../math/Shapes.h"
 #include "../../../math/Math.h"
+#include "../../../Image.h"
 #include <cmath>
 #include <X11/keysym.h>
 #include <stdio.h>
@@ -22,7 +23,10 @@ BossScene::~BossScene()
 
 void BossScene::Init()
 {
+    GLuint texture;
+    loadTexture("assets/wall14.png", texture);
 
+    m_rectangle.setTexture(&texture);
 }
 
 const static float speed = 2.0f;
@@ -32,8 +36,8 @@ void BossScene::Update()
     if(get_key(XK_y)) {
         m_pNextScene = new MapScreen(m_xres, m_yres);
     }
-    Vec2 mousePos = get_mouse_pos();
-    
+
+    // MOVEMENT 
     if(get_key(XK_w)) {
         m_rectangle.move(Vec2(0, speed));
     }
@@ -48,6 +52,9 @@ void BossScene::Update()
     }
 
     // get the angle from the rectangle to the mouse
+
+    // ROTATION
+    Vec2 mousePos = get_mouse_pos();
     m_rectangle.rotation = atan2(mousePos.y - m_rectangle.getPosition().y, mousePos.x - m_rectangle.getPosition().x);
 }
 

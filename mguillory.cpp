@@ -640,8 +640,6 @@ void Tile::render(Vec2 &pos) {
     glEnable(GL_TEXTURE_2D);
     glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
     glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
     glBindTexture(GL_TEXTURE_2D, *texture);
     glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
     glBegin(GL_QUADS);

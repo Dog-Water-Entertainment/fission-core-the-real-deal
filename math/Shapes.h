@@ -29,6 +29,8 @@ class Rectangle : public Shape
         Rectangle();
         ~Rectangle();
 
+        void setTexture(GLuint * texture);
+
         // Will move with the vector
         // provided
         void move(Vec2 position);

@@ -850,18 +850,18 @@ void render(void)
             glDisable(GL_ALPHA_TEST);
         }
         darkMode(gl.dark, gl.xres, gl.yres);
-        unsigned int c = 0x00ffff44;
+        unsigned int c = 0x00ffffff;
         r.bot = gl.yres - 20;
         r.left = 10;
         r.center = 0;
-        ggprint8b(&r, 16, c, "W   Walk cycle");
-        ggprint8b(&r, 16, c, "E   Explosion");
-        ggprint8b(&r, 16, c, "N   Dim lights");
-        ggprint8b(&r, 16, c, "+   faster");
-        ggprint8b(&r, 16, c, "-   slower");
-        ggprint8b(&r, 16, c, "right arrow -> walk right");
-        ggprint8b(&r, 16, c, "left arrow  <- walk left");
-        ggprint8b(&r, 16, c, "frame: %i", gl.walkFrame);
+        //ggprint8b(&r, 16, c, "W   Walk cycle");
+        //ggprint8b(&r, 16, c, "E   Explosion");
+        //ggprint8b(&r, 16, c, "N   Dim lights");
+        //ggprint8b(&r, 16, c, "+   faster");
+        //ggprint8b(&r, 16, c, "-   slower");
+        //ggprint8b(&r, 16, c, "right arrow -> walk right");
+        //ggprint8b(&r, 16, c, "left arrow  <- walk left");
+        //ggprint8b(&r, 16, c, "frame: %i", gl.walkFrame);
         ggprint8b(&r, 16, c, "fps: %d", gl.fps);
         if (gl.movie) {
             screenCapture();
