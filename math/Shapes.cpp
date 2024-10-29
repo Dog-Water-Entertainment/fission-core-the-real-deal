@@ -64,59 +64,30 @@ Vec2 Rectangle::getPosition()
     return position;
 }
 
-void Rectangle::rotateAroundLocal(float angle)
+void Rectangle::draw()
 {
-    float _cos = cos(angle);
-    float _sin = sin(angle);
+    Vec2 drawingVerts[4];
+
+    float _cos = cos(rotation);
+    float _sin = sin(rotation);
 
     for (int i = 0; i < 4; i++) {
         float x = vertices[i].x - position.x;
         float y = vertices[i].y - position.y;
 
-        vertices[i].x = x * _cos - y * _sin + position.x;
-        vertices[i].y = x * _sin + y * _cos + position.y;
+        drawingVerts[i].x = x * _cos - y * _sin + position.x;
+        drawingVerts[i].y = x * _sin + y * _cos + position.y;
     }
-}
 
-void Rectangle::rotateAroundGlobal(float angle)
-{
-    float _cos = cos(angle);
-    float _sin = sin(angle);
-
-    for (int i = 0; i < 4; i++) {
-        float x = vertices[i].x - globalPosition.x;
-        float y = vertices[i].y - globalPosition.y;
-
-        vertices[i].x = x * _cos - y * _sin + globalPosition.x;
-        vertices[i].y = x * _sin + y * _cos + globalPosition.y;
-    }
-}
-
-void Rectangle::draw()
-{
-    if(texture != nullptr) {
-        return; // Not implemented yet
-        glBindTexture(GL_TEXTURE_2D, *texture);
-        glPushMatrix();
-        glColor4f(1.0f, 0.2f, 0.2f, 0.8f);
-        glBegin(GL_QUADS);
-            for (int i = 0; i < 4; i++)
-            {
-                glVertex2f(vertices[i].x, vertices[i].y);
-            }
-        glEnd();
-        glPopMatrix();
-    } else {
-        glPushMatrix();
-        glColor4f(1.0f, 0.2f, 0.2f, 0.8f);
-        glBegin(GL_QUADS);
-            for (int i = 0; i < 4; i++)
-            {
-                glVertex2f(vertices[i].x, vertices[i].y);
-            }
-        glEnd();
-        glPopMatrix();
-    }
+    glPushMatrix();
+    glColor4f(1.0f, 0.2f, 0.2f, 0.8f);
+    glBegin(GL_QUADS);
+        for (int i = 0; i < 4; i++)
+        {
+            glVertex2f(drawingVerts[i].x, drawingVerts[i].y);
+        }
+    glEnd();
+    glPopMatrix();
 }
 
 void Rectangle::drawRotated(float angle)

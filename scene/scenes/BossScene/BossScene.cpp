@@ -11,7 +11,7 @@ BossScene::BossScene(int xres, int yres)
 {
     m_xres = xres;
     m_yres = yres;
-    m_rectangle = Rectangle(Vec2(m_xres/2, m_yres/2), 100, 100);
+    m_rectangle = Rectangle(Vec2(m_xres/2, m_yres/2), 50, 50);
     m_pNextScene = nullptr;
 }
 
@@ -25,6 +25,8 @@ void BossScene::Init()
 
 }
 
+const static float speed = 2.0f;
+
 void BossScene::Update()
 {
     if(get_key(XK_y)) {
@@ -32,13 +34,26 @@ void BossScene::Update()
     }
     Vec2 mousePos = get_mouse_pos();
     
+    if(get_key(XK_w)) {
+        m_rectangle.move(Vec2(0, speed));
+    }
+    if(get_key(XK_s)) {
+        m_rectangle.move(Vec2(0, -speed));
+    }
+    if(get_key(XK_a)) {
+        m_rectangle.move(Vec2(-speed, 0));
+    }
+    if(get_key(XK_d)) {
+        m_rectangle.move(Vec2(speed, 0));
+    }
+
     // get the angle from the rectangle to the mouse
-    anglePlayerLook = atan2(mousePos.y - m_rectangle.getPosition().y, mousePos.x - m_rectangle.getPosition().x);
+    m_rectangle.rotation = atan2(mousePos.y - m_rectangle.getPosition().y, mousePos.x - m_rectangle.getPosition().x);
 }
 
 void BossScene::Render()
 {
-    m_rectangle.drawRotated(anglePlayerLook);
+    m_rectangle.draw();
 }
 
 void BossScene::Release()

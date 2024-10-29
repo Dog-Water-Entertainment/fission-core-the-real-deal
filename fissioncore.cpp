@@ -559,7 +559,8 @@ int checkKeys(XEvent *e)
                 PauseMenu::selectOption(PauseMenu::getSelectedOption());
             break;
         case XK_s:
-            screenCapture();
+            // movement key now
+            //screenCapture();
             break;
         case XK_m:
             gl.movie ^= 1;
@@ -568,8 +569,8 @@ int checkKeys(XEvent *e)
             gl.dark = !gl.dark;
             break;
         case XK_w:
-            timers.recordTime(&timers.walkTime);
-            gl.walk ^= 1;
+            //timers.recordTime(&timers.walkTime);
+            //gl.walk ^= 1;
             break;
         case XK_e:
             gl.exp.pos[0] = 200.0;

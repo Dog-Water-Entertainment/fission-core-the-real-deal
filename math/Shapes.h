@@ -24,6 +24,7 @@ class Rectangle : public Shape
         Vec2 globalPosition;
         void updateVertices();
     public:
+        float rotation;
         Rectangle(Vec2 position, int width, int height);
         Rectangle();
         ~Rectangle();
@@ -34,8 +35,7 @@ class Rectangle : public Shape
 
         Vec2 getPosition();
 
-        void rotateAroundLocal(float angle);
-        void rotateAroundGlobal(float angle);
+
         void draw();
         void drawRotated(float angle);
 };
