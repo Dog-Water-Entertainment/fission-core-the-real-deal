@@ -8,6 +8,7 @@
 class BossScene : public Scene
 {
     private:
+        float anglePlayerLook;
         Rectangle m_rectangle;
     public:
         BossScene(int xres, int yres);

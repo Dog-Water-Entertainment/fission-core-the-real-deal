@@ -3,6 +3,7 @@
 #include "../../../inputs/Inputs.h"
 #include "../../../math/Shapes.h"
 #include "../../../math/Math.h"
+#include <cmath>
 #include <X11/keysym.h>
 #include <stdio.h>
 
@@ -30,18 +31,14 @@ void BossScene::Update()
         m_pNextScene = new MapScreen(m_xres, m_yres);
     }
     Vec2 mousePos = get_mouse_pos();
-    printf("Mouse Pos: %f, %f\n", mousePos.x, mousePos.y);
-
-    if (get_mouse_inpulse()) {
-        printf("Mouse Pressed\n");
-    }
-
-    m_rectangle.rotateAroundLocal(0.01f);
+    
+    // get the angle from the rectangle to the mouse
+    anglePlayerLook = atan2(mousePos.y - m_rectangle.getPosition().y, mousePos.x - m_rectangle.getPosition().x);
 }
 
 void BossScene::Render()
 {
-    m_rectangle.draw();
+    m_rectangle.drawRotated(anglePlayerLook);
 }
 
 void BossScene::Release()

@@ -59,6 +59,11 @@ void Rectangle::move(Vec2 position)
     updateVertices();
 }
 
+Vec2 Rectangle::getPosition()
+{
+    return position;
+}
+
 void Rectangle::rotateAroundLocal(float angle)
 {
     float _cos = cos(angle);
@@ -112,4 +117,30 @@ void Rectangle::draw()
         glEnd();
         glPopMatrix();
     }
+}
+
+void Rectangle::drawRotated(float angle)
+{
+    Vec2 drawingVerts[4];
+
+    float _cos = cos(angle);
+    float _sin = sin(angle);
+
+    for (int i = 0; i < 4; i++) {
+        float x = vertices[i].x - position.x;
+        float y = vertices[i].y - position.y;
+
+        drawingVerts[i].x = x * _cos - y * _sin + position.x;
+        drawingVerts[i].y = x * _sin + y * _cos + position.y;
+    }
+
+    glPushMatrix();
+    glColor4f(1.0f, 0.2f, 0.2f, 0.8f);
+    glBegin(GL_QUADS);
+        for (int i = 0; i < 4; i++)
+        {
+            glVertex2f(drawingVerts[i].x, drawingVerts[i].y);
+        }
+    glEnd();
+    glPopMatrix();
 }

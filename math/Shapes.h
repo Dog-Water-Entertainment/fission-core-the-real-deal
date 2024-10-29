@@ -31,10 +31,13 @@ class Rectangle : public Shape
         // Will move with the vector
         // provided
         void move(Vec2 position);
-        
+
+        Vec2 getPosition();
+
         void rotateAroundLocal(float angle);
         void rotateAroundGlobal(float angle);
         void draw();
+        void drawRotated(float angle);
 };
 
 
