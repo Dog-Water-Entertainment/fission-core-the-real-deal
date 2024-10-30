@@ -764,7 +764,7 @@ void render(void)
     #endif
         //
         // Walk texture
-        float h = 200.0;
+        float h = 50.0;
         float w = h * 0.5;
         glPushMatrix();
         glColor3f(1.0, 1.0, 1.0);
@@ -797,6 +797,7 @@ void render(void)
         glPopMatrix();
         glBindTexture(GL_TEXTURE_2D, 0);
         glDisable(GL_ALPHA_TEST);
+
         //
         //
         if (gl.exp.onoff) {
