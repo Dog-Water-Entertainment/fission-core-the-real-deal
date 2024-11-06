@@ -63,6 +63,8 @@ int DeadHelp(int& which)
 }
 void DeadCheck(bool state, int xres, int yres, int which)
 {
+    if (get_key(XK_Escape))
+        exit(0);
     std::cout << which << std::endl;
     std::vector<const char *> quips{
     "You are trying... right?",  
