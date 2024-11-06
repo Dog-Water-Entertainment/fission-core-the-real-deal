@@ -13,6 +13,7 @@
 */
 #include "Config.h"
 #include <fstream>
+#include <iostream>
 
 ConfigLoader::ConfigLoader(std::string filename) {
 	this->FILE = filename;
@@ -25,8 +26,8 @@ bool shouldContinue(std::string in) {
 	return (in[0] == ';');
 }
 
-int ConfigLoader::getInt(std::string key) {
-	std::ifstream _file(this->FILE);
+int ConfigLoader::getInt(std::string key, int defaultValue) {
+	std::fstream _file(this->FILE, std::fstream::in | std::fstream::out);
 	std::string line;
 	while (std::getline(_file, line)) {
 		if (shouldContinue(line)) continue;
@@ -35,12 +36,13 @@ int ConfigLoader::getInt(std::string key) {
 			return std::stoi(line.substr(line.find("=") + 1));
 		}
 	}
+	_file << "\n" << key << "=" << defaultValue;
 	_file.close();
-	return -1;
+	return defaultValue;
 }
 
-std::string ConfigLoader::getString(std::string key) {
-	std::ifstream _file(this->FILE);
+std::string ConfigLoader::getString(std::string key, const std::string& defaultValue) {
+	std::fstream _file(this->FILE, std::fstream::in | std::fstream::out);
 	std::string line;
 	while (std::getline(_file, line)) {
 		if (shouldContinue(line)) continue;
@@ -49,12 +51,17 @@ std::string ConfigLoader::getString(std::string key) {
 			return line.substr(line.find("=") + 1);
 		}
 	}
+
 	_file.close();
-	return "";
+	_file.open(this->FILE, std::fstream::app);
+	_file << key << "=" << defaultValue;
+	_file.close();
+
+	return defaultValue;
 }
 
-bool ConfigLoader::getBool(std::string key) {
-	std::ifstream _file(this->FILE);
+bool ConfigLoader::getBool(std::string key, bool defaultValue) {
+	std::fstream _file(this->FILE, std::fstream::in | std::fstream::out);
 	std::string line;
 	while (std::getline(_file, line)) {
 		if (shouldContinue(line)) continue;
@@ -63,12 +70,16 @@ bool ConfigLoader::getBool(std::string key) {
 			return line.substr(line.find("=") + 1) == "true";
 		}
 	}
+
 	_file.close();
-	return false;
+	_file.open(this->FILE, std::fstream::app);
+	_file << key << "=" << defaultValue;
+	_file.close();
+	return defaultValue;
 }
 
-float ConfigLoader::getFloat(std::string key) {
-	std::ifstream _file(this->FILE);
+float ConfigLoader::getFloat(std::string key, float defaultValue) {
+	std::fstream _file(this->FILE, std::fstream::in | std::fstream::out);
 	std::string line;
 	while (std::getline(_file, line)) {
 		if (shouldContinue(line)) continue;
@@ -77,8 +88,17 @@ float ConfigLoader::getFloat(std::string key) {
 			return std::stof(line.substr(line.find("=") + 1));
 		}
 	}
+
 	_file.close();
-	return -1.0f;
+	_file.open(this->FILE, std::fstream::app);
+	_file << key << "=" << defaultValue;
+	_file.close();
+
+	return defaultValue;
+}
+
+void ConfigLoader::setFloat(std::string key, float value) {
+	// TODO: IMPLEMENT ME
 }
 
 ConfigLoader::~ConfigLoader() {

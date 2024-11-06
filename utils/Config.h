@@ -8,10 +8,11 @@ public:
     ConfigLoader(std::string);
     ~ConfigLoader();
 
-    int getInt(std::string key);
-    float getFloat(std::string key);
-    std::string getString(std::string key);
-    bool getBool(std::string key);
+    int getInt(std::string key, int defaultValue = -1);
+    float getFloat(std::string key, float defaultValue = -1);
+    void setFloat(std::string key, float value);
+    std::string getString(std::string key, const std::string& defaultValue = "");
+    bool getBool(std::string key, bool defaultValue = false);
 
 
 };
