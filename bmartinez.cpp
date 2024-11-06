@@ -7,9 +7,10 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <X11/keysym.h>
 #include "bmartinez.h"
+#include "inputs/Inputs.h"
 #include "fonts.h"
-typedef int Stat;
 // Forward Declarations////////////////////////////////////////////////////////
 class Player;
 class Enemy;
@@ -52,10 +53,12 @@ Item::Item(int ID) : itemID(ID)
 ///////////////////////////////////////////////////////////////////////////////
 ///
 // DEATH STUFF////////////////////////////////////////////////////////////////
-int DeadHelp()
+int DeadHelp(int& which)
 {
-    std::srand(std::time(NULL));
-    int which = std::rand() % 11;
+    if(get_key(XK_k)) {
+        std::srand(std::time(NULL));
+        which = std::rand() % 11;
+    }
     return which;
 }
 void DeadCheck(bool state, int xres, int yres, int which)
@@ -108,9 +111,10 @@ void DeadCheck(bool state, int xres, int yres, int which)
             glVertex2i(xres, yres);
         glEnd();
     int i = which;
+    /*
     if (i == which)
         i = DeadHelp();
-    
+    */
     //words on death screen 
     d.bot = yres/2;
     d.left = xres / 2 - 80;
@@ -144,7 +148,7 @@ gprint8b(&d, 16, 0x000FF000, ;
     // its supposed to write to the screen but ill figure that out once 
     // the scene loader can be used or something idk, pick a random number
     // spit out the line at that index
-};
+}
 ///////////////////////////////////////////////////////////////////////////////
 ///
 /// dark mode /////////////////////////////////////////////////////////////////

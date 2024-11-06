@@ -136,6 +136,7 @@ class Global {
         bool walking;
         bool dark;
         bool dead;
+        int which;
         int xres, yres;
         int movie, movieStep;
         int walk;
@@ -162,6 +163,7 @@ class Global {
             dead = false;
             gameStarted = false;
             logOpen();
+            which = 0;
             camera[0] = camera[1] = 0.0;
             movie=0;
             movieStep=2;
@@ -514,6 +516,7 @@ void screenCapture()
 
 int checkKeys(XEvent *e)
 {
+    gl.dead = get_key(XK_k);
     //keyboard input?
     static int shift = 0;
     if (e->type != KeyPress && e->type != KeyRelease)
@@ -869,7 +872,8 @@ void render(void)
     if (gl.movie) {
         screenCapture();
     }
-
+    DeadHelp(gl.which);
+    DeadCheck(gl.dead, gl.xres, gl.yres, gl.which);
     PauseMenu::render(gl.xres, gl.yres);	
 }
 
