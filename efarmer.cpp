@@ -6,19 +6,30 @@
 #include <GL/glx.h>
 #include <string>
 #include "efarmer.h"
+#include <map>
 
 PauseMenu* PauseMenu::m_instance = nullptr;
 const int PauseMenu::SELECTED_BUTTON_COLOR = 0x0000FF00;
 const int PauseMenu::BUTTON_COLOR = 0x00FFFF00;
+const std::map<PauseMenu::Setting, float> defaultSettingValues{
+	{PauseMenu::Setting::DISPLAY_FPS, 0},
+	{PauseMenu::Setting::MUTE_MUSIC, 0},
+	{PauseMenu::Setting::MUTE_SOUNDS, 0}
+};
+const std::map<PauseMenu::Setting, std::string> settingKeys{
+	{PauseMenu::Setting::DISPLAY_FPS, "displayFPS"},
+	{PauseMenu::Setting::MUTE_MUSIC, "muteMusic"},
+	{PauseMenu::Setting::MUTE_SOUNDS, "muteSounds"},
+};
 
 PauseMenu* PauseMenu::get()
 {
-        if (m_instance == nullptr)
-        {
-                m_instance = new PauseMenu();
-        }
+	if (m_instance == nullptr)
+	{
+		m_instance = new PauseMenu();
+	}
 
-        return m_instance;
+	return m_instance;
 }
 
 bool PauseMenu::isOptionsMenuOpen() {
@@ -27,7 +38,7 @@ bool PauseMenu::isOptionsMenuOpen() {
 
 void PauseMenu::render(int xRes, int yRes)
 {
-    if (!PauseMenu::isPaused())
+	if (!PauseMenu::isPaused())
 		return;
 
 	// Draw pause screen overlay
@@ -48,7 +59,7 @@ void PauseMenu::render(int xRes, int yRes)
 	glEnable(GL_TEXTURE_2D);
 
 	if (PauseMenu::isOptionsMenuOpen()) {
-
+		PauseMenu::get()->displaySettingButton(PauseMenu::Setting::DISPLAY_FPS, yRes - 50, 50, "Toggle FPS");	
 	}
 	else {
 		PauseMenu::get()->displayPauseOptionButton(PauseMenu::PauseMenuOption::RESUME, yRes - 50, 50, "Resume");
@@ -59,21 +70,23 @@ void PauseMenu::render(int xRes, int yRes)
 
 PauseMenu::PauseMenuOption PauseMenu::getSelectedOption()
 {
-        return PauseMenu::get()->m_selectedOption;
+	return PauseMenu::get()->m_selectedOption;
 }
 
 PauseMenu::PauseMenu()
 {
-        this->m_selectedOption = PauseMenu::PauseMenuOption::RESUME;
-        m_paused = false;
-        m_optionsMenuOpen = false;
-		// m_config = ConfigLoader("./config/main.config");
+	this->selectedSetting = PauseMenu::Setting::DISPLAY_FPS;
+	this->m_selectedOption = PauseMenu::PauseMenuOption::RESUME;
+	m_paused = false;
+	m_optionsMenuOpen = false;
+	m_config.getFloat("foo", 90);
+	m_config.setFloat("foo", 900);
 }
 
 void PauseMenu::pause()
 {
 	std::cout << "The game is now paused\n";
-        PauseMenu::get()->m_paused = true;
+	PauseMenu::get()->m_paused = true;
 }
 
 void PauseMenu::resume()
@@ -81,7 +94,7 @@ void PauseMenu::resume()
 	std::cout << "The game has been unpaused" << std::endl;
 	PauseMenu::setSelectedOption(PauseMenu::PauseMenuOption::RESUME);
 	PauseMenu::get()->m_paused = false;
-    PauseMenu::get()->hideOptionsScreen();
+	PauseMenu::get()->hideOptionsScreen();
 }
 
 bool PauseMenu::isPaused()
@@ -91,8 +104,8 @@ bool PauseMenu::isPaused()
 
 void PauseMenu::setSelectedOption(PauseMenu::PauseMenuOption option)
 {
-        PauseMenu* instance = PauseMenu::get();
-        instance->m_selectedOption = option;
+	PauseMenu* instance = PauseMenu::get();
+	instance->m_selectedOption = option;
 }
 
 void PauseMenu::selectOption(PauseMenu::PauseMenuOption option)
@@ -114,19 +127,31 @@ void PauseMenu::selectOption(PauseMenu::PauseMenuOption option)
 
 }
 
+void PauseMenu::setSelectedSetting(PauseMenu::Setting setting) {
+	PauseMenu::get()->selectedSetting = setting;
+}
+
 void PauseMenu::displayPauseOptionButton(PauseMenu::PauseMenuOption correspondingOption, int bot, int left, const std::string &text)
 {
 	int color = correspondingOption == PauseMenu::getSelectedOption() 
 		? PauseMenu::SELECTED_BUTTON_COLOR 
 		: PauseMenu::BUTTON_COLOR;
-
-    PauseMenu::get()->displayButton(bot, left, text, color);
+	
+	PauseMenu::get()->displayButton(bot, left, text, color);
 }
 
-//void PauseMenu::displayOptionButton(PauseMenu::PauseMenuOption correspondingOption, int bot, int left, const std::string &text)
-//{
-    // PauseMenu::get()->displayButton(bot, left, text, color);
-//}
+void PauseMenu::displaySettingButton(PauseMenu::Setting setting, int bot, int left, const std::string &text)
+{
+	int color = setting == PauseMenu::getSelectedSetting() 
+		? PauseMenu::SELECTED_BUTTON_COLOR 
+		: PauseMenu::BUTTON_COLOR;
+
+	PauseMenu::get()->displayButton(bot, left, text, color);
+}
+
+PauseMenu::Setting PauseMenu::getSelectedSetting() {
+	return PauseMenu::get()->selectedSetting;
+}
 
 
 void PauseMenu::displayButton(int bot, int left, const std::string &text, int color) {
@@ -134,7 +159,7 @@ void PauseMenu::displayButton(int bot, int left, const std::string &text, int co
 	r.bot = bot;
 	r.left = left;
 	r.center = 0;
-    ggprint16(&r, 16, color, text.c_str());
+	ggprint16(&r, 16, color, text.c_str());
 }
 
 void PauseMenu::showOptionsScreen() {
@@ -142,5 +167,9 @@ void PauseMenu::showOptionsScreen() {
 }
 
 void PauseMenu::hideOptionsScreen() {
-    this->m_optionsMenuOpen = false;
+	this->m_optionsMenuOpen = false;
+}
+
+float PauseMenu::getSettingValue(PauseMenu::Setting setting) {
+	return get()->m_config.getFloat(get()->settingKeys.at(setting), get()->defaultSettingValues.at(setting));
 }
