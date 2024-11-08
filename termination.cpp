@@ -18,7 +18,7 @@ Termination* Termination::GetInstance()
 void Termination::Terminate() 
 {
 	if (Termination::IsTerminated())
-		throw "The event loop has already been terminated.\n";
+		return;
 
 	Termination::GetInstance()->isTerminated = true;
 }
