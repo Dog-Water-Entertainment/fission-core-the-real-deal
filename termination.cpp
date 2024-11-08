@@ -17,9 +17,6 @@ Termination* Termination::GetInstance()
 
 void Termination::Terminate() 
 {
-	if (Termination::IsTerminated())
-		return;
-
 	Termination::GetInstance()->isTerminated = true;
 }
 
