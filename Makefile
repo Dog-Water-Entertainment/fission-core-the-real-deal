@@ -5,7 +5,7 @@ LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm #-lXrandr
 EFLAGS = -Wall -Wextra
 
 USELIBS = ./Image.cpp log.cpp
-UTILITIES = ./Config.cpp
+UTILITIES = ./Config.cpp ./termination.cpp
 INPUTS = ./Inputs.cpp
 SCENES = ./SceneManager.cpp ./MapScreen.cpp ./BossScene.cpp
 PERSONALFILES = ./efarmer.cpp ./mguillory.cpp ./bmartinez.cpp ./emedrano.cpp

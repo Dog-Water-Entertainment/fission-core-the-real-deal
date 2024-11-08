@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+#include "termination.h"
 
 Image::~Image() { delete [] data; };
 
@@ -51,7 +51,8 @@ Image::Image(const char *fname)
         fclose(fpi);
     } else {
         printf("ERROR opening image: %s\n", ppmname);
-        exit(0);
+        Termination::Terminate();
+        return;
     }
     if (!ppmFlag)
         unlink(ppmname);

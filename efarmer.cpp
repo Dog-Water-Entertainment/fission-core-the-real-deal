@@ -7,6 +7,7 @@
 #include <string>
 #include "efarmer.h"
 #include <map>
+#include "termination.h"
 
 PauseMenu* PauseMenu::m_instance = nullptr;
 const int PauseMenu::SELECTED_BUTTON_COLOR = 0x0000FF00;
@@ -111,7 +112,7 @@ void PauseMenu::selectOption(PauseMenu::PauseMenuOption option)
 	switch (option)
 	{
 		case PauseMenuOption::QUIT:
-			exit(0);
+			Termination::Terminate();
 			break;
 		case PauseMenuOption::RESUME:
 			PauseMenu::resume();
