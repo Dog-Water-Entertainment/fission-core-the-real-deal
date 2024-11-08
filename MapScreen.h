@@ -1,8 +1,8 @@
 #ifndef _MAPSCREEN_H_
 #define _MAPSCREEN_H_
 
-#include "../../SceneManager.h"
-#include "../../../mguillory.h"
+#include "SceneManager.h"
+#include "mguillory.h"
 
 
 class MapScreen : public Scene

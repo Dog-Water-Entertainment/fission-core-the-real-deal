@@ -9,7 +9,7 @@
 #include <ctime>
 #include <X11/keysym.h>
 #include "bmartinez.h"
-#include "inputs/Inputs.h"
+#include "Inputs.h"
 #include "fonts.h"
 // Forward Declarations////////////////////////////////////////////////////////
 class Player;

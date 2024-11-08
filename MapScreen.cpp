@@ -1,7 +1,7 @@
 #include "MapScreen.h"
-#include "../../../inputs/Inputs.h"
-#include "../../SceneManager.h"
-#include "../BossScene/BossScene.h"
+#include "Inputs.h"
+#include "SceneManager.h"
+#include "BossScene.h"
 
 #include <X11/keysym.h>
 

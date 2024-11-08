@@ -4,7 +4,7 @@
 #include <functional>
 #include <string>
 #include <map>
-#include "utils/Config.h"
+#include "Config.h"
 
 #ifndef EFARMER_H
 #define EFARMER_H

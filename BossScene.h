@@ -1,9 +1,9 @@
 #ifndef _BOSS_SCENE_H_
 #define _BOSS_SCENE_H_
 
-#include "../../SceneManager.h"
-#include "../../../inputs/Inputs.h"
-#include "../../../math/Shapes.h"
+#include "SceneManager.h"
+#include "Inputs.h"
+#include "Shapes.h"
 
 class BossScene : public Scene
 {

@@ -31,16 +31,16 @@
 #include "mguillory.h"
 #include "bmartinez.h"
 #include "emedrano.h"
-#include "math/Math.h"
+#include "Math.h"
 #include <typeinfo>
 
 // Utils Include
-#include "utils/Config.h"
-#include "inputs/Inputs.h"
+#include "Config.h"
+#include "Inputs.h"
 
 // Scene Includes
-#include "scene/SceneManager.h"
-#include "./scene/scenes/MapScreen/MapScreen.h"
+#include "SceneManager.h"
+#include "MapScreen.h"
 
 //defined types
 typedef double Flt;

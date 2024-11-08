@@ -79,8 +79,6 @@ PauseMenu::PauseMenu()
 	this->m_selectedOption = PauseMenu::PauseMenuOption::RESUME;
 	m_paused = false;
 	m_optionsMenuOpen = false;
-	m_config.getFloat("foo", 90);
-	m_config.setFloat("foo", 900);
 }
 
 void PauseMenu::pause()
@@ -124,7 +122,6 @@ void PauseMenu::selectOption(PauseMenu::PauseMenuOption option)
 		default:
 			break;
 	}
-
 }
 
 void PauseMenu::setSelectedSetting(PauseMenu::Setting setting) {
@@ -152,7 +149,6 @@ void PauseMenu::displaySettingButton(PauseMenu::Setting setting, int bot, int le
 PauseMenu::Setting PauseMenu::getSelectedSetting() {
 	return PauseMenu::get()->selectedSetting;
 }
-
 
 void PauseMenu::displayButton(int bot, int left, const std::string &text, int color) {
 	Rect r;

@@ -1,4 +1,4 @@
-#include "./Shapes.h"
+#include "Shapes.h"
 #include <cmath>
 
 Shape::Shape()

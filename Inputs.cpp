@@ -1,5 +1,5 @@
 #include "Inputs.h"
-#include "../math/Math.h"
+#include "Math.h"
 
 static unsigned char keys[65536] = {0};
 

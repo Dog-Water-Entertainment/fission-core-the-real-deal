@@ -1,7 +1,7 @@
 #ifndef _SHAPE_H_
 #define _SHAPE_H_
 
-#include "./Math.h"
+#include "Math.h"
 #include <GL/glx.h>
 
 class Shape

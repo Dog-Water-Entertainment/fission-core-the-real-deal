@@ -1,7 +1,7 @@
 #ifndef _INPUTS_H_
 #define _INPUTS_H_
 
-#include "../math/Math.h"
+#include "Math.h"
 
 bool get_key(unsigned int key);
 

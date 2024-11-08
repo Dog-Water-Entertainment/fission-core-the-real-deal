@@ -15,7 +15,7 @@
 #include <cmath>
 #include <X11/Xlib.h>
 #include <set>
-#include "./math/Math.h"
+#include "Math.h"
 #include "Image.h"
 
 static Image img[19] = {

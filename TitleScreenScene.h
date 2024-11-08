@@ -1,7 +1,7 @@
 #ifndef TitleScreenScene_H
 #define TitleScreenScene_H
 
-#include "../../SceneManager.h"
+#include "SceneManager.h"
 
 class TitleScreenScene : public Scene
 {

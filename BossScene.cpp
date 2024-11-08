@@ -1,9 +1,9 @@
-#include "./BossScene.h"
-#include "../MapScreen/MapScreen.h"
-#include "../../../inputs/Inputs.h"
-#include "../../../math/Shapes.h"
-#include "../../../math/Math.h"
-#include "../../../Image.h"
+#include "BossScene.h"
+#include "MapScreen.h"
+#include "Inputs.h"
+#include "Shapes.h"
+#include "Math.h"
+#include "Image.h"
 #include <cmath>
 #include <X11/keysym.h>
 #include <stdio.h>

@@ -5,7 +5,7 @@
 #include <fstream>
 #include <X11/Xlib.h>
 #include <GL/glx.h>
-#include "./math/Math.h"
+#include "Math.h"
 
 
 

@@ -5,11 +5,11 @@ LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm #-lXrandr
 EFLAGS = -Wall -Wextra
 
 USELIBS = ./Image.cpp log.cpp
-UTILITIES = ./utils/Config.cpp
-INPUTS = ./inputs/Inputs.cpp
-SCENES = ./scene/SceneManager.cpp ./scene/scenes/MapScreen/MapScreen.cpp ./scene/scenes/BossScene/BossScene.cpp
+UTILITIES = ./Config.cpp
+INPUTS = ./Inputs.cpp
+SCENES = ./SceneManager.cpp ./MapScreen.cpp ./BossScene.cpp
 PERSONALFILES = ./efarmer.cpp ./mguillory.cpp ./bmartinez.cpp ./emedrano.cpp
-MATHLIBS = ./math/Math.cpp ./math/Shapes.cpp
+MATHLIBS = ./Math.cpp ./Shapes.cpp
 FONTS = libggfonts.a
 
 
