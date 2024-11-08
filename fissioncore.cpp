@@ -28,6 +28,7 @@
 #include "Image.h"
 #include "fonts.h"
 #include "efarmer.h"
+#include "termination.h"
 #include "mguillory.h"
 #include "bmartinez.h"
 #include "emedrano.h"
@@ -301,7 +302,7 @@ int main(void)
     initOpengl();
     init();
     int done = 0;
-    while (!done) {
+    while (!Termination::IsTerminated()) {
         while (x11.getXPending()) {
             XEvent e = x11.getXNextEvent();
             x11.checkResize(&e);

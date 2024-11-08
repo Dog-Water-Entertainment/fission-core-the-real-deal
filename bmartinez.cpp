@@ -66,7 +66,7 @@ int DeadHelp(int& which)
 void DeadCheck(bool state, int xres, int yres, int which)
 {
     if (get_key(XK_Escape)) {
-        Termination::Terminate();
+        // Termination::Terminate();
         return;
     }
 
