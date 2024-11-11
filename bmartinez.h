@@ -17,7 +17,7 @@ class Player
         Player(Stat hp, Stat dmg);
         Player();
         void Attack(Enemy &a, Stat dmg);
-        void Heal (); 
+        void Heal (Stat heals); 
 };
 
 class Enemy
@@ -31,7 +31,7 @@ class Enemy
         Enemy(Stat hp, Stat dmg);
         Enemy();
         void Attack(Player &a, Stat dmg);
-        void Heal();
+        void Heal(Stat heals);
 };
 
 class Item
