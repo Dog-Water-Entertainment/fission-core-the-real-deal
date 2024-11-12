@@ -6,6 +6,8 @@
 #include "Shapes.h"
 #include <GL/glx.h>
 
+// Origin: Mykull Guillory
+
 class BossScene : public Scene
 {
     private:
@@ -15,6 +17,8 @@ class BossScene : public Scene
         GLuint silhouetteTexture;
         float anglePlayerLook;
         Rectangle m_rectangle;
+
+        Line degubLine;
     public:
         BossScene(int xres, int yres);
         ~BossScene();

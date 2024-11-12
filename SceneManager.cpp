@@ -1,5 +1,7 @@
 #include "SceneManager.h"
 
+// Mykull Guillory
+
 Scene::~Scene() {}
 
 Scene * Scene::GetNextScene()

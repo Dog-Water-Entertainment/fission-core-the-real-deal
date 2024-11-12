@@ -5,6 +5,7 @@
 
 #include <X11/keysym.h>
 
+// Origin: Mykull Guillory
 
 MapScreen::MapScreen(int xres, int yres)
 {

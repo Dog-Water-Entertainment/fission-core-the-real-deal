@@ -8,8 +8,11 @@
 #include <X11/keysym.h>
 #include <stdio.h>
 
+// Origin: Mykull Guillory
+
 BossScene::BossScene(int xres, int yres)
 {
+    degubLine = Line(Vec2(100, 200), Vec2(400, 500), 5);
     m_xres = xres;
     m_yres = yres;
     m_rectangle = Rectangle(Vec2(m_xres/2, m_yres/2), 50, 50);
@@ -108,6 +111,7 @@ void BossScene::Update()
 void BossScene::Render()
 {
     m_rectangle.draw();
+    degubLine.draw();
 }
 
 void BossScene::Release()

@@ -4,6 +4,8 @@
 #include "Math.h"
 #include <GL/glx.h>
 
+
+// Origin: Michael Guillory
 class Shape
 {
     protected:
@@ -22,6 +24,7 @@ class Rectangle : public Shape
         Vec2 size;
         Vec2 vertices[4];
         Vec2 globalPosition;
+        Vec3 color;
         void updateVertices();
     public:
         float rotation;
@@ -37,9 +40,29 @@ class Rectangle : public Shape
 
         Vec2 getPosition();
 
+        // sets the color of the rectangle
+        // default is white
+        void setColor(Vec3 color);
 
         void draw();
         void drawRotated(float angle);
+};
+
+class Line : public Shape
+{
+    private:
+        Vec3 color;
+        Vec2 start;
+        Vec2 end;
+        int width;
+    public:
+        Line(Vec2 start, Vec2 end, int width);
+        Line();
+        ~Line();
+
+
+        void setColor(Vec3 color);
+        void draw();
 };
 
 
