@@ -12,13 +12,13 @@
 PauseMenu* PauseMenu::m_instance = nullptr;
 const int PauseMenu::SELECTED_BUTTON_COLOR = 0x0000FF00;
 const int PauseMenu::BUTTON_COLOR = 0x00FFFF00;
-const std::map<PauseMenu::Setting, float> defaultSettingValues{
+const std::map<PauseMenu::Setting, float> PauseMenu::defaultSettingValues{
 	{PauseMenu::Setting::DISPLAY_FPS, 0},
 };
-const std::map<PauseMenu::Setting, std::string> settingKeys{
+const std::map<PauseMenu::Setting, std::string> PauseMenu::settingKeys{
 	{PauseMenu::Setting::DISPLAY_FPS, "displayFPS"},
 };
-const std::map<PauseMenu::SettingButton, PauseMenu::Setting> settingButtonMap{
+const std::map<PauseMenu::SettingButton, PauseMenu::Setting> PauseMenu::settingButtonMap{
 	{PauseMenu::SettingButton::DISPLAY_FPS, PauseMenu::Setting::DISPLAY_FPS},
 	{PauseMenu::SettingButton::BACK, PauseMenu::Setting::SETTING_NULL},
 };
@@ -149,7 +149,7 @@ void PauseMenu::displaySettingButton(PauseMenu::SettingButton settingButton, int
 	std::string textToDraw = "";
 
 	if (settingButton != PauseMenu::SettingButton::BACK) {
-		PauseMenu::Setting setting = PauseMenu::get()->settingButtonMap.at(settingButton); // Crashes here.
+		PauseMenu::Setting setting = PauseMenu::settingButtonMap.at(settingButton); // Crashes here.
 		if (PauseMenu::get()->getSettingValue(setting) == 1)
 			textToDraw = text + ": On";
 		else
@@ -172,7 +172,7 @@ void PauseMenu::displayButton(int bot, int left, const std::string &text, int co
 }
 
 float PauseMenu::getSettingValue(PauseMenu::Setting setting) {
-	return get()->m_config.getFloat(get()->settingKeys.at(setting), get()->defaultSettingValues.at(setting));
+	return get()->m_config.getFloat(PauseMenu::settingKeys.at(setting), PauseMenu::defaultSettingValues.at(setting));
 }
 
 void PauseMenu::setState(PauseMenu::State state) {

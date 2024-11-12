@@ -47,3 +47,5 @@ vid/*
 *.swp
 libggfonts.a
 tmp/*
+
+config/settings.config

@@ -52,6 +52,11 @@ public:
 	static const int SELECTED_BUTTON_COLOR;
 	static const int BUTTON_COLOR;
 
+
+	static const std::map<PauseMenu::Setting, float> defaultSettingValues;
+	static const std::map<PauseMenu::Setting, std::string> settingKeys;
+	static const std::map<PauseMenu::SettingButton, PauseMenu::Setting> settingButtonMap;
+
 private:
 	PauseMenu();
 	
@@ -67,9 +72,5 @@ private:
 	ConfigLoader m_config = ConfigLoader("./config/settings.config");
 
 	static PauseMenu* m_instance;
-
-	const std::map<PauseMenu::Setting, float> defaultSettingValues;
-	const std::map<PauseMenu::Setting, std::string> settingKeys;
-	const std::map<PauseMenu::SettingButton, PauseMenu::Setting> settingButtonMap;
 };
 #endif
