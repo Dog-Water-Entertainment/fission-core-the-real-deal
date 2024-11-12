@@ -29,17 +29,17 @@ void BossScene::Init()
 
 	glGenTextures(1, playerTexture);
 
-	int w = img[0].width;
-	int h = img[0].height;
+	int w = playerImg.width;
+	int h = playerImg.height;
 	//
 	glBindTexture(GL_TEXTURE_2D, g.fanTexture);
 
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
+		GL_RGB, GL_UNSIGNED_BYTE, playerImg.data);
 
-		glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+		glBindTexture(GL_TEXTURE_2D, silhouetteTexture);
 	//
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
