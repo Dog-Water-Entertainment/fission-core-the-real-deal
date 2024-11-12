@@ -26,17 +26,24 @@ public:
 		DISPLAY_FPS,
 	};
 
+	enum class State {
+		CLOSED,
+		HOME,
+		SETTINGS,
+	};
+
 	static PauseMenu* get();
 	static void render(int xRes, int yRes);
 	static PauseMenu::PauseMenuOption getSelectedOption();
 	static void setSelectedOption(PauseMenu::PauseMenuOption);
-	static bool isPaused();
+	static PauseMenu::State getState();
+	static void setState(PauseMenu::State state);
 	static void pause();
 	static void resume();
-	static bool isOptionsMenuOpen();
 	static void selectOption(PauseMenu::PauseMenuOption);
 	static PauseMenu::Setting getSelectedSetting();
 	static float getSettingValue(PauseMenu::Setting setting);
+	static bool isPaused();
 
 	static const int SELECTED_BUTTON_COLOR;
 	static const int BUTTON_COLOR;
@@ -54,8 +61,8 @@ private:
 
 	PauseMenu::Setting selectedSetting;
 	PauseMenu::PauseMenuOption m_selectedOption;
+	PauseMenu::State state;
 
-	bool m_paused;
 	ConfigLoader m_config = ConfigLoader("./config/settings.config");
 
 	bool m_optionsMenuOpen;

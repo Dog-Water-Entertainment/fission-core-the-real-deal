@@ -33,13 +33,11 @@ PauseMenu* PauseMenu::get()
 	return m_instance;
 }
 
-bool PauseMenu::isOptionsMenuOpen() {
-	return PauseMenu::get()->m_optionsMenuOpen;
-}
-
 void PauseMenu::render(int xRes, int yRes)
 {
-	if (!PauseMenu::isPaused())
+	PauseMenu::State state = PauseMenu::getState();
+
+	if (state == PauseMenu::State::CLOSED)
 		return;
 
 	// Draw pause screen overlay
@@ -59,13 +57,25 @@ void PauseMenu::render(int xRes, int yRes)
 	glDisable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 
-	if (PauseMenu::isOptionsMenuOpen()) {
-		PauseMenu::get()->displaySettingButton(PauseMenu::Setting::DISPLAY_FPS, yRes - 50, 50, "Toggle FPS");	
-	}
-	else {
-		PauseMenu::get()->displayPauseOptionButton(PauseMenu::PauseMenuOption::RESUME, yRes - 50, 50, "Resume");
-		PauseMenu::get()->displayPauseOptionButton(PauseMenu::PauseMenuOption::OPTIONS, yRes - 100, 50, "Options");
-		PauseMenu::get()->displayPauseOptionButton(PauseMenu::PauseMenuOption::QUIT, yRes - 150, 50, "Quit");
+	PauseMenu* instance = PauseMenu::get();
+
+	using Option = PauseMenu::PauseMenuOption;
+	using Setting = PauseMenu::Setting;
+
+	switch (state) {
+		case PauseMenu::State::HOME: {
+			instance->displayPauseOptionButton(Option::RESUME, yRes - 50, 50, "Resume");
+			instance->displayPauseOptionButton(Option::OPTIONS, yRes - 100, 50, "Options");
+			instance->displayPauseOptionButton(Option::QUIT, yRes - 150, 50, "Quit");
+			break;
+		}
+		case PauseMenu::State::SETTINGS: {
+			instance->displaySettingButton(Setting::DISPLAY_FPS, yRes - 50, 50, "Toggle FPS");
+			break;
+		}
+		default: {
+			break;
+		}
 	}
 }
 
@@ -78,27 +88,22 @@ PauseMenu::PauseMenu()
 {
 	this->selectedSetting = PauseMenu::Setting::DISPLAY_FPS;
 	this->m_selectedOption = PauseMenu::PauseMenuOption::RESUME;
-	m_paused = false;
-	m_optionsMenuOpen = false;
+	this->state = PauseMenu::State::CLOSED;
+	this->m_optionsMenuOpen = false;
 }
 
 void PauseMenu::pause()
 {
 	std::cout << "The game is now paused\n";
-	PauseMenu::get()->m_paused = true;
+	PauseMenu::get()->state = PauseMenu::State::HOME;
 }
 
 void PauseMenu::resume()
 {
 	std::cout << "The game has been unpaused" << std::endl;
 	PauseMenu::setSelectedOption(PauseMenu::PauseMenuOption::RESUME);
-	PauseMenu::get()->m_paused = false;
+	PauseMenu::setState(PauseMenu::State::CLOSED);
 	PauseMenu::get()->hideOptionsScreen();
-}
-
-bool PauseMenu::isPaused()
-{
-	return PauseMenu::get()->m_paused;
 }
 
 void PauseMenu::setSelectedOption(PauseMenu::PauseMenuOption option)
@@ -169,4 +174,16 @@ void PauseMenu::hideOptionsScreen() {
 
 float PauseMenu::getSettingValue(PauseMenu::Setting setting) {
 	return get()->m_config.getFloat(get()->settingKeys.at(setting), get()->defaultSettingValues.at(setting));
+}
+
+void PauseMenu::setState(PauseMenu::State state) {
+	get()->state = state;
+}
+
+PauseMenu::State PauseMenu::getState() {
+	return get()->state;
+}
+
+bool PauseMenu::isPaused() {
+	return get()->state != PauseMenu::State::CLOSED;
 }

@@ -602,7 +602,10 @@ int checkKeys(XEvent *e)
                         PauseMenu::setSelectedOption(option::RESUME);
                         break;
                     case option::QUIT:
-                        PauseMenu::setSelectedOption(option::OPTIONS);
+                        PauseMenu::setSelectedOption(option::QUIT);
+                        break;
+                    case option::RESUME:
+                        PauseMenu::resume();
                         break;
                     default:
                         break;
