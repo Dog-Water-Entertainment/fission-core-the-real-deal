@@ -48,7 +48,7 @@ class Item
 
 
 void darkMode(bool click, int xres, int yres);
-void DeadCheck(bool state, int xres, int yres, int which);
+void DeadCheck(bool& state, int xres, int yres, int which);
 int DeadHelp(int& which);
 
 #endif

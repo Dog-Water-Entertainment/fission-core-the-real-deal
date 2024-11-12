@@ -480,7 +480,8 @@ bool is_movement_key(int key)
 
 int checkKeys(XEvent *e)
 {
-    gl.dead = get_key(XK_k);
+    if (get_key(XK_k))
+        gl.dead = 1;
     //keyboard input?
     static int shift = 0;
     if (e->type != KeyPress && e->type != KeyRelease)
@@ -831,7 +832,6 @@ void render(void)
     //ggprint8b(&r, 16, c, "left arrow  <- walk left");
     //ggprint8b(&r, 16, c, "frame: %i", gl.walkFrame);
     ggprint8b(&r, 16, c, "fps: %d", gl.fps);
-
     DeadHelp(gl.which);
     DeadCheck(gl.dead, gl.xres, gl.yres, gl.which);
     PauseMenu::render(gl.xres, gl.yres);	
