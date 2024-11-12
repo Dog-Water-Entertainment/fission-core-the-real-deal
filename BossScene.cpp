@@ -25,14 +25,16 @@ BossScene::~BossScene()
 void BossScene::Init()
 {
     /*
-    Image playerImg = Image("./assets/player.png");
+    Image playerImg = Image("./assets/playerTopDown.png");
 
-	glGenTextures(1, playerTexture);
+    glEnable(GL_TEXTURE_2D);
+
+	glGenTextures(1, &playerTexture);
 
 	int w = playerImg.width;
 	int h = playerImg.height;
 	//
-	glBindTexture(GL_TEXTURE_2D, g.fanTexture);
+	glBindTexture(GL_TEXTURE_2D, playerTexture);
 
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
@@ -45,11 +47,12 @@ void BossScene::Init()
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	//
 	//must build a new set of data...
-	unsigned char *silhouetteData = buildAlphaData(&img[0]);	
+	unsigned char *silhouetteData = buildAlphaData(&playerImg);	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 								GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
 	free(silhouetteData);
     */
+    
 
     Image img = Image("./assets/darktile.png");
 
@@ -68,7 +71,9 @@ void BossScene::Init()
 		GL_RGBA, GL_UNSIGNED_BYTE, imgData);
 	free(imgData);
 
-    m_rectangle.setTexture(&texture);
+
+    m_rectangle.setTexture(&silhouetteTexture);
+    glDisable(GL_TEXTURE_2D);
 }
 
 const static float speed = 2.0f;

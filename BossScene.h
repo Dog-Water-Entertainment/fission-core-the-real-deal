@@ -10,6 +10,9 @@ class BossScene : public Scene
 {
     private:
         GLuint texture;
+
+        GLuint playerTexture;
+        GLuint silhouetteTexture;
         float anglePlayerLook;
         Rectangle m_rectangle;
     public:

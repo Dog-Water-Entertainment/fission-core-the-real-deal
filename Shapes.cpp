@@ -104,8 +104,8 @@ void Rectangle::draw()
     if (texture != nullptr) {
         glEnable(GL_TEXTURE_2D);
         glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-        //glEnable(GL_ALPHA_TEST);
-        //glAlphaFunc(GL_GREATER, 0.0f);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
         glBindTexture(GL_TEXTURE_2D, *texture);
         glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
     } else {
@@ -136,6 +136,7 @@ void Rectangle::draw()
 
     if (texture != nullptr) {
         glDisable(GL_TEXTURE_2D);
+        glDisable(GL_ALPHA_TEST);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
