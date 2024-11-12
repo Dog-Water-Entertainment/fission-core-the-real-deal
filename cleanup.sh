@@ -1,0 +1,2 @@
+rm .*.swp
+rm .*.swo
