@@ -4,10 +4,12 @@
 #include "SceneManager.h"
 #include "Inputs.h"
 #include "Shapes.h"
+#include <GL/glx.h>
 
 class BossScene : public Scene
 {
     private:
+        GLuint texture;
         float anglePlayerLook;
         Rectangle m_rectangle;
     public:

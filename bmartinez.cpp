@@ -69,7 +69,7 @@ int DeadHelp(int& which)
     }
     return which;
 }
-void DeadCheck(bool state, int xres, int yres, int which)
+void DeadCheck(bool& state, int xres, int yres, int which)
 {
     std::vector<const char *> quips{
     "You are trying... right?",  
@@ -120,9 +120,10 @@ void DeadCheck(bool state, int xres, int yres, int which)
     b.left = xres/2 + 60;
     b.center = 0;
     ggprint12(&b, 16, 0x000FF000, "ENTER to CONTINUE");
-        if (get_key(XK_q))
-            Termination::Terminate();
-    
+    if (get_key(XK_Return))
+        state = 0;
+    if (get_key(XK_q))
+        Termination::Terminate(); 
     }
 /*
 ggprint16(&d, 16, 0x000FF000, ); biggest

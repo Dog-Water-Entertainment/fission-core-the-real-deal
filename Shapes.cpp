@@ -1,4 +1,6 @@
 #include "Shapes.h"
+#include <GL/glx.h>
+#include <iostream>
 #include <cmath>
 
 Shape::Shape()
@@ -44,6 +46,13 @@ void Rectangle::updateVertices()
     float _width = size.x / 2;
     float _height = size.y / 2;
 
+    /*
+
+    3, 2
+    0, 1
+
+    */
+
     vertices[0] = Vec2(position.x -_width, position.y - _height);
     vertices[1] = Vec2(position.x + _width, position.y - _height);
     vertices[2] = Vec2(position.x + _width, position.y + _height);
@@ -84,12 +93,19 @@ void Rectangle::draw()
         drawingVerts[i].y = x * _sin + y * _cos + position.y;
     }
 
+    /*
+
+    0, 1
+    3, 2
+
+    */
+
     glPushMatrix();
     if (texture != nullptr) {
         glEnable(GL_TEXTURE_2D);
         glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.0f);
+        //glEnable(GL_ALPHA_TEST);
+        //glAlphaFunc(GL_GREATER, 0.0f);
         glBindTexture(GL_TEXTURE_2D, *texture);
         glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
     } else {
@@ -98,6 +114,7 @@ void Rectangle::draw()
 
     glBegin(GL_QUADS);
         if (texture != nullptr) {
+
             glTexCoord2f(0.0f, 1.0f);
             glVertex2f(drawingVerts[0].x, drawingVerts[0].y);
 
