@@ -14,6 +14,7 @@ BossScene::BossScene(int xres, int yres)
     m_yres = yres;
     m_rectangle = Rectangle(Vec2(m_xres/2, m_yres/2), 50, 50);
     m_pNextScene = nullptr;
+    texture = 0;
 }
 
 BossScene::~BossScene()
@@ -23,8 +24,22 @@ BossScene::~BossScene()
 
 void BossScene::Init()
 {
-    GLuint texture;
-    loadTexture("assets/wall14.png", texture);
+    Image img = Image("./assets/darktile.png");
+
+    int w = img.width;
+	int h = img.height;
+
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	//
+	//must build a new set of data...
+	unsigned char *imgData = buildAlphaData(&img);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, imgData);
+	free(imgData);
 
     m_rectangle.setTexture(&texture);
 }

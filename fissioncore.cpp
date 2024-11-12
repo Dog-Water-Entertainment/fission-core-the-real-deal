@@ -831,7 +831,9 @@ void render(void)
     //ggprint8b(&r, 16, c, "right arrow -> walk right");
     //ggprint8b(&r, 16, c, "left arrow  <- walk left");
     //ggprint8b(&r, 16, c, "frame: %i", gl.walkFrame);
+    glEnable(GL_TEXTURE_2D);
     ggprint8b(&r, 16, c, "fps: %d", gl.fps);
+    glDisable(GL_TEXTURE_2D);
     DeadHelp(gl.which);
     DeadCheck(gl.dead, gl.xres, gl.yres, gl.which);
     PauseMenu::render(gl.xres, gl.yres);	
