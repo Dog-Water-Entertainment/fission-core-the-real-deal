@@ -26,9 +26,7 @@ const std::map<PauseMenu::Setting, std::string> settingKeys{
 PauseMenu* PauseMenu::get()
 {
 	if (m_instance == nullptr)
-	{
 		m_instance = new PauseMenu();
-	}
 
 	return m_instance;
 }
@@ -149,6 +147,8 @@ void PauseMenu::displaySettingButton(PauseMenu::Setting setting, int bot, int le
 		? PauseMenu::SELECTED_BUTTON_COLOR 
 		: PauseMenu::BUTTON_COLOR;
 
+//	std::cout << PauseMenu::getSelectedSetting() == setting << std::endl;
+	
 	PauseMenu::get()->displayButton(bot, left, text, color);
 }
 

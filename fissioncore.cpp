@@ -522,7 +522,7 @@ int checkKeys(XEvent *e)
             if (!gl.gameStarted) {
                 gl.gameStarted = true;
             }
-            if (PauseMenu::isPaused())
+            if (PauseMenu::getState() == PauseMenu::State::HOME)
                 PauseMenu::selectOption(PauseMenu::getSelectedOption());
             break;
         case XK_s:
@@ -563,10 +563,7 @@ int checkKeys(XEvent *e)
                         PauseMenu::setSelectedOption(option::RESUME);
                         break;
                     case option::QUIT:
-                        PauseMenu::setSelectedOption(option::QUIT);
-                        break;
-                    case option::RESUME:
-                        PauseMenu::resume();
+                        PauseMenu::setSelectedOption(option::OPTIONS);
                         break;
                     default:
                         break;
