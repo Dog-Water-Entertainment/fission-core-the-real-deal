@@ -7,6 +7,7 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <cstring>
 #include <X11/keysym.h>
 #include "bmartinez.h"
 #include "Inputs.h"
@@ -26,8 +27,11 @@ void Player::Attack(Enemy &a, Stat dmg)
     if (a.HP < 0)
         a.HP = 0;
 }
-void Player::Heal () 
+void Player::Heal(Stat heals) 
 {
+    HP += heals;
+    if (HP > MaxHP)
+        HP = MaxHP;
 }
 ///////////////////////////////////////////////////////////////////////////////
 ///
@@ -40,9 +44,11 @@ void Enemy::Attack(Player &a, Stat dmg)
     if (a.HP < 0)
         a.HP = 0;
 }
-void Enemy::Heal()
+void Enemy::Heal(Stat heals)
 {
-        
+    HP += heals;
+    if (HP > MaxHP)
+        HP = MaxHP;
 }
 ///////////////////////////////////////////////////////////////////////////////
 ///
@@ -59,18 +65,12 @@ int DeadHelp(int& which)
 {
     if(get_key(XK_k)) {
         std::srand(std::time(NULL));
-        which = std::rand() % 11;
+        which = std::rand() % 17;
     }
     return which;
 }
 void DeadCheck(bool state, int xres, int yres, int which)
 {
-    if (get_key(XK_Escape)) {
-        // Termination::Terminate();
-        return;
-    }
-
-    std::cout << which << std::endl;
     std::vector<const char *> quips{
     "You are trying... right?",  
     "Consider Fortnite!", 
@@ -81,30 +81,14 @@ void DeadCheck(bool state, int xres, int yres, int which)
     "Consider the Talk-Tuah Podcast...", 
     "On skibidi ????", 
     "We've been trying to reach you concerning your car's extended warranty.",
-    "*teleports behind you* nothing personal, kid...",/*
-    "What the flip did you just flipping say about me, you little rascal? "
-    "I'll have you know I graduated top of my class in the Navy Seals, and "
-    "I've been involved in numerous secret raids on Al-Quaeda, and I have over"
-    " 300 confirmed kills. I am trained in gorilla warfare and I'm the top "
-    "sniper in the entire US armed forces. You are nothing to me but just "
-    "another target. I will wipe you the flip out with precision the likes of "
-    "which has never been seen before on this Earth, mark my flipping words. "
-    "You think you can get away with saying that crap to me over the Internet? "
-    "Think again, little guy. As we speak I am contacting my secret network of "
-    "spies across the USA and your IP is being traced right now so you better "
-    "prepare for the storm, maggot. The storm that wipes out the pathetic "
-    "little thing you call your life. You're flippin' dead, kid. I can be "
-    "anywhere, anytime, and I can kill you in over seven hundred ways, and "
-    "that's just with my bare hands. Not only am I extensively trained in "
-    "unarmed combat, but I have access to the entire arsenal of the United "
-    "States Marine Corps and I will use it to its full extent to wipe your "
-    "miserable cheeks off the face of the continent, you little poop. If only "
-    "you could have known what unholy retribution your little \"clever\" "
-    "comment was about to bring down upon you, maybe you would have held your "
-    "flipping tongue. But you couldn't, you didn't, and now you're paying the "
-    "price, you goshdarn nincompoop. I will poo fury all over you and you will "
-    "drown in it.You're frinkin dead, kiddo.", */
-    "Being this bad should be punishable by jail time."
+    "*teleports behind you* nothing personal, kid...",
+    "The Flat Earth Society has members all around the globe!",
+    "yikes.",
+    "How many fingers am I holding up?",
+    "bad bad not good",
+    "Try again!", 
+    "Let's take a deep breath.",
+    "You've got to be trolling."
     };
     Rect d, q, a, b;
     if (state) {
@@ -118,27 +102,27 @@ void DeadCheck(bool state, int xres, int yres, int which)
             glVertex2i(xres, yres);
         glEnd();
     int i = which;
-    /*
-    if (i == which)
-        i = DeadHelp();
-    */
     //words on death screen 
     d.bot = yres/2;
-    d.left = xres / 2 - 80;
+    d.left = xres / 2 - 70;
     d.center = 0;
     ggprint16(&d, 16, 0x88B00000, "GAME OVER.");
+    int wrd = strlen(quips[i]);
     q.bot = d.bot-10;
-    q.left = xres / 2 - 80;
+    q.left = xres / 2 - (wrd*3);
     q.center = 0;
     ggprint10(&q, 16, 0xFFCCCCBB, quips[i]);
     a.bot = q.bot-60;
-    a.left = xres /2 -  230;
+    a.left = xres /2 -  228;
     a.center = 0;
-    ggprint12(&a, 16, 0x000FF000, "ESC to QUIT");
+    ggprint12(&a, 16, 0x000FF000, "Q to QUIT");
     b.bot = q.bot-60;
     b.left = xres/2 + 60;
     b.center = 0;
     ggprint12(&b, 16, 0x000FF000, "ENTER to CONTINUE");
+        if (get_key(XK_q))
+            Termination::Terminate();
+    
     }
 /*
 ggprint16(&d, 16, 0x000FF000, ); biggest
@@ -150,11 +134,6 @@ ggprint07(&d, 16, 0x000FF000, );
 ggprint06(&d, 16, 0x000FF000, );
 gprint8b(&d, 16, 0x000FF000, ;
 */
-    //int number = getrandomnumber(0, sizeofvector) 
-    //std::cout << quips[number] << endl;
-    // its supposed to write to the screen but ill figure that out once 
-    // the scene loader can be used or something idk, pick a random number
-    // spit out the line at that index
 }
 ///////////////////////////////////////////////////////////////////////////////
 ///
