@@ -14,13 +14,13 @@ const int PauseMenu::SELECTED_BUTTON_COLOR = 0x0000FF00;
 const int PauseMenu::BUTTON_COLOR = 0x00FFFF00;
 const std::map<PauseMenu::Setting, float> defaultSettingValues{
 	{PauseMenu::Setting::DISPLAY_FPS, 0},
-	{PauseMenu::Setting::MUTE_MUSIC, 0},
-	{PauseMenu::Setting::MUTE_SOUNDS, 0}
 };
 const std::map<PauseMenu::Setting, std::string> settingKeys{
 	{PauseMenu::Setting::DISPLAY_FPS, "displayFPS"},
-	{PauseMenu::Setting::MUTE_MUSIC, "muteMusic"},
-	{PauseMenu::Setting::MUTE_SOUNDS, "muteSounds"},
+};
+const std::map<PauseMenu::SettingButton, PauseMenu::Setting> settingButtonMap{
+	{PauseMenu::SettingButton::DISPLAY_FPS, PauseMenu::Setting::DISPLAY_FPS},
+	{PauseMenu::SettingButton::BACK, PauseMenu::Setting::SETTING_NULL},
 };
 
 PauseMenu* PauseMenu::get()
@@ -68,7 +68,8 @@ void PauseMenu::render(int xRes, int yRes)
 			break;
 		}
 		case PauseMenu::State::SETTINGS: {
-			instance->displaySettingButton(Setting::DISPLAY_FPS, yRes - 50, 50, "Toggle FPS");
+			instance->displaySettingButton(SettingButton::DISPLAY_FPS, yRes - 50, 50, "Toggle FPS");
+			instance->displaySettingButton(SettingButton::BACK, yRes - 100, 50, "Back");
 			break;
 		}
 		default: {
@@ -84,10 +85,9 @@ PauseMenu::PauseMenuOption PauseMenu::getSelectedOption()
 
 PauseMenu::PauseMenu()
 {
-	this->selectedSetting = PauseMenu::Setting::DISPLAY_FPS;
+	this->selectedSetting = PauseMenu::SettingButton::DISPLAY_FPS;
 	this->m_selectedOption = PauseMenu::PauseMenuOption::RESUME;
 	this->state = PauseMenu::State::CLOSED;
-	this->m_optionsMenuOpen = false;
 }
 
 void PauseMenu::pause()
@@ -101,7 +101,6 @@ void PauseMenu::resume()
 	std::cout << "The game has been unpaused" << std::endl;
 	PauseMenu::setSelectedOption(PauseMenu::PauseMenuOption::RESUME);
 	PauseMenu::setState(PauseMenu::State::CLOSED);
-	PauseMenu::get()->hideOptionsScreen();
 }
 
 void PauseMenu::setSelectedOption(PauseMenu::PauseMenuOption option)
@@ -121,14 +120,14 @@ void PauseMenu::selectOption(PauseMenu::PauseMenuOption option)
 			PauseMenu::resume();
 			break;
 		case PauseMenuOption::OPTIONS:
-			PauseMenu::get()->showOptionsScreen();
+			PauseMenu::setState(PauseMenu::State::SETTINGS);
 			break;
 		default:
 			break;
 	}
 }
 
-void PauseMenu::setSelectedSetting(PauseMenu::Setting setting) {
+void PauseMenu::setSelectedSetting(PauseMenu::SettingButton setting) {
 	PauseMenu::get()->selectedSetting = setting;
 }
 
@@ -141,18 +140,26 @@ void PauseMenu::displayPauseOptionButton(PauseMenu::PauseMenuOption correspondin
 	PauseMenu::get()->displayButton(bot, left, text, color);
 }
 
-void PauseMenu::displaySettingButton(PauseMenu::Setting setting, int bot, int left, const std::string &text)
+void PauseMenu::displaySettingButton(PauseMenu::SettingButton settingButton, int bot, int left, const std::string &text)
 {
-	int color = setting == PauseMenu::getSelectedSetting() 
+	int color = settingButton == PauseMenu::getSelectedSetting() 
 		? PauseMenu::SELECTED_BUTTON_COLOR 
 		: PauseMenu::BUTTON_COLOR;
 
-//	std::cout << PauseMenu::getSelectedSetting() == setting << std::endl;
+	std::string textToDraw = "";
+
+	if (settingButton != PauseMenu::SettingButton::BACK) {
+		PauseMenu::Setting setting = PauseMenu::get()->settingButtonMap.at(settingButton); // Crashes here.
+		if (PauseMenu::get()->getSettingValue(setting) == 1)
+			textToDraw = text + ": On";
+		else
+			textToDraw = text + ": Off";
+	}
 	
-	PauseMenu::get()->displayButton(bot, left, text, color);
+	PauseMenu::get()->displayButton(bot, left, textToDraw, color);
 }
 
-PauseMenu::Setting PauseMenu::getSelectedSetting() {
+PauseMenu::SettingButton PauseMenu::getSelectedSetting() {
 	return PauseMenu::get()->selectedSetting;
 }
 
@@ -162,14 +169,6 @@ void PauseMenu::displayButton(int bot, int left, const std::string &text, int co
 	r.left = left;
 	r.center = 0;
 	ggprint16(&r, 16, color, text.c_str());
-}
-
-void PauseMenu::showOptionsScreen() {
-	this->m_optionsMenuOpen = true;
-}
-
-void PauseMenu::hideOptionsScreen() {
-	this->m_optionsMenuOpen = false;
 }
 
 float PauseMenu::getSettingValue(PauseMenu::Setting setting) {

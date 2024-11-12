@@ -21,9 +21,13 @@ public:
 	};
 
 	enum class Setting {
-		MUTE_MUSIC,
-		MUTE_SOUNDS,
+		SETTING_NULL = -1,
 		DISPLAY_FPS,
+	};
+
+	enum class SettingButton {
+		DISPLAY_FPS,
+		BACK,
 	};
 
 	enum class State {
@@ -41,7 +45,7 @@ public:
 	static void pause();
 	static void resume();
 	static void selectOption(PauseMenu::PauseMenuOption);
-	static PauseMenu::Setting getSelectedSetting();
+	static PauseMenu::SettingButton getSelectedSetting();
 	static float getSettingValue(PauseMenu::Setting setting);
 	static bool isPaused();
 
@@ -53,22 +57,19 @@ private:
 	
 	void displayButton(int bot, int left, const std::string& text, int color);
 	void displayPauseOptionButton(PauseMenu::PauseMenuOption option, int bot, int left, const std::string& text);
-	void setSelectedSetting(PauseMenu::Setting setting);
-	void displaySettingButton(PauseMenu::Setting setting, int bot, int left, const std::string& text);
+	void setSelectedSetting(PauseMenu::SettingButton setting);
+	void displaySettingButton(PauseMenu::SettingButton setting, int bot, int left, const std::string& text);
 
-	void showOptionsScreen();
-	void hideOptionsScreen();
-
-	PauseMenu::Setting selectedSetting;
 	PauseMenu::PauseMenuOption m_selectedOption;
 	PauseMenu::State state;
+	PauseMenu::SettingButton selectedSetting;
 
 	ConfigLoader m_config = ConfigLoader("./config/settings.config");
 
-	bool m_optionsMenuOpen;
 	static PauseMenu* m_instance;
 
 	const std::map<PauseMenu::Setting, float> defaultSettingValues;
 	const std::map<PauseMenu::Setting, std::string> settingKeys;
+	const std::map<PauseMenu::SettingButton, PauseMenu::Setting> settingButtonMap;
 };
 #endif
