@@ -48,4 +48,5 @@ vid/*
 libggfonts.a
 tmp/*
 
+./config/settings.config
 config/settings.config

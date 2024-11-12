@@ -91,7 +91,7 @@ float ConfigLoader::getFloat(std::string key, float defaultValue) {
 
 	_file.close();
 	_file.open(this->FILE, std::fstream::app);
-	_file << key << "=" << defaultValue;
+	_file << "\n" << key << "=" << defaultValue;
 	_file.close();
 
 	return defaultValue;
