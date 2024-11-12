@@ -478,43 +478,6 @@ bool is_movement_key(int key)
     return gl.move_keys.find(key) != gl.move_keys.end();
 }
 
-
-void screenCapture()
-{
-    static int fnum = 0;
-    static int vid = 0;
-    if (!vid) {
-        system("mkdir ./vid");
-        vid = 1;
-    }
-    unsigned char *data = (unsigned char *)malloc(gl.xres * gl.yres * 3);
-    glReadPixels(0, 0, gl.xres, gl.yres, GL_RGB, GL_UNSIGNED_BYTE, data);
-    char ts[32];
-    sprintf(ts, "./vid/pic%03i.ppm", fnum);
-    FILE *fpo = fopen(ts,"w");	
-    if (fpo) {
-        fprintf(fpo, "P6\n%i %i\n255\n", gl.xres, gl.yres);
-        unsigned char *p = data;
-        //go backwards a row at a time...
-        p = p + ((gl.yres-1) * gl.xres * 3);
-        unsigned char *start = p;
-        for (int i=0; i<gl.yres; i++) {
-            for (int j=0; j<gl.xres*3; j++) {
-                fprintf(fpo, "%c",*p);
-                ++p;
-            }
-            start = start - (gl.xres*3);
-            p = start;
-        }
-        fclose(fpo);
-        char s[256];
-        sprintf(s, "convert ./vid/pic%03i.ppm ./vid/pic%03i.gif", fnum, fnum);
-        system(s);
-        unlink(ts);
-    }
-    ++fnum;
-}
-
 int checkKeys(XEvent *e)
 {
     gl.dead = get_key(XK_k);
@@ -563,8 +526,6 @@ int checkKeys(XEvent *e)
                 PauseMenu::selectOption(PauseMenu::getSelectedOption());
             break;
         case XK_s:
-            // movement key now
-            //screenCapture();
             break;
         case XK_m:
             gl.movie ^= 1;
@@ -873,9 +834,7 @@ void render(void)
     //ggprint8b(&r, 16, c, "left arrow  <- walk left");
     //ggprint8b(&r, 16, c, "frame: %i", gl.walkFrame);
     ggprint8b(&r, 16, c, "fps: %d", gl.fps);
-    if (gl.movie) {
-        screenCapture();
-    }
+
     DeadHelp(gl.which);
     DeadCheck(gl.dead, gl.xres, gl.yres, gl.which);
     PauseMenu::render(gl.xres, gl.yres);	
