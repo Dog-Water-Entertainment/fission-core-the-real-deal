@@ -491,6 +491,9 @@ int checkKeys(XEvent *e)
 
     bool move_key = is_movement_key(key);
 
+
+    PauseMenu::State state = PauseMenu::getState();
+
     if (e->type == KeyRelease) {
         if (move_key) {
             gl.pressed_move_keys.erase(key);
@@ -525,6 +528,9 @@ int checkKeys(XEvent *e)
             }
             if (PauseMenu::getState() == PauseMenu::State::HOME)
                 PauseMenu::selectOption(PauseMenu::getSelectedOption());
+            else if (PauseMenu::getState() == PauseMenu::State::SETTINGS) {
+                PauseMenu::toggleSetting(PauseMenu::getSelectedSetting());
+            }
             break;
         case XK_s:
             break;
@@ -557,34 +563,56 @@ int checkKeys(XEvent *e)
         case XK_Right:
             break;
         case XK_Up:
-            using option = PauseMenu::PauseMenuOption;
-            if (PauseMenu::isPaused()) {
+            using Option = PauseMenu::PauseMenuOption;
+            using SettingButton = PauseMenu::SettingButton;
+
+            if (state == PauseMenu::State::HOME) {
                 switch (PauseMenu::getSelectedOption()) {
-                    case option::OPTIONS:
-                        PauseMenu::setSelectedOption(option::RESUME);
+                    case Option::OPTIONS:
+                        PauseMenu::setSelectedOption(Option::RESUME);
                         break;
-                    case option::QUIT:
-                        PauseMenu::setSelectedOption(option::OPTIONS);
+                    case Option::QUIT:
+                        PauseMenu::setSelectedOption(Option::OPTIONS);
                         break;
                     default:
                         break;
                 }
             }
+            else if (state == PauseMenu::State::SETTINGS) {
+                switch (PauseMenu::getSelectedSetting()) {
+                    case SettingButton::BACK:
+                        PauseMenu::setSelectedSetting(SettingButton::DISPLAY_FPS);
+                    default:
+                        break;
+                }
+            }
+
             break;
         case XK_Down:
-            using option = PauseMenu::PauseMenuOption;
-            if (PauseMenu::isPaused()) {
+            using Option = PauseMenu::PauseMenuOption;
+            using SettingButton = PauseMenu::SettingButton;
+
+            if (state == PauseMenu::State::HOME) {
                 switch (PauseMenu::getSelectedOption()) {
-                    case option::RESUME:
-                        PauseMenu::setSelectedOption(option::OPTIONS);
+                    case Option::RESUME:
+                        PauseMenu::setSelectedOption(Option::OPTIONS);
                         break;
-                    case option::OPTIONS:
-                        PauseMenu::setSelectedOption(option::QUIT);
+                    case Option::OPTIONS:
+                        PauseMenu::setSelectedOption(Option::QUIT);
                         break;
                     default:
                         break;
                 }
             }
+            else if (state == PauseMenu::State::SETTINGS) {
+                switch (PauseMenu::getSelectedSetting()) {
+                    case SettingButton::DISPLAY_FPS:
+                        PauseMenu::setSelectedSetting(SettingButton::BACK);
+                    default: 
+                        break;
+                }
+            }
+
             break;
         case XK_equal:
             gl.delay -= 0.005;

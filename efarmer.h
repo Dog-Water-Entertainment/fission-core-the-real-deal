@@ -47,11 +47,12 @@ public:
 	static void selectOption(PauseMenu::PauseMenuOption);
 	static PauseMenu::SettingButton getSelectedSetting();
 	static float getSettingValue(PauseMenu::Setting setting);
+	static void setSelectedSetting(PauseMenu::SettingButton setting);
 	static bool isPaused();
+	static void toggleSetting(PauseMenu::SettingButton setting);
 
 	static const int SELECTED_BUTTON_COLOR;
 	static const int BUTTON_COLOR;
-
 
 	static const std::map<PauseMenu::Setting, float> defaultSettingValues;
 	static const std::map<PauseMenu::Setting, std::string> settingKeys;
@@ -62,7 +63,6 @@ private:
 	
 	void displayButton(int bot, int left, const std::string& text, int color);
 	void displayPauseOptionButton(PauseMenu::PauseMenuOption option, int bot, int left, const std::string& text);
-	void setSelectedSetting(PauseMenu::SettingButton setting);
 	void displaySettingButton(PauseMenu::SettingButton setting, int bot, int left, const std::string& text);
 
 	PauseMenu::PauseMenuOption m_selectedOption;

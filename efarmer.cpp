@@ -149,11 +149,14 @@ void PauseMenu::displaySettingButton(PauseMenu::SettingButton settingButton, int
 	std::string textToDraw = "";
 
 	if (settingButton != PauseMenu::SettingButton::BACK) {
-		PauseMenu::Setting setting = PauseMenu::settingButtonMap.at(settingButton); // Crashes here.
+		PauseMenu::Setting setting = PauseMenu::settingButtonMap.at(settingButton); 
 		if (PauseMenu::get()->getSettingValue(setting) == 1)
 			textToDraw = text + ": On";
 		else
 			textToDraw = text + ": Off";
+	}
+	else {
+		textToDraw = text;
 	}
 	
 	PauseMenu::get()->displayButton(bot, left, textToDraw, color);
@@ -185,4 +188,26 @@ PauseMenu::State PauseMenu::getState() {
 
 bool PauseMenu::isPaused() {
 	return get()->state != PauseMenu::State::CLOSED;
+}
+
+void PauseMenu::toggleSetting(PauseMenu::SettingButton settingButton) {
+	PauseMenu* instance = PauseMenu::get();
+
+	if (settingButton == PauseMenu::SettingButton::BACK) {
+		PauseMenu::setSelectedSetting(PauseMenu::SettingButton::DISPLAY_FPS);
+		PauseMenu::setState(PauseMenu::State::HOME);
+	}
+	else {
+		PauseMenu::Setting setting = PauseMenu::settingButtonMap.at(settingButton); 
+		std::string key = instance->settingKeys.at(setting);
+		float value = instance->m_config.getFloat(key);
+		std::cout << value << "\n";
+		
+		if (value == 0) {
+			instance->m_config.setFloat(key, 1);
+		}
+		else {
+			instance->m_config.setFloat(key, 0);
+		}
+	}
 }
