@@ -57,11 +57,12 @@ void MapScreen::Update()
             map->setPlayerPos(Vec2(map->getPlayerPos().x,
                         map->getPlayerPos().y + movement_speed));
     }
-   if(get_key(XK_v)) {
-      movement_speed = 0.8;
-       } 
     } else {
         map->setPlayerPos(playerPos);
+    }
+
+    if(get_key(XK_v)) {
+        movement_speed = 0.8;
     }
 
 }
