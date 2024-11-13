@@ -27,7 +27,7 @@ BossScene::~BossScene()
 
 void BossScene::Init()
 {
-    /*
+    
     Image playerImg = Image("./assets/playerTopDown.png");
 
     glEnable(GL_TEXTURE_2D);
@@ -54,9 +54,9 @@ void BossScene::Init()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 								GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
 	free(silhouetteData);
-    */
     
-
+    
+/*
     Image img = Image("./assets/darktile.png");
 
     int w = img.width;
@@ -73,7 +73,7 @@ void BossScene::Init()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 		GL_RGBA, GL_UNSIGNED_BYTE, imgData);
 	free(imgData);
-
+*/
 
     m_rectangle.setTexture(&silhouetteTexture);
     glDisable(GL_TEXTURE_2D);

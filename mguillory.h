@@ -16,6 +16,7 @@ public:
     GLuint * texture;
     char id;
     void render(Vec2 &pos);
+    char getTileType() { return id; }
     virtual ~Tile() {};
 };
 
@@ -151,5 +152,7 @@ public:
 
     Tile * getTileAt(float x, float y);
 };
+
+bool isWalkable(Tile * tile);
 
 #endif // _MGUILLORY_H_
