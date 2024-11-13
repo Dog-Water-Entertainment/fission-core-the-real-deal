@@ -58,7 +58,6 @@ void PauseMenu::render(int xRes, int yRes)
 	PauseMenu* instance = PauseMenu::get();
 
 	using Option = PauseMenu::PauseMenuOption;
-	using Setting = PauseMenu::Setting;
 
 	switch (state) {
 		case PauseMenu::State::HOME: {
@@ -202,7 +201,7 @@ void PauseMenu::toggleSetting(PauseMenu::SettingButton settingButton) {
 		std::string key = instance->settingKeys.at(setting);
 		float value = instance->m_config.getFloat(key);
 		std::cout << value << "\n";
-		
+
 		if (value == 0) {
 			instance->m_config.setFloat(key, 1);
 		}

@@ -301,7 +301,6 @@ int main(void)
 
     initOpengl();
     init();
-    int done = 0;
     while (!Termination::IsTerminated()) {
         while (x11.getXPending()) {
             XEvent e = x11.getXNextEvent();
