@@ -4,11 +4,12 @@
 #include "SceneManager.h"
 #include "mguillory.h"
 
+// Origin: Mykull Guillory
 
 class MapScreen : public Scene
 {
     MapLoader * map;
-    const float movement_speed = 0.1f;
+    float movement_speed;
 
     public:
         MapScreen(int xres, int yres);

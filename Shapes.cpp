@@ -3,6 +3,12 @@
 #include <iostream>
 #include <cmath>
 
+/*
+    Michael Guillory
+    CS3350
+    needed a shape class to handle the drawing of shapes
+*/
+
 Shape::Shape()
 {
     position = Vec2(0, 0);
@@ -23,6 +29,7 @@ Rectangle::Rectangle(Vec2 position, int width, int height)
     size = Vec2(width, height);
     updateVertices();
 
+    color = Vec3(1.0f, 1.0f, 1.0f);
     globalPosition = Vec2(0, 0);
 }
 
@@ -39,6 +46,11 @@ Rectangle::Rectangle()
 
 Rectangle::~Rectangle()
 {
+}
+
+void Rectangle::setColor(Vec3 color)
+{
+    this->color = color;
 }
 
 void Rectangle::updateVertices()
@@ -103,13 +115,13 @@ void Rectangle::draw()
     glPushMatrix();
     if (texture != nullptr) {
         glEnable(GL_TEXTURE_2D);
-        glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-        //glEnable(GL_ALPHA_TEST);
-        //glAlphaFunc(GL_GREATER, 0.0f);
+        glColor4f(color.x, color.y, color.z, 0.8f);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
         glBindTexture(GL_TEXTURE_2D, *texture);
-        glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+        glColor4f(color.x, color.y, color.z, 0.8f);
     } else {
-        glColor4f(1.0f, 0.2f, 0.2f, 0.8f);
+        glColor4f(color.x, color.y, color.z, 0.8f);
     }
 
     glBegin(GL_QUADS);
@@ -136,6 +148,7 @@ void Rectangle::draw()
 
     if (texture != nullptr) {
         glDisable(GL_TEXTURE_2D);
+        glDisable(GL_ALPHA_TEST);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
@@ -164,6 +177,49 @@ void Rectangle::drawRotated(float angle)
         {
             glVertex2f(drawingVerts[i].x, drawingVerts[i].y);
         }
+    glEnd();
+    glPopMatrix();
+}
+
+
+
+// Line class
+Line::Line(Vec2 start, Vec2 end, int width)
+{
+    position = start;
+    this->end = end;
+    this->width = width;
+    color = Vec3(1.0f, 1.0f, 1.0f);
+}
+
+Line::Line() 
+{
+    position = Vec2(0, 0);
+    end = Vec2(0, 0);
+
+    color = Vec3(1.0f, 1.0f, 1.0f);
+}
+
+Line::~Line() { }
+
+void Line::setColor(Vec3 color)
+{
+    this->color = color;
+}
+
+void Line::draw()
+{
+    glPushMatrix();
+    glColor4f(color.x, color.y, color.z, 0.8f);
+    glBegin(GL_QUADS);
+        Vec2 direction = end - position;
+        Vec2 perpendicular(-direction.y, direction.x);
+        perpendicular = perpendicular * (width / 2.0f / sqrt(perpendicular.x * perpendicular.x + perpendicular.y * perpendicular.y)); // Adjust thickness here
+
+        glVertex2f(position.x + perpendicular.x, position.y + perpendicular.y);
+        glVertex2f(position.x - perpendicular.x, position.y - perpendicular.y);
+        glVertex2f(end.x - perpendicular.x, end.y - perpendicular.y);
+        glVertex2f(end.x + perpendicular.x, end.y + perpendicular.y);
     glEnd();
     glPopMatrix();
 }

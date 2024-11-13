@@ -8,8 +8,11 @@
 #include <X11/keysym.h>
 #include <stdio.h>
 
+// Origin: Mykull Guillory
+
 BossScene::BossScene(int xres, int yres)
 {
+    degubLine = Line(Vec2(100, 200), Vec2(400, 500), 5);
     m_xres = xres;
     m_yres = yres;
     m_rectangle = Rectangle(Vec2(m_xres/2, m_yres/2), 50, 50);
@@ -25,31 +28,34 @@ BossScene::~BossScene()
 void BossScene::Init()
 {
     /*
-    Image playerImg = Image("./assets/player.png");
+    Image playerImg = Image("./assets/playerTopDown.png");
 
-	glGenTextures(1, playerTexture);
+    glEnable(GL_TEXTURE_2D);
 
-	int w = img[0].width;
-	int h = img[0].height;
+	glGenTextures(1, &playerTexture);
+
+	int w = playerImg.width;
+	int h = playerImg.height;
 	//
-	glBindTexture(GL_TEXTURE_2D, g.fanTexture);
+	glBindTexture(GL_TEXTURE_2D, playerTexture);
 
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
+		GL_RGB, GL_UNSIGNED_BYTE, playerImg.data);
 
-		glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+		glBindTexture(GL_TEXTURE_2D, silhouetteTexture);
 	//
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	//
 	//must build a new set of data...
-	unsigned char *silhouetteData = buildAlphaData(&img[0]);	
+	unsigned char *silhouetteData = buildAlphaData(&playerImg);	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 								GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
 	free(silhouetteData);
     */
+    
 
     Image img = Image("./assets/darktile.png");
 
@@ -68,7 +74,9 @@ void BossScene::Init()
 		GL_RGBA, GL_UNSIGNED_BYTE, imgData);
 	free(imgData);
 
-    m_rectangle.setTexture(&texture);
+
+    m_rectangle.setTexture(&silhouetteTexture);
+    glDisable(GL_TEXTURE_2D);
 }
 
 const static float speed = 2.0f;
@@ -103,6 +111,7 @@ void BossScene::Update()
 void BossScene::Render()
 {
     m_rectangle.draw();
+    degubLine.draw();
 }
 
 void BossScene::Release()

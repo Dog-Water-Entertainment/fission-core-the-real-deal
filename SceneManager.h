@@ -2,6 +2,7 @@
 #define SCENE_MANAGER_H
 
 
+// Original code by Michael Guillory
 // Virtual class for scenes
 // If we want to create a new scene, 
 // we need to inherit from this class

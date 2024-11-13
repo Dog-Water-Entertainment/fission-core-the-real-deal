@@ -4,7 +4,24 @@
 #define BMARTINEZ_H
 typedef int Stat;
 //forward declarations
+
 class Enemy;
+class Player;
+class Item;
+
+class Item
+{
+    public:
+    int itemID;       // 1 = heals, 2 = super heals, 3 = buff (+10 max health 
+                      // temporarily) 4 = minor debuff (-10 max health) 
+                      // idk just ideas.
+    int duration;     //duration of the effect (if buff/debuff)
+    Item(int ID);
+    void Use(int ID, Player& a);
+    void Use(int ID, Enemy& a);
+
+//ill figure a system out eventually
+};
 
 class Player
 {
@@ -17,7 +34,8 @@ class Player
         Player(Stat hp, Stat dmg);
         Player();
         void Attack(Enemy &a, Stat dmg);
-        void Heal (Stat heals); 
+        void Heal (Stat heals);
+        friend void Item::Use(int ID, Player& a); 
 };
 
 class Enemy
@@ -32,23 +50,13 @@ class Enemy
         Enemy();
         void Attack(Player &a, Stat dmg);
         void Heal(Stat heals);
+        friend void Item::Use(int ID, Enemy& a); 
 };
 
-class Item
-{
-    public:
-    int itemID;       // 1 = heals, 2 = super heals, 3 = buff (+10 max health 
-                      // temporarily) 4 = minor debuff (-10 max health) 
-                      // idk just ideas.
-    int duration;     //duration of the effect (if buff/debuff)
-    Item(int ID);
-
-//ill figure a system out eventually
-};
 
 
 void darkMode(bool click, int xres, int yres);
 void DeadCheck(bool& state, int xres, int yres, int which);
 int DeadHelp(int& which);
-
+//void supaspeed();
 #endif
