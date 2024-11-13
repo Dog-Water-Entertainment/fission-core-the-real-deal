@@ -25,6 +25,7 @@ void MapScreen::Init()
     map->setFileName("test.map");
     map->LoadMapFile();
     map->loadTextures();
+    movement_speed = 0.1;
 }
 
 void MapScreen::Update()
@@ -47,7 +48,10 @@ void MapScreen::Update()
     if(get_key(XK_Down)) {
         map->setPlayerPos(Vec2(map->getPlayerPos().x,
                     map->getPlayerPos().y + movement_speed));
-    } 
+    }
+   if(get_key(XK_v)) {
+      movement_speed = 0.8;
+   } 
 }
 
 void MapScreen::Render()

@@ -13,10 +13,27 @@
 #include "Inputs.h"
 #include "fonts.h"
 #include "termination.h"
-
+#include "MapScreen.h"
 // Forward Declarations////////////////////////////////////////////////////////
+class Item;
 class Player;
 class Enemy;
+// ITEM STUFF//////////////////////////////////////////////////////////////////
+Item::Item(int ID) : itemID(ID) 
+{
+    std::cout << "placeholder" << ID  << std::endl;
+}
+void Item::Use(int ID, Player& a)
+{
+
+}
+
+void Item::Use(int ID, Enemy& a)
+{
+
+}
+///////////////////////////////////////////////////////////////////////////////
+///
 //PLAYER STUFF/////////////////////////////////////////////////////////////////
 Player::Player(Stat hp, Stat dmg) : MaxHP(hp), HP(hp), dmgDeal(dmg) {}
 Player::Player() : MaxHP(50), HP(50), dmgDeal(2) {}
@@ -52,14 +69,6 @@ void Enemy::Heal(Stat heals)
 }
 ///////////////////////////////////////////////////////////////////////////////
 ///
-// ITEM STUFF//////////////////////////////////////////////////////////////////
-Item::Item(int ID) : itemID(ID) 
-{
-    std::cout << "placeholder" << ID  << std::endl;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-///
 // DEATH STUFF////////////////////////////////////////////////////////////////
 int DeadHelp(int& which)
 {
@@ -92,6 +101,7 @@ void DeadCheck(bool& state, int xres, int yres, int which)
     };
     Rect d, q, a, b;
     if (state) {
+         glEnable(GL_TEXTURE_2D);
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
         glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
@@ -159,3 +169,11 @@ void darkMode(bool click, int xres, int yres)
      } 
 };
 //////////////////////////////////////////////////////////////////////////////
+///
+/// other ////////////////////////////////////////////////////////////////////
+ /*void supaspeed()
+{
+    if (get_key(XK_v)) {
+        movement_speed = 0.5f;
+    }
+} */
