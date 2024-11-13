@@ -9,6 +9,18 @@
 #ifndef EFARMER_H
 #define EFARMER_H
 
+class Termination {
+public:
+	static bool IsTerminated();
+	static void Terminate();
+	static Termination* GetInstance();
+private:
+	Termination();
+
+	static Termination* instance;
+	bool isTerminated;
+};
+
 class PauseMenu
 {
 public:
@@ -50,6 +62,7 @@ public:
 	static void setSelectedSetting(PauseMenu::SettingButton setting);
 	static bool isPaused();
 	static void toggleSetting(PauseMenu::SettingButton setting);
+	static void initialize();
 
 	static const int SELECTED_BUTTON_COLOR;
 	static const int BUTTON_COLOR;
@@ -57,6 +70,7 @@ public:
 	static const std::map<PauseMenu::Setting, float> defaultSettingValues;
 	static const std::map<PauseMenu::Setting, std::string> settingKeys;
 	static const std::map<PauseMenu::SettingButton, PauseMenu::Setting> settingButtonMap;
+	static const std::map<PauseMenu::Setting, float> settingValues;
 
 private:
 	PauseMenu();
@@ -70,7 +84,7 @@ private:
 	PauseMenu::SettingButton selectedSetting;
 
 	ConfigLoader m_config = ConfigLoader("./config/settings.config");
-
+	bool initialized;
 	static PauseMenu* m_instance;
 };
 #endif

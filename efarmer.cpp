@@ -7,7 +7,6 @@
 #include <string>
 #include "efarmer.h"
 #include <map>
-#include "termination.h"
 
 PauseMenu* PauseMenu::m_instance = nullptr;
 const int PauseMenu::SELECTED_BUTTON_COLOR = 0x0000FF00;
@@ -22,6 +21,7 @@ const std::map<PauseMenu::SettingButton, PauseMenu::Setting> PauseMenu::settingB
 	{PauseMenu::SettingButton::DISPLAY_FPS, PauseMenu::Setting::DISPLAY_FPS},
 	{PauseMenu::SettingButton::BACK, PauseMenu::Setting::SETTING_NULL},
 };
+const std::map<PauseMenu::Setting, float> PauseMenu::settingValues{};
 
 PauseMenu* PauseMenu::get()
 {
@@ -29,6 +29,16 @@ PauseMenu* PauseMenu::get()
 		m_instance = new PauseMenu();
 
 	return m_instance;
+}
+
+void PauseMenu::initialize() {
+	PauseMenu* instance = PauseMenu::get();
+
+	if (instance->initialized) {
+		return;
+	}
+
+	instance->initialized = true;
 }
 
 void PauseMenu::render(int xRes, int yRes)
@@ -209,4 +219,29 @@ void PauseMenu::toggleSetting(PauseMenu::SettingButton settingButton) {
 			instance->m_config.setFloat(key, 0);
 		}
 	}
+}
+
+Termination* Termination::instance;
+
+Termination::Termination() 
+{
+	this->isTerminated = false;
+}
+
+Termination* Termination::GetInstance() 
+{
+	if (Termination::instance == nullptr)
+		Termination::instance = new Termination();
+
+	return Termination::instance;
+}
+
+void Termination::Terminate() 
+{
+	Termination::GetInstance()->isTerminated = true;
+}
+
+bool Termination::IsTerminated() 
+{
+	return Termination::GetInstance()->isTerminated;
 }

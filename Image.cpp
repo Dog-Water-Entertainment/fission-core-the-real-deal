@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "termination.h"
+#include "efarmer.h"
 
 Image::~Image() { delete [] data; };
 
