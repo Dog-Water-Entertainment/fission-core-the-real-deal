@@ -58,5 +58,6 @@ class Enemy
 void darkMode(bool click, int xres, int yres);
 void DeadCheck(bool& state, int xres, int yres, int which);
 int DeadHelp(int& which);
+bool getDead();
 //void supaspeed();
 #endif
