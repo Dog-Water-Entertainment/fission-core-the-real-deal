@@ -58,7 +58,7 @@ void MapScreen::Update()
                         map->getPlayerPos().y + movement_speed));
     }
     } else {
-        map->setPlayerPos(playerPos);
+        // currently nothing
     }
 
     if(get_key(XK_v)) {
