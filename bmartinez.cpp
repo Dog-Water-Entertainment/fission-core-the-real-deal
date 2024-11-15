@@ -19,18 +19,53 @@ class Item;
 class Player;
 class Enemy;
 // ITEM STUFF//////////////////////////////////////////////////////////////////
-Item::Item(int ID) : itemID(ID) {} 
-void Item::Use(int ID, Player& a)
+enum class ItemList {
+    HealingPotion = 1,
+    GreaterHealingPotion,
+    PermaHealth,
+    Knife,
+    Sword,
+    PermaDmg,
+    DevWeapon,
+    DevPotion
+};
+
+void Item::Use(ItemList item, Player& a)
 {
-
-
+    switch (item) {
+        case ItemList::HealingPotion:
+            a.HP += 15;
+            if (a.MaxHP < a.HP)
+               a.HP = a.MaxHP; 
+            break;
+        default:
+            //no item what r u doing
+            std::cout << "ok" << std::endl;
+    }
 }
 
-void Item::Use(int ID, Enemy& a)
+void Item::Use(ItemList item, Enemy& a)
 {
-
-
+    switch (item) {
+        case ItemList::HealingPotion:
+            a.HP += 15;
+            if (a.MaxHP < a.HP)
+               a.HP = a.MaxHP; 
+            break;
+        default:
+            //no item what r u doing
+            std::cout << "ok" << std::endl;
+    }
 }
+/*
+void Use(int ID, Enemy& a)
+{
+    switch (item) {
+        case ItemType::HealingPotion:
+            //placeholder
+            break;
+}
+*/
 ///////////////////////////////////////////////////////////////////////////////
 ///
 //PLAYER STUFF/////////////////////////////////////////////////////////////////
