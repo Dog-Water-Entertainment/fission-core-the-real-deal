@@ -569,6 +569,12 @@ void MapLoader::LoadMapFile()
 void MapLoader::render()
 {
     // Calculate the center tile based on the player's position
+
+    // Do checks to make sure the player is within bounds
+    if (playerPos.x < 0 || playerPos.x >= 50 || playerPos.y < 0 || playerPos.y >= 50) {
+        return;
+    }
+
     Vec2 tileCenter = Vec2(floor(playerPos.x), 
                            floor(playerPos.y));
     int startingTileY = tileCenter.y - 8; // Adjusted for correct axis
