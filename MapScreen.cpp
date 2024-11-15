@@ -38,16 +38,16 @@ void MapScreen::Update()
 
     Vec2 newPos = playerPos;
 
-    if(get_key(XK_Left)) {
+    if(get_key(XK_a)) {
         newPos.x -= movement_speed;
     }
-    if(get_key(XK_Right)) {
+    if(get_key(XK_d)) {
         newPos.x += movement_speed;
     }
-    if(get_key(XK_Up)) {
+    if(get_key(XK_w)) {
         newPos.y -= movement_speed;
     }
-    if(get_key(XK_Down)) {
+    if(get_key(XK_s)) {
         newPos.y += movement_speed;
     }
 

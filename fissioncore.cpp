@@ -157,7 +157,7 @@ class Global {
         }
         Global() {
             pressed_move_keys = {};
-            move_keys = {XK_Up, XK_Down, XK_Left, XK_Right};
+            move_keys = {XK_w, XK_a, XK_s, XK_d};
             walking = false;
             walking_left = false;
             dark = false;
@@ -663,9 +663,9 @@ void physics(void)
         gl.walkFrame = 4;
     }
     else {
-        if (gl.keys[XK_Right])
+        if (gl.keys[XK_d])
             gl.walking_left = false;
-        else if (gl.keys[XK_Left])
+        else if (gl.keys[XK_a])
             gl.walking_left = true;
 
         //man is walking...
