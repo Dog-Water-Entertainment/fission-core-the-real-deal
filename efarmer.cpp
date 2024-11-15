@@ -21,7 +21,6 @@ const std::map<PauseMenu::SettingButton, PauseMenu::Setting> PauseMenu::settingB
 	{PauseMenu::SettingButton::DISPLAY_FPS, PauseMenu::Setting::DISPLAY_FPS},
 	{PauseMenu::SettingButton::BACK, PauseMenu::Setting::SETTING_NULL},
 };
-const std::map<PauseMenu::Setting, float> PauseMenu::settingValues{};
 
 PauseMenu* PauseMenu::get()
 {

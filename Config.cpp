@@ -14,6 +14,8 @@
 #include "Config.h"
 #include <fstream>
 #include <iostream>
+#include <string>
+#include <vector>
 
 ConfigLoader::ConfigLoader(std::string filename) {
 	this->FILE = filename;
@@ -98,7 +100,33 @@ float ConfigLoader::getFloat(std::string key, float defaultValue) {
 }
 
 void ConfigLoader::setFloat(std::string key, float value) {
-	std::cout << key << value << "\n"; // Silence the warning for now.
+	std::vector<std::string> lines{};
+
+	std::fstream _file(this->FILE, std::fstream::in | std::fstream::out);
+	std::string line;
+
+	while (std::getline(_file, line)) {
+		if (shouldContinue(line)) continue;
+
+		if (line.find(key) != std::string::npos) {
+			lines.push_back(key + "=" + std::to_string(value));
+		}
+		else {
+			lines.push_back(line);
+		}
+	}
+
+	_file.close();
+	_file.open(this->FILE, std::fstream::out | std::fstream::trunc);
+	_file.flush();
+	_file.close();
+	_file.open(this->FILE, std::fstream::app);
+
+	for (const std::string& line : lines) {
+		_file << line << "\n";
+	}
+
+	_file.close();
 }
 
 ConfigLoader::~ConfigLoader() {
