@@ -30,28 +30,34 @@ void MapScreen::Init()
 
 void MapScreen::Update()
 {
+    Vec2 playerPos = map->getPlayerPos();
+
     if(get_key(XK_t)) {
         m_pNextScene = new BossScene(m_xres, m_yres);
     }
-    if(get_key(XK_Left)) {
-        map->setPlayerPos(Vec2(map->getPlayerPos().x - movement_speed,
-                    map->getPlayerPos().y));
+
+    Vec2 newPos = playerPos;
+
+    if(get_key(XK_a)) {
+        newPos.x -= movement_speed;
     }
-    if(get_key(XK_Right)) {
-        map->setPlayerPos(Vec2(map->getPlayerPos().x + movement_speed,
-                    map->getPlayerPos().y));
+    if(get_key(XK_d)) {
+        newPos.x += movement_speed;
     }
-    if(get_key(XK_Up)) {
-        map->setPlayerPos(Vec2(map->getPlayerPos().x,
-                    map->getPlayerPos().y - movement_speed));
+    if(get_key(XK_w)) {
+        newPos.y -= movement_speed;
     }
-    if(get_key(XK_Down)) {
-        map->setPlayerPos(Vec2(map->getPlayerPos().x,
-                    map->getPlayerPos().y + movement_speed));
+    if(get_key(XK_s)) {
+        newPos.y += movement_speed;
     }
-   if(get_key(XK_v)) {
-      movement_speed = 0.8;
-   } 
+
+    if(isWalkable(map->getTileAt(newPos.y + 1, newPos.x + 1))) {
+        map->setPlayerPos(newPos);
+    }
+
+    if(get_key(XK_v)) {
+        movement_speed = 0.8;
+    }
 }
 
 void MapScreen::Render()

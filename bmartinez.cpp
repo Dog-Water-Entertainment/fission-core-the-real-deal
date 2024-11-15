@@ -19,17 +19,16 @@ class Item;
 class Player;
 class Enemy;
 // ITEM STUFF//////////////////////////////////////////////////////////////////
-Item::Item(int ID) : itemID(ID) 
-{
-    std::cout << "placeholder" << ID  << std::endl;
-}
+Item::Item(int ID) : itemID(ID) {} 
 void Item::Use(int ID, Player& a)
 {
+
 
 }
 
 void Item::Use(int ID, Enemy& a)
 {
+
 
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,6 +69,13 @@ void Enemy::Heal(Stat heals)
 ///////////////////////////////////////////////////////////////////////////////
 ///
 // DEATH STUFF////////////////////////////////////////////////////////////////
+/*void getDead(bool state) {
+    return state;
+}*/
+bool globalDead;
+bool getDead(){
+    return globalDead;
+}
 int DeadHelp(int& which)
 {
     if(get_key(XK_k)) {
@@ -101,7 +107,8 @@ void DeadCheck(bool& state, int xres, int yres, int which)
     };
     Rect d, q, a, b;
     if (state) {
-         glEnable(GL_TEXTURE_2D);
+        globalDead = 1;
+        glEnable(GL_TEXTURE_2D);
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
         glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
@@ -111,29 +118,31 @@ void DeadCheck(bool& state, int xres, int yres, int which)
             glVertex2i(xres, 0);
             glVertex2i(xres, yres);
         glEnd();
-    int i = which;
-    //words on death screen 
-    d.bot = yres/2;
-    d.left = xres / 2 - 70;
-    d.center = 0;
-    ggprint16(&d, 16, 0x88B00000, "GAME OVER.");
-    int wrd = strlen(quips[i]);
-    q.bot = d.bot-10;
-    q.left = xres / 2 - (wrd*3);
-    q.center = 0;
-    ggprint10(&q, 16, 0xFFCCCCBB, quips[i]);
-    a.bot = q.bot-60;
-    a.left = xres /2 -  228;
-    a.center = 0;
-    ggprint12(&a, 16, 0x000FF000, "Q to QUIT");
-    b.bot = q.bot-60;
-    b.left = xres/2 + 60;
-    b.center = 0;
-    ggprint12(&b, 16, 0x000FF000, "ENTER to CONTINUE");
-    if (get_key(XK_Return))
-        state = 0;
-    if (get_key(XK_q))
-        Termination::Terminate(); 
+        int i = which;
+        //words on death screen 
+        d.bot = yres/2;
+        d.left = xres / 2 - 70;
+        d.center = 0;
+        ggprint16(&d, 16, 0x88B00000, "GAME OVER.");
+        int wrd = strlen(quips[i]);
+        q.bot = d.bot-10;
+        q.left = xres / 2 - (wrd*3);
+        q.center = 0;
+        ggprint10(&q, 16, 0xFFCCCCBB, quips[i]);
+        a.bot = q.bot-60;
+        a.left = xres /2 -  228;
+        a.center = 0;
+        ggprint12(&a, 16, 0x000FF000, "Q to QUIT");
+        b.bot = q.bot-60;
+        b.left = xres/2 + 60;
+        b.center = 0;
+        ggprint12(&b, 16, 0x000FF000, "ENTER to CONTINUE");
+        if (get_key(XK_Return)) {
+            state = 0;
+            globalDead=0;
+        }
+        if (get_key(XK_q))
+            Termination::Terminate(); 
     }
 /*
 ggprint16(&d, 16, 0x000FF000, ); biggest

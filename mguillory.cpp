@@ -15,6 +15,7 @@
 #include <cmath>
 #include <X11/Xlib.h>
 #include <set>
+#include <exception>
 #include "Math.h"
 #include "Image.h"
 
@@ -38,6 +39,20 @@ static Image img[19] = {
     "./assets/wall14.png",
     "./assets/wall_edge_left.png",
     "./assets/wall_edge_right.png"
+};
+
+class TileMapError : public std::exception
+{
+    std::string message;
+public:
+    TileMapError(std::string msg) 
+    {
+        message = msg;
+    }
+    const char *what() const noexcept override
+    {
+        return message.c_str();
+    }
 };
 
 class global 
@@ -455,7 +470,7 @@ void MapLoader::LoadMapFile()
     std::ifstream mapFile(mapFileName.c_str());
 
     if (!mapFile.is_open()) {
-        std::cerr << "Error: Could not open file " << mapFileName << std::endl;
+        throw TileMapError("Could not open map file");
         return;
     }
 
@@ -536,14 +551,12 @@ void MapLoader::LoadMapFile()
                 } else if (ch == ' ') {
                     continue;
                 } else {
-                    std::cerr << "Error: Invalid character in map file "
-                              << mapFileName << std::endl;
+                    throw TileMapError("Invalid character in map file");
                     return;
                 }
                 j++;
             } else {
-                std::cerr << "Error: Map file " << mapFileName 
-                          << " is too large" << std::endl;
+                throw TileMapError("Map file is too large");
                 break;
             }
         }
@@ -556,6 +569,12 @@ void MapLoader::LoadMapFile()
 void MapLoader::render()
 {
     // Calculate the center tile based on the player's position
+
+    // Do checks to make sure the player is within bounds
+    if (playerPos.x < 0 || playerPos.x >= 50 || playerPos.y < 0 || playerPos.y >= 50) {
+        return;
+    }
+
     Vec2 tileCenter = Vec2(floor(playerPos.x), 
                            floor(playerPos.y));
     int startingTileY = tileCenter.y - 8; // Adjusted for correct axis
@@ -652,4 +671,7 @@ void Tile::render(Vec2 &pos) {
     glPopMatrix();
 }
 
-
+bool isWalkable(Tile * tile) {
+    char id = tile->getTileType();
+    return id == 'b' || id == 'c' || id == 'd';
+}
