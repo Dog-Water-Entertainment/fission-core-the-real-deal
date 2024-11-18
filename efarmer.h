@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include "Config.h"
+#include <array>
 
 #ifndef EFARMER_H
 #define EFARMER_H
@@ -87,4 +88,21 @@ private:
 	bool initialized;
 	static PauseMenu* m_instance;
 };
+
+class DialogManager {
+public:
+	template <unsigned int T>
+	static void promptDialog(const std::string& speaker, const std::array<std::string, T>& dialog, int x, int y, int dialogColor);
+	static void promptDialog(const std::string& speaker, std::string& dialog, int x, int y, int dialogColor);
+	static bool isDialogActive();
+
+private:
+	DialogManager();
+
+	static DialogManager* instance;
+	static DialogManager* getInstance();
+
+	bool dialogActive;
+};
+
 #endif

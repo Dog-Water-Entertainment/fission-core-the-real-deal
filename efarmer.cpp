@@ -21,6 +21,7 @@ const std::map<PauseMenu::SettingButton, PauseMenu::Setting> PauseMenu::settingB
 	{PauseMenu::SettingButton::DISPLAY_FPS, PauseMenu::Setting::DISPLAY_FPS},
 	{PauseMenu::SettingButton::BACK, PauseMenu::Setting::SETTING_NULL},
 };
+DialogManager* DialogManager::instance = nullptr;
 
 PauseMenu* PauseMenu::get()
 {
@@ -243,4 +244,29 @@ void Termination::Terminate()
 bool Termination::IsTerminated() 
 {
 	return Termination::GetInstance()->isTerminated;
+}
+
+DialogManager::DialogManager() {
+
+}
+
+template <unsigned int T>
+void DialogManager::promptDialog(const std::string& speaker, const std::array<std::string, T>& dialog, int x, int y, int dialogColor) {
+
+}
+
+DialogManager* DialogManager::getInstance() {
+	if (!DialogManager::instance) {
+		DialogManager::instance = new DialogManager();
+	}
+
+	return DialogManager::instance;
+}
+
+void DialogManager::promptDialog(const std::string& speaker, std::string& dialog, int x, int y, int dialogColor) {
+
+}
+
+bool DialogManager::isDialogActive() {
+	return DialogManager::getInstance()->dialogActive;
 }
