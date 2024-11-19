@@ -17,6 +17,20 @@ class Shape
         virtual void draw() = 0;
 };
 
+class CollisionBox {
+    public:
+        Vec2 vmin;
+        Vec2 vmax;
+        CollisionBox() {
+            vmin = Vec2(0, 0);
+            vmax = Vec2(0, 0);
+        }
+        CollisionBox(Vec2 min, Vec2 max) {
+            vmin = min;
+            vmax = max;
+        }
+};
+
 class Rectangle : public Shape
 {
     private:
@@ -27,6 +41,7 @@ class Rectangle : public Shape
         Vec3 color;
         void updateVertices();
     public:
+        CollisionBox collisionBox;
         float rotation;
         Rectangle(Vec2 position, int width, int height);
         Rectangle();

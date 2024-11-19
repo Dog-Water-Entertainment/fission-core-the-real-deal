@@ -16,8 +16,11 @@
 #include <X11/Xlib.h>
 #include <set>
 #include <exception>
+#include <vector>
+#include <typeinfo>
 #include "Math.h"
 #include "Image.h"
+#include "Shapes.h"
 
 static Image img[19] = {
 	"./images/map_textures/grass.jpg",
@@ -674,4 +677,29 @@ void Tile::render(Vec2 &pos) {
 bool isWalkable(Tile * tile) {
     char id = tile->getTileType();
     return id == 'b' || id == 'c' || id == 'd';
+}
+
+
+/*
+ * ========================================
+ *
+ *
+ *
+ *            2D    RayCast
+ *
+ *
+ *
+ *
+ * ========================================
+ */
+
+// Should return a vector of shapes that were hit by the ray
+std::vector<Rectangle> Physics2d::raycast(std::vector<Rectangle> rects, Vec2 origin, float angle, float distance)
+{
+    std::vector<Rectangle> hits;
+    Vec2 end = Vec2(origin.x + distance * cos(angle), origin.y + distance * sin(angle));
+    for (Shape &rec : rects) {
+        // Right now we only have rectangles
+    }
+    return hits;
 }

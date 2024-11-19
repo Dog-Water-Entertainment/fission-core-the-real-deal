@@ -5,7 +5,10 @@
 #include <fstream>
 #include <X11/Xlib.h>
 #include <GL/glx.h>
+#include <cmath>
+#include <vector>
 #include "Math.h"
+#include "Shapes.h"
 
 
 
@@ -154,5 +157,9 @@ public:
 };
 
 bool isWalkable(Tile * tile);
+
+namespace Physics2d {
+    std::vector<Rectangle> raycast(std::vector<Rectangle> rects, Vec2 origin, float angle, float distance);
+}
 
 #endif // _MGUILLORY_H_
