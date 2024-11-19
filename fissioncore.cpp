@@ -868,9 +868,7 @@ void render(void)
     DeadCheck(gl.dead, gl.xres, gl.yres, gl.which);
     
     double delta_time = (TimeUtils::get_time() - gl.last_elapsed) / 1000;
-
-    std::cout << delta_time << std::endl;
-
+    
     gl.last_elapsed = TimeUtils::get_time();
 }
 
