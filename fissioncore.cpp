@@ -41,6 +41,7 @@
 // Scene Includes
 #include "SceneManager.h"
 #include "MapScreen.h"
+#include "TimeUtils.h"
 
 //defined types
 typedef double Flt;
@@ -129,6 +130,7 @@ class Global {
 
         ConfigLoader cnfg = ConfigLoader("./config/main.config");
 
+        double last_elapsed;
         unsigned int TARGET_FPS = 60;
         unsigned int fps;
         unsigned char keys[65536];
@@ -155,6 +157,7 @@ class Global {
             logClose();
         }
         Global() {
+            last_elapsed = TimeUtils::get_time();
             pressed_move_keys = {};
             move_keys = {XK_w, XK_a, XK_s, XK_d};
             walking = false;
@@ -282,7 +285,6 @@ Image img[3] = {
 
 int main(void)
 {
-
     auto startTime = std::chrono::high_resolution_clock::now();
     int frameCount = 0;
 
@@ -329,8 +331,6 @@ int main(void)
         if (elapsedTime >= 1.0) {
             double fps = frameCount / elapsedTime;
             gl.fps = fps;
-
-
 
             frameCount = 0;
             startTime = endTime;
@@ -866,7 +866,10 @@ void render(void)
     
     DeadHelp(gl.which);
     DeadCheck(gl.dead, gl.xres, gl.yres, gl.which);
-    PauseMenu::render(gl.xres, gl.yres);	
+    
+    double delta_time = TimeUtils::get_time() - gl.last_elapsed;
+
+    gl.last_elapsed = TimeUtils::get_time();
 }
 
 
