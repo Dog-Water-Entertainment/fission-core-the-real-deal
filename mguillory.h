@@ -159,7 +159,7 @@ public:
 bool isWalkable(Tile * tile);
 
 namespace Physics2d {
-    std::vector<Shape> raycast(std::vector<Shape> shapes, Vec2 origin, float angle, float distance);
+    std::vector<Rectangle> raycast(std::vector<Rectangle> rects, Vec2 origin, float angle, float distance);
 }
 
 #endif // _MGUILLORY_H_

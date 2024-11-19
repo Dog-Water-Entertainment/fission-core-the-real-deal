@@ -694,14 +694,12 @@ bool isWalkable(Tile * tile) {
  */
 
 // Should return a vector of shapes that were hit by the ray
-std::vector<Shape> Physics2d::raycast(std::vector<Shape> shapes, Vec2 origin, float angle, float distance)
+std::vector<Rectangle> Physics2d::raycast(std::vector<Rectangle> rects, Vec2 origin, float angle, float distance)
 {
-    std::vector<Shape> hits;
+    std::vector<Rectangle> hits;
     Vec2 end = Vec2(origin.x + distance * cos(angle), origin.y + distance * sin(angle));
-    for (Shape &shape : shapes) {
-        if (typeid(shape) == typeid(Rectangle)) {
-            // Nothing for right now
-        }
+    for (Shape &rec : rects) {
+        // Right now we only have rectangles
     }
     return hits;
 }

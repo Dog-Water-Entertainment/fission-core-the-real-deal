@@ -15,7 +15,7 @@ BossScene::BossScene(int xres, int yres)
     degubLine = Line(Vec2(100, 200), Vec2(400, 500), 5);
     m_xres = xres;
     m_yres = yres;
-    m_rectangle = Rectangle(Vec2(m_xres/2, m_yres/2), 50, 50);
+    sceneObjects.push_back(Rectangle(Vec2(m_xres/2, m_yres/2), 50, 50));
     m_pNextScene = nullptr;
     texture = 0;
 }
@@ -45,7 +45,7 @@ void BossScene::Init()
 		GL_RGBA, GL_UNSIGNED_BYTE, imgData);
 	free(imgData);
 
-    m_rectangle.setTexture(&texture);
+    sceneObjects[0].setTexture(&texture);
 }
 
 const static float speed = 2.0f;
@@ -58,28 +58,28 @@ void BossScene::Update()
 
     // MOVEMENT 
     if(get_key(XK_w)) {
-        m_rectangle.move(Vec2(0, speed));
+        sceneObjects[0].move(Vec2(0, speed));
     }
     if(get_key(XK_s)) {
-        m_rectangle.move(Vec2(0, -speed));
+        sceneObjects[0].move(Vec2(0, -speed));
     }
     if(get_key(XK_a)) {
-        m_rectangle.move(Vec2(-speed, 0));
+        sceneObjects[0].move(Vec2(-speed, 0));
     }
     if(get_key(XK_d)) {
-        m_rectangle.move(Vec2(speed, 0));
+        sceneObjects[0].move(Vec2(speed, 0));
     }
 
     // get the angle from the rectangle to the mouse
 
     // ROTATION
     Vec2 mousePos = get_mouse_pos();
-    m_rectangle.rotation = atan2(mousePos.y - m_rectangle.getPosition().y, mousePos.x - m_rectangle.getPosition().x);
+    sceneObjects[0].rotation = atan2(mousePos.y - m_rectangle.getPosition().y, mousePos.x - m_rectangle.getPosition().x);
 }
 
 void BossScene::Render()
 {
-    m_rectangle.draw();
+    sceneObjects[0].draw();
     degubLine.draw();
 }
 

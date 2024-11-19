@@ -1,6 +1,8 @@
 #ifndef SCENE_MANAGER_H
 #define SCENE_MANAGER_H
 
+#include <vector>
+#include "Shapes.h"
 
 // Original code by Michael Guillory
 // Virtual class for scenes
@@ -10,9 +12,11 @@
 class Scene 
 {
 protected:
+    std::vector<Rectangle> sceneObjects;
     int m_xres;
     int m_yres;
     Scene * m_pNextScene;
+
 public:
     virtual ~Scene();
 
