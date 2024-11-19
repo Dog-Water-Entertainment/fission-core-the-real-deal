@@ -29,6 +29,9 @@ Rectangle::Rectangle(Vec2 position, int width, int height)
     size = Vec2(width, height);
     updateVertices();
 
+    collisionBox.vmax = vertices[2];
+    collisionBox.vmin = vertices[0];
+
     color = Vec3(1.0f, 1.0f, 1.0f);
     globalPosition = Vec2(0, 0);
 }
@@ -115,11 +118,10 @@ void Rectangle::draw()
     glPushMatrix();
     if (texture != nullptr) {
         glEnable(GL_TEXTURE_2D);
-        glColor4f(color.x, color.y, color.z, 0.8f);
         glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.0f);
+        glAlphaFunc(GL_GREATER, 0.1f);
         glBindTexture(GL_TEXTURE_2D, *texture);
-        glColor4f(color.x, color.y, color.z, 0.8f);
+        glColor4f(color.x, color.y, color.z, 1.0f);
     } else {
         glColor4f(color.x, color.y, color.z, 0.8f);
     }
@@ -136,7 +138,7 @@ void Rectangle::draw()
             glTexCoord2f(1.0f, 0.0f);
             glVertex2f(drawingVerts[2].x, drawingVerts[2].y);
 
-            glTexCoord2f(1.0f, 1.0f);
+            glTexCoord2f(0.0f, 0.0f);
             glVertex2f(drawingVerts[3].x, drawingVerts[3].y);
         } else {
             for (int i = 0; i < 4; i++)
@@ -147,9 +149,9 @@ void Rectangle::draw()
     glEnd();
 
     if (texture != nullptr) {
-        glDisable(GL_TEXTURE_2D);
         glDisable(GL_ALPHA_TEST);
         glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
     }
 
     glPopMatrix();
