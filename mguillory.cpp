@@ -58,6 +58,20 @@ public:
     }
 };
 
+class RayCastError : public std::exception
+{
+    std::string message;
+public:
+    RayCastError(std::string msg) 
+    {
+        message = msg;
+    }
+    const char *what() const noexcept override
+    {
+        return message.c_str();
+    }
+};
+
 class global 
 {
 public:
@@ -700,6 +714,9 @@ std::vector<Rectangle> Physics2d::raycast(std::vector<Rectangle> rects, Vec2 ori
     Vec2 end = Vec2(origin.x + distance * cos(angle), origin.y + distance * sin(angle));
     for (Shape &rec : rects) {
         // Right now we only have rectangles
+        Rectangle * r = dynamic_cast<Rectangle*>(&rec);
+        Vec2 vmin = r->collisionBox.vmin;
+        Vec2 vmax = r->collisionBox.vmax;
     }
     return hits;
 }
