@@ -870,6 +870,8 @@ void render(void)
     double delta_time = (TimeUtils::get_time() - gl.last_elapsed) / 1000;
     
     gl.last_elapsed = TimeUtils::get_time();
+    
+    PauseMenu::render(gl.xres, gl.yres);
 }
 
 
