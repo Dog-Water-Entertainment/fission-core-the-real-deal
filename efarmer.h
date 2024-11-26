@@ -57,7 +57,7 @@ public:
 	static void setState(PauseMenu::State state);
 	static void pause();
 	static void resume();
-	static void selectOption(PauseMenu::PauseMenuOption);
+	static void selectOption(PauseMenu::PauseMenuOption option);
 	static PauseMenu::SettingButton getSelectedSetting();
 	static float getSettingValue(PauseMenu::Setting setting);
 	static void setSelectedSetting(PauseMenu::SettingButton setting);
@@ -91,10 +91,9 @@ private:
 
 class DialogManager {
 public:
-	template <unsigned int T>
-	static void promptDialog(const std::string& speaker, const std::array<std::string, T>& dialog, int x, int y, int dialogColor);
-	static void promptDialog(const std::string& speaker, std::string& dialog, int x, int y, int dialogColor);
+	static void promptDialog(std::string speaker, std::vector<std::string> dialog, int x, int y, int dialogColor);
 	static bool isDialogActive();
+	static void render(int dt);
 
 private:
 	DialogManager();
@@ -103,6 +102,11 @@ private:
 	static DialogManager* getInstance();
 
 	bool dialogActive;
+	std::vector<std::string> current_dialog;
+	int current_dialog_index;
+	int x_pos;
+	int y_pos;
+	double time_prompted;
 };
 
 #endif

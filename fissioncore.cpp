@@ -535,6 +535,18 @@ int checkKeys(XEvent *e)
         case XK_m:
             gl.movie ^= 1;
             break;
+        case XK_r:
+            DialogManager::promptDialog(
+                "Bob", 
+                {
+                    "skibidi skibidi ohio my rizzler and my gyatt lil bro from OHIO\n skibidi skibdi!", "This is a cool (very cool) dialog manager for the game", 
+                    "Remember to like and subscribe and PLEASE wishlist Fission Core on Steam, releasing in 2083."
+                }, 
+                gl.xres / 2, 
+                50, 
+                0x00000000
+            );
+            break;
         case XK_n:
             gl.dark = !gl.dark;
             break;
@@ -870,8 +882,7 @@ void render(void)
     double delta_time = (TimeUtils::get_time() - gl.last_elapsed) / 1000;
     
     gl.last_elapsed = TimeUtils::get_time();
-    
-    PauseMenu::render(gl.xres, gl.yres);
+    DialogManager::render(delta_time);
 }
 
 

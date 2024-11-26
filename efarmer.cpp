@@ -6,7 +6,9 @@
 #include <GL/glx.h>
 #include <string>
 #include "efarmer.h"
+#include "TimeUtils.h"
 #include <map>
+#include <cmath>
 
 PauseMenu* PauseMenu::m_instance = nullptr;
 const int PauseMenu::SELECTED_BUTTON_COLOR = 0x0000FF00;
@@ -247,12 +249,27 @@ bool Termination::IsTerminated()
 }
 
 DialogManager::DialogManager() {
-
+	this->dialogActive = false;
+	this->current_dialog = {};
+	this->current_dialog_index = 0;
+	this->x_pos = 0;
+	this->y_pos = 0;
+	this->time_prompted = 0;
 }
 
-template <unsigned int T>
-void DialogManager::promptDialog(const std::string& speaker, const std::array<std::string, T>& dialog, int x, int y, int dialogColor) {
+void DialogManager::promptDialog(std::string speaker, std::vector<std::string> dialog, int x, int y, int dialogColor) {
+	DialogManager* instance = DialogManager::getInstance();
 
+	if (DialogManager::isDialogActive()) {
+		return;
+	}
+
+	instance->current_dialog_index = 0;
+	instance->dialogActive = true;
+	instance->current_dialog = dialog;
+	instance->x_pos = x;
+	instance->y_pos = y;
+	instance->time_prompted = TimeUtils::get_time();
 }
 
 DialogManager* DialogManager::getInstance() {
@@ -263,10 +280,26 @@ DialogManager* DialogManager::getInstance() {
 	return DialogManager::instance;
 }
 
-void DialogManager::promptDialog(const std::string& speaker, std::string& dialog, int x, int y, int dialogColor) {
-
-}
-
 bool DialogManager::isDialogActive() {
 	return DialogManager::getInstance()->dialogActive;
+}
+
+void DialogManager::render(int dt) {
+	if (!DialogManager::isDialogActive()) {
+		return;
+	}
+
+	DialogManager* instance = DialogManager::getInstance();
+	std::string current_text = instance->current_dialog.at(instance->current_dialog_index);
+	double current_time = TimeUtils::get_time();
+	double time_difference = (current_time - instance->time_prompted) / 1000;
+	int characters_to_render = std::min(static_cast<double>(current_text.size() - 1), time_difference/0.01);
+	std::cout << characters_to_render << "\n";
+	std::string text_to_render = "* " + current_text.substr(0, characters_to_render);
+
+	Rect r;
+	r.bot = instance->y_pos;
+	r.left = instance->x_pos - current_text.size();
+	r.center = 0;
+	ggprint16(&r, 16, 0x00ffffff, text_to_render.c_str());
 }

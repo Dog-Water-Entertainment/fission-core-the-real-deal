@@ -20,3 +20,4 @@ double TimeUtils::get_time()
     double current_time = std::chrono::duration_cast<std::chrono::milliseconds>(time_since_epoch).count();
     return current_time - TimeUtils::m_time_started;
 }
+
