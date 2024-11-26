@@ -539,7 +539,7 @@ int checkKeys(XEvent *e)
             DialogManager::promptDialog(
                 "Bob", 
                 {
-                    "skibidi skibidi ohio my rizzler and my gyatt lil bro from OHIO\n skibidi skibdi!", "This is a cool (very cool) dialog manager for the game", 
+                    "ohio.", "This is a cool (very cool) dialog manager for the game", 
                     "Remember to like and subscribe and PLEASE wishlist Fission Core on Steam, releasing in 2083."
                 }, 
                 gl.xres / 2, 
