@@ -22,7 +22,7 @@
 #include "Image.h"
 #include "Shapes.h"
 
-static Image img[19] = {
+static Image img[20] = {
 	"./images/map_textures/grass.jpg",
     "./images/map_textures/stone.png",
     "./assets/darktile.png",
@@ -41,7 +41,8 @@ static Image img[19] = {
     "./assets/wall_t_right.png",
     "./assets/wall14.png",
     "./assets/wall_edge_left.png",
-    "./assets/wall_edge_right.png"
+    "./assets/wall_edge_right.png",
+    "./assets/chestclosed.png"
 };
 
 class TileMapError : public std::exception
@@ -95,6 +96,7 @@ public:
     GLuint wall14;
     GLuint wall_edge_left;
     GLuint wall_edge_right;
+    GLuint chestClosed;
 
 
     global() {
@@ -471,6 +473,22 @@ void MapLoader::loadTextures()
     free(wall_edge_rightData);
 
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    w = img[19].width;
+    h = img[19].height;
+
+    glGenTextures(1, &g.chestClosed);
+    glBindTexture(GL_TEXTURE_2D, g.chestClosed);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *chest_closed_Data = buildAlphaData(&img[19]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, chest_closed_Data);
+    free(chest_closed_Data);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void MapLoader::LoadMapFile()
@@ -565,6 +583,10 @@ void MapLoader::LoadMapFile()
                     map[i][j] = new WallCornerLeft();
                     map[i][j]->id = 'q';
                     map[i][j]->texture = &g.wall_corner_left;
+                } else if (ch == 'r') {
+                    map[i][j] = new ChestClosed();
+                    map[i][j]->id = 'r';
+                    map[i][j]->texture = &g.chestClosed;
                 } else if (ch == ' ') {
                     continue;
                 } else {
@@ -716,7 +738,7 @@ std::vector<Rectangle> Physics2d::raycast(std::vector<Rectangle> rects, Vec2 ori
         // Right now we only have rectangles
         Rectangle * r = dynamic_cast<Rectangle*>(&rec);
         Vec2 vmin = r->collisionBox.vmin;
-        Vec2 vmax = r->collisionBox.vmax;
+        Vec2 vmax = r->collisionBox.vmax;        
     }
     return hits;
 }

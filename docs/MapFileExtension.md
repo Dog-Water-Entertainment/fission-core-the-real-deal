@@ -39,6 +39,8 @@ p => ![Alt text](../assets/wall_top_left.png "a title")
 
 q => ![Alt text](../assets/wall_top_right.png "a title")
 
+r => ![Alt text](../assets/chestclosed.png "a title")
+
 # Rendering
 
 It is rendered from the bottom left coordinate and is 50x50 pixels
