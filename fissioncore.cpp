@@ -756,6 +756,7 @@ void render(void)
 
     gl.sceneManager.Render();
 
+
     // If current screen is instanceof MapScreen, render player
     if(typeid(*gl.sceneManager.GetCurrentScene()) == typeid(MapScreen)) {
         
@@ -880,11 +881,12 @@ void render(void)
     
     DeadHelp(gl.which);
     DeadCheck(gl.dead, gl.xres, gl.yres, gl.which);
-    dialoguebackground(gl.speaking);    
+    dialoguebackground(gl.speaking);
     double delta_time = (TimeUtils::get_time() - gl.last_elapsed) / 1000;
     
     gl.last_elapsed = TimeUtils::get_time();
     DialogManager::render(delta_time);
+    PauseMenu::render(gl.xres, gl.yres);
 }
 
 
