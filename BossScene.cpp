@@ -4,6 +4,8 @@
 #include "Shapes.h"
 #include "Math.h"
 #include "Image.h"
+#include "fonts.h"
+#include "bmartinez.h"
 #include <cmath>
 #include <X11/keysym.h>
 #include <stdio.h>
@@ -64,8 +66,8 @@ BossScene::~BossScene()
 void BossScene::Init()
 {
     // Todo SETUP HEALTH STUFF
-	player = Player(10, 100);
-	enemy = Enemy(20, 200);
+	player = Player(100, 10);
+	enemy = Enemy(200, 20);
 
     glGenTextures(1, &g.enemy_texture);
     // For grass
@@ -307,6 +309,18 @@ void BossScene::Render()
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glPopMatrix();
 	}
+
+	// Draw Health Text
+	Rect r;
+	r.bot = 190;
+	r.left = m_xres / 2 + 230;
+	r.center = 0;
+	ggprint16(&r, 16, 0x00ffffff, "Health: %d/100", player.HP);
+
+	r.bot = m_yres - 50;
+	r.left = 10;
+	r.center = 0;
+	ggprint16(&r, 16, 0x00ffffff, "Enemy Health: %d/200", enemy.HP);
 }
 
 void BossScene::Release()
