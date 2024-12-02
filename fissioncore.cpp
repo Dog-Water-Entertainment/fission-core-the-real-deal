@@ -542,7 +542,8 @@ int checkKeys(XEvent *e)
                 "Bob", 
                 {
                     "ohio.", "This is a cool (very cool) dialog manager for the game", 
-                    "Remember to like and subscribe and PLEASE wishlist Fission Core on Steam, releasing in 2083."
+                    "Remember to wishlist Fission Core, coming to Steam in 2083!",
+                    "bye.",
                 }, 
                 gl.xres / 2 - 300, 
                 50, 
