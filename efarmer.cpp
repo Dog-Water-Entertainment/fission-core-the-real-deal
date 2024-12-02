@@ -307,7 +307,7 @@ void DialogManager::promptDialog(
 	std::vector<std::string> dialog, 
 	int x, 
 	int y, 
-	int dialogColor
+	int dialog_color
 ) {
 	DialogManager* instance = DialogManager::getInstance();
 
@@ -320,6 +320,8 @@ void DialogManager::promptDialog(
 	instance->current_dialog = dialog;
 	instance->x_pos = x;
 	instance->y_pos = y;
+	instance->dialog_color = dialog_color;
+	instance->speaker = speaker;
 	instance->time_prompted = TimeUtils::get_time();
 }
 
@@ -337,7 +339,7 @@ bool DialogManager::isDialogActive()
 	return DialogManager::getInstance()->dialogActive;
 }
 
-void DialogManager::render(int dt) 
+void DialogManager::render() 
 {
 	if (!DialogManager::isDialogActive()) {
 		return;
@@ -356,7 +358,7 @@ void DialogManager::render(int dt)
 	 * Do not update the character index in case the user skipped the 
 	 * typewriter effect.
 	 */
-	if (current_text.size() - 1 != instance->current_character_index) {
+	if ((int)current_text.size() - 1 != instance->current_character_index) {
 		instance->current_character_index = 
 			std::min(
 				static_cast<double>(current_text.size() - 1),
@@ -385,13 +387,11 @@ void DialogManager::tryAdvanceDialog(bool force)
 
 	std::string current_text = 
 		instance->current_dialog.at(instance->current_dialog_index);
-	auto text_size = current_text.size();
-	
+	int text_size = current_text.size();
+	int last_dialog_index = instance->current_dialog.size() - 1;
+
 	if (instance->current_character_index == text_size - 1 || force) {
-		bool last_character_index = 
-			(int)instance->current_dialog.size() - 1;
-			
-		if (instance->current_dialog_index == last_character_index) {
+		if (instance->current_dialog_index == last_dialog_index) {
 			instance->dialogActive = false;
 		}
 		else {

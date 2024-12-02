@@ -886,11 +886,11 @@ void render(void)
     DeadHelp(gl.which);
     DeadCheck(gl.dead, gl.xres, gl.yres, gl.which);
     dialoguebackground(gl.speaking);
-    double delta_time = (TimeUtils::get_time() - gl.last_elapsed) / 1000;
+    [[maybe_unused]] double delta_time = (TimeUtils::get_time() - gl.last_elapsed) / 1000;
     
     gl.last_elapsed = TimeUtils::get_time();
     
-    DialogManager::render(delta_time);
+    DialogManager::render();
     PauseMenu::render(gl.xres, gl.yres);
 }
 
