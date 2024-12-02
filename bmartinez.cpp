@@ -258,6 +258,53 @@ void Battle::BattleStart(Player& a, Enemy& b)
 
 }
 void Battle::Update(float deltaTime)
+{
+    if (!inBattle)
+        return;
+    if (!madeChoice)
+        //get the thing to render
+        //process the input somehow
+    bool fleed = 0
+        switch (playerChoice) 
+           // case fight:
+        //       (play animation);
+                Player::Attack(b, a.dmgDeal);
+                if (b.HP == 0) 
+                    beatEnemy = 1;
+                break;
+           // case flee:
+           //     (play animation);
+                bool erm = flee(); // 1/100 chance of fleeing maybe ? idk,its 
+                if (erm) {
+                    fleed = 1;
+                    break;  // cuz the only fight in this demo is the boss
+                } else {
+                    //no no no tsk tsk tsk
+                    break;
+                }
+               case heal:
+                   Item::Use(HealingPotion, this->player)
+                   dialogue saying u healed or something idk 
+                   break;
+            default:
+                std::cerr << "something went wrong, try again" << std::endl;
+         }
+        
+         if (beatEnemy) {
+             beatEnemy(); 
+        // dialogue maybe ? ()
+        }
+
+        enemySide(a, b, dead); //check if it kills you in the while loop 
+                               //( not in the function for readability's sake )
+        // maybe ill write a functino here that forces everythin to stop until
+        // you make a choice 
+        // back up to top of while
+        if (player
+    }
+
+*/
+/*
 void BattleStart(Player& a, Enemy& b, bool& dead)
 {
     if (!inBattle)
@@ -492,11 +539,13 @@ Bckgr* Bckgr::getInstance()
     return instance;
 }
 Bckgr* Bckgr::instance = nullptr;
-void Bckgr::dialoguebackground(bool& speaking)
+
+//void Bckgr::dialoguebackground(bool& speaking)
+void Bckgr::dialoguebackground()
 {
-    if (get_key(XK_r))
-        speaking = 1;
+    bool speaking = 1;
     if (speaking) {
+    //  if (DialogManager::isDialogActive()) {
         glDisable(GL_TEXTURE_2D);
         glColor3ub(255, 255, 255);
         glBegin(GL_QUADS);
@@ -514,7 +563,8 @@ void Bckgr::dialoguebackground(bool& speaking)
             glVertex2i(780, 150); //top right  (counter clockwise)
         glEnd(); 
         glEnable(GL_TEXTURE_2D);
-        if (get_key(XK_Return)) {
+        //if (get_key(XK_Return)) {
+	    if (DialogManager::isDialogActive() == 0) {
             speaking = 0;
             return;
         }

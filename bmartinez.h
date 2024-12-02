@@ -102,7 +102,7 @@ class Bckgr
 
     public:
         static Bckgr* getInstance();
-        void dialoguebackground(bool& speaking);
+        void dialoguebackground();
 
 
 };
