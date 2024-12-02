@@ -37,17 +37,38 @@ void MapScreen::Init()
     movement_speed = 0.1;
 }
 
+static bool foundFirst = false;
+static bool foundSecond = false;
+
 void MapScreen::Update()
 {
     Vec2 playerPos = map->getPlayerPos();
 
-
-    // TODO: Change this logic
-    if(get_key(XK_t)) {
+    if(playerPos.x >= 30 && playerPos.x <= 36 &&
+       playerPos.y >= 11 && playerPos.y <= 16 && !foundFirst) {
         BossScene * next = new BossScene(m_xres, m_yres);
         next->setPlayerPos(playerPos.x, playerPos.y);
         m_pNextScene = next;
+        foundFirst = true;
     }
+
+    if(playerPos.x >= 15 && playerPos.x <= 18 &&
+       playerPos.y >= 12 && playerPos.y <= 16 && !foundSecond) {
+        BossScene * next = new BossScene(m_xres, m_yres);
+        next->setPlayerPos(playerPos.x, playerPos.y);
+        m_pNextScene = next;
+        foundSecond = true;
+    }
+
+    // 15, 16
+    // 15, 12
+    // 18, 12
+    // 18, 16
+
+
+
+    // TODO: Change this logic
+
 
     Vec2 newPos = playerPos;
 
@@ -68,9 +89,18 @@ void MapScreen::Update()
         map->setPlayerPos(newPos);
     }
 
-    if(get_key(XK_v)) {
-        movement_speed = 0.8;
-    }
+    std::cout << "Player Pos: " << playerPos.x << ", " << playerPos.y << std::endl;
+
+    // Bounding box to enter next scene
+    // 36, 16
+    // 30 16
+    // 30, 11
+    // 36, 11
+
+    // cringe
+    //if(get_key(XK_v)) {
+    //    movement_speed = 0.8;
+    //}
 }
 
 void MapScreen::Render()
