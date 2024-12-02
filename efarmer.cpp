@@ -132,13 +132,11 @@ PauseMenu::PauseMenu()
 
 void PauseMenu::pause()
 {
-	std::cout << "The game is now paused\n";
 	PauseMenu::get()->state = PauseMenu::State::HOME;
 }
 
 void PauseMenu::resume()
 {
-	std::cout << "The game has been unpaused" << std::endl;
 	PauseMenu::setSelectedOption(PauseMenu::PauseMenuOption::RESUME);
 	PauseMenu::setState(PauseMenu::State::CLOSED);
 }
@@ -270,7 +268,6 @@ void PauseMenu::toggleSetting(PauseMenu::SettingButton settingButton)
 		auto setting = PauseMenu::settingButtonMap.at(settingButton);
 		std::string key = instance->settingKeys.at(setting);
 		float value = instance->m_config.getFloat(key);
-		std::cout << value << "\n";
 
 		if (value == 0) {
 			instance->m_config.setFloat(key, 1);
