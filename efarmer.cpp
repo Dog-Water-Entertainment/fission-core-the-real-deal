@@ -252,6 +252,7 @@ DialogManager::DialogManager() {
 	this->dialogActive = false;
 	this->current_dialog = {};
 	this->current_dialog_index = 0;
+	this->current_character_index = 0;
 	this->x_pos = 0;
 	this->y_pos = 0;
 	this->time_prompted = 0;
@@ -290,16 +291,54 @@ void DialogManager::render(int dt) {
 	}
 
 	DialogManager* instance = DialogManager::getInstance();
-	std::string current_text = instance->current_dialog.at(instance->current_dialog_index);
+
+	std::string current_text = 
+		instance->current_dialog.at(instance->current_dialog_index);
+
 	double current_time = TimeUtils::get_time();
 	double time_difference = (current_time - instance->time_prompted) / 1000;
-	int characters_to_render = std::min(static_cast<double>(current_text.size() - 1), time_difference/0.01);
-	std::cout << characters_to_render << "\n";
-	std::string text_to_render = "* " + current_text.substr(0, characters_to_render);
+	
+	/**
+	 * Do not update the character index in case the user skipped the 
+	 * typewriter effect.
+	 */
+	if (current_text.size() - 1 != instance->current_character_index) {
+		instance->current_character_index = 
+			std::min(
+				static_cast<double>(current_text.size() - 1),
+				time_difference/0.01
+			);		
+	}
+
+	std::string text_to_render = "* " + current_text.substr(0, instance->current_character_index + 1);
 
 	Rect r;
 	r.bot = instance->y_pos;
-	r.left = instance->x_pos - current_text.size();
+	r.left = instance->x_pos;
 	r.center = 0;
 	ggprint16(&r, 16, 0x00ffffff, text_to_render.c_str());
+}
+
+void DialogManager::tryAdvanceDialog(bool force) {
+	if (!DialogManager::isDialogActive()) {
+		return;
+	}
+
+	DialogManager* instance = DialogManager::getInstance();
+
+	std::string current_text = instance->current_dialog.at(instance->current_dialog_index);
+
+	if (instance->current_character_index == current_text.size() - 1 || force) {
+		if (instance->current_dialog_index == instance->current_dialog.size() - 1) {
+			instance->dialogActive = false;
+		}
+		else {
+			instance->current_dialog_index++;
+			instance->current_character_index = 0;
+			instance->time_prompted = TimeUtils::get_time();
+		}
+	}
+	else {
+		instance->current_character_index = current_text.size() - 1;
+	}
 }

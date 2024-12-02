@@ -94,6 +94,7 @@ public:
 	static void promptDialog(std::string speaker, std::vector<std::string> dialog, int x, int y, int dialogColor);
 	static bool isDialogActive();
 	static void render(int dt);
+	static void tryAdvanceDialog(bool force);
 
 private:
 	DialogManager();
@@ -104,6 +105,7 @@ private:
 	bool dialogActive;
 	std::vector<std::string> current_dialog;
 	int current_dialog_index;
+	int current_character_index;
 	int x_pos;
 	int y_pos;
 	double time_prompted;

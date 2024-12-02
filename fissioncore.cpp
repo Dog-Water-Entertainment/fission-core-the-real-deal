@@ -544,7 +544,7 @@ int checkKeys(XEvent *e)
                     "ohio.", "This is a cool (very cool) dialog manager for the game", 
                     "Remember to like and subscribe and PLEASE wishlist Fission Core on Steam, releasing in 2083."
                 }, 
-                gl.xres / 2, 
+                gl.xres / 2 - 300, 
                 50, 
                 0x00000000
             );
@@ -555,6 +555,9 @@ int checkKeys(XEvent *e)
         case XK_w:
             //timers.recordTime(&timers.walkTime);
             //gl.walk ^= 1;
+            break;
+        case XK_x:
+            DialogManager::tryAdvanceDialog(false);
             break;
         case XK_e:
             gl.exp.pos[0] = 200.0;
