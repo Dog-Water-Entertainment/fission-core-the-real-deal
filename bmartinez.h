@@ -9,7 +9,7 @@ class Enemy;
 class Player;
 class Battle;
 class Item;
-class Bckgr;
+//class Bckgr;
 enum class ItemList;
 
 class Item
@@ -93,7 +93,7 @@ class Enemy
                                                         //if you pass 
                                                         //it a potion it'll work
 };
-
+/*
 class Bckgr
 {
     private:
@@ -106,6 +106,7 @@ class Bckgr
 
 
 };
+*/
 //void dialoguebackground(bool& speaking);
 void darkMode(bool click, int xres, int yres); //dim the lights 
 void DeadCheck(bool& state, int xres, int yres, int which); // dead scene 

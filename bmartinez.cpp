@@ -38,7 +38,7 @@
 // - dark souls boss vanquished scene 
 //---------------------------------------------------------------------------
 // Forward Declarations////////////////////////////////////////////////////////
-class Bckgr;
+//class Bckgr;
 class Item;
 class Player;
 class Enemy;
@@ -532,6 +532,7 @@ void darkMode(bool click, int xres, int yres)
 //////////////////////////////////////////////////////////////////////////////
 ///
 /// dialogue background //////////////////////////////////////////////////////
+/*
 Bckgr* Bckgr::getInstance()
 {
     if (instance == nullptr)
@@ -570,4 +571,4 @@ void Bckgr::dialoguebackground()
         }
     }
 }
-
+*/
