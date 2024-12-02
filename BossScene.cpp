@@ -102,8 +102,8 @@ void BossScene::Init()
 {
 	srand(time(NULL));
     // Todo SETUP HEALTH STUFF
-	player = Player(100, 10);
-	enemy = Enemy(200, 20);
+	player = Player(100, 200);
+	enemy = Enemy(200, 15);
 
     glGenTextures(1, &g.enemy_texture);
     // For grass
@@ -188,6 +188,16 @@ void BossScene::Init()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 		GL_RGBA, GL_UNSIGNED_BYTE, healData);
 	free(healData);
+
+	DialogManager::promptDialog(
+		"Enemy", 
+		{
+			"An enemy has appeared!"
+		}, 
+		m_xres / 2 - 300, 
+		50, 
+		0x00ffffff
+	);
 }
 
 const static float speed = 2.0f;
@@ -201,19 +211,21 @@ void startAnimation() {
 	// TODO: Implement me
 }
 
+std::string stringify(int num) {
+	return num == 1 ? "Enemy attacked the player for 15 damage!" : "Enemy missed!";
+}
+
 static int backwards = 0;
 static int input_inpulse = 0;
 static int first = 1;
-static int difficulty = 20;
+static int difficulty = 12;
 static int playerTurn = 1;
 static int move = 0;
+static int counter = 0;
+static int firstPass = 1;
 
 void BossScene::Update()
 {
-	if(DialogManager::isDialogActive()) {
-		return;
-	}
-
 	if (get_key(XK_space) && first) {
 		input_inpulse = 1;
 		first = false;
@@ -223,12 +235,37 @@ void BossScene::Update()
 	if (!get_key(XK_space)) {
 		first = true;
 	}
+
+	if(input_inpulse && DialogManager::isDialogActive()) {
+		DialogManager::tryAdvanceDialog(false);
+	}
+
+	if(DialogManager::isDialogActive()) {
+		return;
+	}
+
+	if (enemy.HP <= 0) {
+		DialogManager::promptDialog(
+			"Enemy", 
+			{
+				"Enemy has been defeated!"
+			}, 
+			m_xres / 2 - 300, 
+			50, 
+			0x00ffffff
+		);
+		exitScene();
+		return;
+	}
+
+
 	if (move > 2) {
 		playerTurn = !playerTurn;
 		move = 0;
 	}
 
 	if (playerTurn) {
+		int multiplier = 1;
 		currMouse.position = get_mouse_pos();
 		int mouseClick = get_mouse_inpulse();
 		if(get_key(XK_y)) {
@@ -249,7 +286,23 @@ void BossScene::Update()
 			}
 
 			if (input_inpulse) {
-				player.Attack(enemy, player.dmgDeal);
+				if (fighting_offset >= 200 && fighting_offset <= 220) {
+					multiplier = 4;
+				} else if (fighting_offset <= 105 || fighting_offset >= 315) {
+					multiplier = 0;
+				}
+				
+				DialogManager::promptDialog(
+					"Player " + std::to_string(counter), 
+					{
+						"Player attacked the enemy for " + std::to_string(player.dmgDeal * multiplier) + " damage!"
+					}, 
+					m_xres / 2 - 300, 
+					50, 
+					0x00ffffff
+				);
+				counter++;
+				player.Attack(enemy, player.dmgDeal * multiplier);
 				move++;
 				fighting = false;
 			}
@@ -257,9 +310,8 @@ void BossScene::Update()
 
 
 		// TODO: Implement a size modifier for the buttons
-		if(mouseClick) {
+		if(mouseClick && !fighting) {
 			int button = getButtonHover(m_xres, m_yres);
-			printf("Button: %d\n", button);
 			if(button == FIGHT) {
 				// Fight
 				fighting = true;
@@ -268,7 +320,7 @@ void BossScene::Update()
 			} else if(button == HEAL) {
 				// Heal
 				// TODO Implement heal logic
-				player.HP += 5;
+				player.HP += 10;
 				move++;
 			}
 		}
@@ -276,34 +328,40 @@ void BossScene::Update()
 		// Enemy Turn
 
 		// Please fix logic
-		if(getRandomNumber(0, 5) != 1) {
-			enemy.Attack(player, enemy.dmgDeal, *dead);
-			DialogManager::promptDialog(
-				"Enemy", 
-				{
-					"Enemy attacked you for " + std::to_string(enemy.dmgDeal) + " damage!"
-				}, 
-				m_xres / 2 - 300, 
-				50, 
-				0x00000000
-			);
-		} else {
-			DialogManager::promptDialog(
-				"Enemy", 
-				{
-					"Enemy missed!"
-				}, 
-				m_xres / 2 - 300, 
-				50, 
-				0x00000000
-			);
+		int array[3];
+		for (int i = 0; i < 3; i++) {
+			if(getRandomNumber(0, 4) != 1) {
+				enemy.Attack(player, enemy.dmgDeal, *dead);
+				array[i] = 1;
+			} else {
+				array[i] = 0;
+			}
+			move++;
 		}
-		move++;
+
+		DialogManager::promptDialog(
+			"Enemy", 
+			{
+				stringify(array[0]),
+				stringify(array[1]),
+				stringify(array[2])
+			}, 
+			m_xres / 2 - 300, 
+			50, 
+			0x00ffffff
+		);
 	}
 }
 
 void BossScene::Render()
 {
+	if (DialogManager::isDialogActive() && firstPass) {
+		return;
+	} else {
+		firstPass = 0;
+	}
+
+
 	// Fight Button
 	glEnable(GL_TEXTURE_2D);
 	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);

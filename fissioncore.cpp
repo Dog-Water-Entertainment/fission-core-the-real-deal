@@ -572,6 +572,9 @@ int checkKeys(XEvent *e)
             timers.recordTime(&gl.exp44.time);
             gl.exp44.onoff ^= 1;
             break;
+        case XK_space:
+            DialogManager::tryAdvanceDialog(false);
+            break;
         case XK_Left:
             break;
         case XK_Right:
