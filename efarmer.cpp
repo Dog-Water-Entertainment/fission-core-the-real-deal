@@ -177,7 +177,7 @@ void PauseMenu::displayPauseOptionButton(
 	int bot, 
 	int left, 
 	const std::string &text
-	)
+)
 {
 	int color = correspondingOption == PauseMenu::getSelectedOption() 
 		? PauseMenu::SELECTED_BUTTON_COLOR 
