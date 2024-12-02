@@ -64,7 +64,8 @@ BossScene::~BossScene()
 void BossScene::Init()
 {
     // Todo SETUP HEALTH STUFF
-
+	player = Player(10, 100);
+	enemy = Enemy(20, 200);
 
     glGenTextures(1, &g.enemy_texture);
     // For grass
@@ -210,6 +211,7 @@ void BossScene::Render()
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
+	// Heal Button
 	glEnable(GL_TEXTURE_2D);
 	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 	glPushMatrix();
@@ -229,6 +231,7 @@ void BossScene::Render()
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
+	// Run Button
 	glEnable(GL_TEXTURE_2D);
 	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 	glPushMatrix();
@@ -248,6 +251,7 @@ void BossScene::Render()
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
+	// Center Radial
 	glEnable(GL_TEXTURE_2D);
 	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 	glPushMatrix();
@@ -267,6 +271,8 @@ void BossScene::Render()
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
+
+	// Enemy texture
 	glEnable(GL_TEXTURE_2D);
 	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 	glPushMatrix();

@@ -4,6 +4,7 @@
 #include "SceneManager.h"
 #include "Inputs.h"
 #include "Shapes.h"
+#include "bmartinez.h"
 #include <GL/glx.h>
 
 // Origin: Mykull Guillory
@@ -11,6 +12,8 @@
 class BossScene : public Scene
 {
     private:
+        Player player;
+        Enemy enemy;
         float anglePlayerLook;
         Rectangle m_rectangle;
 
