@@ -231,13 +231,13 @@ void Player::Heal(Stat heals)
 ///////////////////////////////////////////////////////////////////////////////
 ///
 //ENEMY STUFF//////////////////////////////////////////////////////////////////
-Enemy::Enemy(Stat hp, Stat) : MaxHP(hp), HP(hp), dmgDeal(2) {}
+Enemy::Enemy(Stat hp, Stat dmgIn) : MaxHP(hp), HP(hp), dmgDeal(dmgIn) {}
 Enemy::Enemy() : MaxHP(50), HP(50), dmgDeal(8) {}
 void Enemy::Attack(Player &a, Stat dmg, bool& dead) // pass dead so that it can
                                                     // be triggered`
 {
     a.HP -= dmg;
-    if (a.HP < 0) {
+    if (a.HP <= 0) {
         a.HP = 0;
         dead = 1;
     }

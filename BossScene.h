@@ -5,6 +5,7 @@
 #include "Inputs.h"
 #include "Shapes.h"
 #include "bmartinez.h"
+#include "efarmer.h"
 #include <GL/glx.h>
 
 // Origin: Mykull Guillory
@@ -18,6 +19,7 @@ class BossScene : public Scene
         Rectangle m_rectangle;
         Vec2 oldPlayerPos;
         bool fighting;
+        bool * dead;
         bool isFighting();
 
         Line degubLine;
@@ -30,6 +32,7 @@ class BossScene : public Scene
         void Render();
         void Release();
 
+        void setDead(bool * dead);
 
         void setPlayerPos(float x, float y);
         void exitScene();

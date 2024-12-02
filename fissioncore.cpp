@@ -42,6 +42,7 @@
 // Scene Includes
 #include "SceneManager.h"
 #include "MapScreen.h"
+#include "BossScene.h"
 #include "TimeUtils.h"
 
 //defined types
@@ -882,6 +883,11 @@ void render(void)
     
     DeadHelp(gl.which);
     DeadCheck(gl.dead, gl.xres, gl.yres, gl.which);
+    
+    if(typeid(*gl.sceneManager.GetCurrentScene()) == typeid(BossScene)) {
+        BossScene *bossScene = dynamic_cast<BossScene*>(gl.sceneManager.GetCurrentScene());
+        bossScene->setDead(&gl.dead);
+    }
 
     [[maybe_unused]] double delta_time = (TimeUtils::get_time() - gl.last_elapsed) / 1000;
     

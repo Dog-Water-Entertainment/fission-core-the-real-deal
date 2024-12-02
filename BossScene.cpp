@@ -6,8 +6,11 @@
 #include "Image.h"
 #include "fonts.h"
 #include "bmartinez.h"
+#include "efarmer.h"
 #include <cmath>
 #include <X11/keysym.h>
+#include <stdlib.h>
+#include <time.h>
 #include <stdio.h>
 
 // Origin: Mykull Guillory
@@ -25,6 +28,10 @@ enum Buttons {
 	RUN,
 	HEAL
 };
+
+int getRandomNumber(int min, int max) {
+	return rand() % (max - min + 1) + min;
+}
 
 class TextureContainer {
     public:
@@ -67,13 +74,17 @@ BossScene::~BossScene()
 int getButtonHover(int xres, int yres) {
 	// Todo Implement me
 	// Check Fight
-	if (currMouse.position.x >= (xres / 2) - 100 && currMouse.position.x <= (xres / 2) + 100 &&
-		currMouse.position.y >= yres-598 && currMouse.position.y <= 152.0f) {
+	if (currMouse.position.x >= (xres / 2) - 100 && 
+		currMouse.position.x <= (xres / 2) + 100 &&
+		currMouse.position.y >= yres-598 && 
+		currMouse.position.y <= 152.0f) {
 		return FIGHT;
 	}
 	// Check Run
-	if (currMouse.position.x >= xres - 250 && currMouse.position.x <= xres - 50 &&
-		currMouse.position.y >= 2.0f && currMouse.position.y <= 152.0f) {
+	if (currMouse.position.x >= xres - 250 && 
+		currMouse.position.x <= xres - 50 &&
+		currMouse.position.y >= 2.0f && 
+		currMouse.position.y <= 152.0f) {
 		return RUN;
 	}
 
@@ -89,6 +100,7 @@ int getButtonHover(int xres, int yres) {
 
 void BossScene::Init()
 {
+	srand(time(NULL));
     // Todo SETUP HEALTH STUFF
 	player = Player(100, 10);
 	enemy = Enemy(200, 20);
@@ -182,32 +194,111 @@ const static float speed = 2.0f;
 
 bool BossScene::isFighting() 
 {
-	return false;
+	return fighting;
 }
+
+void startAnimation() {
+	// TODO: Implement me
+}
+
+static int backwards = 0;
+static int input_inpulse = 0;
+static int first = 1;
+static int difficulty = 20;
+static int playerTurn = 1;
+static int move = 0;
 
 void BossScene::Update()
 {
-	currMouse.position = get_mouse_pos();
-	int mouseClick = get_mouse_inpulse();
-    if(get_key(XK_y)) {
-        m_pNextScene = new MapScreen(m_xres, m_yres);
-    }
-    // TODO: Implement space bar for attacking
+	if(DialogManager::isDialogActive()) {
+		return;
+	}
 
+	if (get_key(XK_space) && first) {
+		input_inpulse = 1;
+		first = false;
+	} else {
+		input_inpulse = 0;
+	}
+	if (!get_key(XK_space)) {
+		first = true;
+	}
+	if (move > 2) {
+		playerTurn = !playerTurn;
+		move = 0;
+	}
 
-	// TODO: Implement a size modifier for the buttons
-	if(mouseClick) {
-		int button = getButtonHover(m_xres, m_yres);
-		printf("Button: %d\n", button);
-		if(button == FIGHT) {
-			// Fight
-			// TODO Implement fight logic
-		} else if(button == RUN) {
-			exitScene();
-		} else if(button == HEAL) {
-			// Heal
-			// TODO Implement heal logic
+	if (playerTurn) {
+		currMouse.position = get_mouse_pos();
+		int mouseClick = get_mouse_inpulse();
+		if(get_key(XK_y)) {
+			m_pNextScene = new MapScreen(m_xres, m_yres);
 		}
+		// TODO: Implement space bar for attacking
+		if(isFighting()) {
+			if (fighting_offset < 420 && backwards == 0) {
+				fighting_offset += difficulty;
+			} else if (fighting_offset >= 420) {
+				backwards = 1;
+				fighting_offset -= difficulty;
+			} else if (fighting_offset > 0 && backwards == 1) {
+				fighting_offset -= difficulty;
+			} else if (fighting_offset <= 0) {
+				backwards = 0;
+				fighting_offset += difficulty;
+			}
+
+			if (input_inpulse) {
+				player.Attack(enemy, player.dmgDeal);
+				move++;
+				fighting = false;
+			}
+		}
+
+
+		// TODO: Implement a size modifier for the buttons
+		if(mouseClick) {
+			int button = getButtonHover(m_xres, m_yres);
+			printf("Button: %d\n", button);
+			if(button == FIGHT) {
+				// Fight
+				fighting = true;
+			} else if(button == RUN) {
+				exitScene();
+			} else if(button == HEAL) {
+				// Heal
+				// TODO Implement heal logic
+				player.HP += 5;
+				move++;
+			}
+		}
+	} else {
+		// Enemy Turn
+
+		// Please fix logic
+		if(getRandomNumber(0, 5) != 1) {
+			enemy.Attack(player, enemy.dmgDeal, *dead);
+			DialogManager::promptDialog(
+				"Enemy", 
+				{
+					"Enemy attacked you for " + std::to_string(enemy.dmgDeal) + " damage!"
+				}, 
+				m_xres / 2 - 300, 
+				50, 
+				0x00000000
+			);
+		} else {
+			DialogManager::promptDialog(
+				"Enemy", 
+				{
+					"Enemy missed!"
+				}, 
+				m_xres / 2 - 300, 
+				50, 
+				0x00000000
+			);
+		}
+		move++;
 	}
 }
 
@@ -332,13 +423,13 @@ void BossScene::Render()
 		// Draw the little radial thing
 		glEnable(GL_TEXTURE_2D);
 		glPushMatrix();
-		glColor4f(1.0f, 1.0f, 0.0f, 0.8f);
+		glColor4f(0.8f, 1.0f, 0.0f, 0.8f);
 		glTranslatef(m_xres / 2 - 210 + fighting_offset, 170.0f, 0.0f);
 		glBegin(GL_QUADS);
 			glVertex2i(0, 0);
 			glVertex2i(0, 100);
-			glVertex2i(10, 100);
-			glVertex2i(10, 0);
+			glVertex2i(5, 100);
+			glVertex2i(5, 0);
 		glEnd();
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glPopMatrix();
@@ -369,6 +460,11 @@ void BossScene::exitScene()
 void BossScene::setPlayerPos(float x, float y)
 {
 	oldPlayerPos = Vec2(x, y);
+}
+
+void BossScene::setDead(bool * dead)
+{
+	this->dead = dead;
 }
 
 // #include "BossScene.h"
