@@ -38,6 +38,7 @@
 // - dark souls boss vanquished scene 
 //---------------------------------------------------------------------------
 // Forward Declarations////////////////////////////////////////////////////////
+class Bckgr;
 class Item;
 class Player;
 class Enemy;
@@ -245,20 +246,34 @@ void Enemy::Attack(Player &a, Stat dmg, bool& dead) // pass dead so that it can
 ///
 //BATTLE///////////////////////////////////////////////////////////////////////
 /*
+void Battle::BattleStart(Player& a, Enemy& b)
+{
+    this->player = &a;
+    this->enemy = &b;
+    inBattle = 1;
+    playerDead = 0;
+    beatEnemy = 0;
+    madeChoice = 0;
+    playerChoice = -1;
+
+}
+void Battle::Update(float deltaTime)
 void BattleStart(Player& a, Enemy& b, bool& dead)
 {
-    //type Choice = ?
-    int tempChoice = 0;
-    bool beatEnemy = 0;   //changed if you kill enemy. breaks out of while
-    bool fleed = 0;
-    //would be good to make a boss beaten screen dark souls type thing
-    while (dead == 0 || beatEnemy == 0) {
+    if (!inBattle)
+        return;
+    if (!madeChoice)
+        //get the thing to render
+        //process the input somehow
+    bool fleed = 0
+   @@@// while (dead == 0 || beatEnemy == 0) {
         //wait for choice somehow ? or prompt choice or maybe wait at the end 
+        //
         //of the loop for choice to be made before we continue back to thispoint
         //
-        //getChoice() 
-        switch (tempChoice) // promps the user to choose between 
-                        // items attack fleeing etc.
+ @@@       //getChoice() 
+     
+        switch (playerChoice) 
            // case fight:
         //       (play animation);
                 Player::Attack(b, a.dmgDeal);
@@ -275,31 +290,40 @@ void BattleStart(Player& a, Enemy& b, bool& dead)
                     //no no no tsk tsk tsk
                     break;
                 }
-          //  case item:
-               // ItemList::chosen = itemScreen();
-               // a.Use(chosen); |i think thats how i set it up lmfao, hopefully
-               // dialgoue for success| it deletes the item from the thing after 
-                break;                                              it is used
-                
-            
+         @ //  case item:
+         @      // ItemList::chosen = itemScreen();
+         @     // a.Use(chosen); |i think thats how i set it up lmfao, hopefully
+         @     // dialgoue for success| it deletes the item from the thing afte
+               case heal:
+                   Item::Use(HealingPotion, this->player)
+                   dialogue saying u healed or something idk 
+                   break;
             default:
-                  idiot
-        
-         if (beatEnemy == 1) {
-             beatEnemy(); 
-        //     breaks out of the battle scene somehow and prints boss killed
-          
+                std::cerr << "something went wrong, try again" << std::endl;
          }
         
+         if (beatEnemy) {
+             beatEnemy(); 
         // dialogue maybe ? ()
+        }
+
         enemySide(a, b, dead); //check if it kills you in the while loop 
                                //( not in the function for readability's sake )
         // maybe ill write a functino here that forces everythin to stop until
         // you make a choice 
         // back up to top of while
+        if (player
     }
 
 
+}
+
+Battle::Battle() : inBattle(0), madeChoice(0) {}
+
+static Battle& Battle::getInstance()
+{
+    static Battle instance;
+    return instance;
 }
 */
 /*
@@ -461,9 +485,16 @@ void darkMode(bool click, int xres, int yres)
 //////////////////////////////////////////////////////////////////////////////
 ///
 /// dialogue background //////////////////////////////////////////////////////
-void dialoguebackground(bool& speaking)
+Bckgr* Bckgr::getInstance()
 {
-    if (get_key(XK_m))
+    if (instance == nullptr)
+        instance = new Bckgr();
+    return instance;
+}
+Bckgr* Bckgr::instance = nullptr;
+void Bckgr::dialoguebackground(bool& speaking)
+{
+    if (get_key(XK_r))
         speaking = 1;
     if (speaking) {
         glDisable(GL_TEXTURE_2D);
@@ -488,8 +519,5 @@ void dialoguebackground(bool& speaking)
             return;
         }
     }
-
-
-
 }
 

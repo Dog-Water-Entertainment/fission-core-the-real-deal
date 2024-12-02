@@ -7,7 +7,9 @@ typedef int Stat;
 
 class Enemy;
 class Player;
+class Battle;
 class Item;
+class Bckgr;
 enum class ItemList;
 
 class Item
@@ -24,6 +26,32 @@ class Item
                                        // at all before it tries unequipping
 
 };
+/*
+class Battle
+{
+    public:
+        static Battle& getInstance();
+        void BattleStart(Player& a, Enemy& b);
+        void Update();
+    private:
+        Battle() : inBattle(0), madeChoice(0) {}
+
+
+        Player* player = nullptr;
+        Enemy* enemy = nullptr;
+        bool inBattle;
+        bool playerDead;
+        bool beatEnemy;
+        bool madeChoice;
+        int playerChoice
+
+
+
+
+
+
+}
+*/
 class Player
 {
     public:
@@ -66,7 +94,19 @@ class Enemy
                                                         //it a potion it'll work
 };
 
-void dialoguebackground(bool& speaking);
+class Bckgr
+{
+    private:
+        static Bckgr* instance;
+        Bckgr() {}
+
+    public:
+        static Bckgr* getInstance();
+        void dialoguebackground(bool& speaking);
+
+
+};
+//void dialoguebackground(bool& speaking);
 void darkMode(bool click, int xres, int yres); //dim the lights 
 void DeadCheck(bool& state, int xres, int yres, int which); // dead scene 
 int DeadHelp(int& which); // helps choose which quip will be displayed
