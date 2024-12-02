@@ -143,6 +143,8 @@ void BossScene::Update()
 
 void BossScene::Render()
 {
+
+	// Fight Button
 	glEnable(GL_TEXTURE_2D);
 	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 	glPushMatrix();
@@ -150,12 +152,50 @@ void BossScene::Render()
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glBindTexture(GL_TEXTURE_2D, g.fight_button_texture);
 	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-	glTranslatef(m_xres - 200, 0.0f, 0.0f);
+	glTranslatef((m_xres / 2) - 100, 2.0f, 0.0f);
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 150);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(200, 150);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(200, 0);
+	glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+
+	glEnable(GL_TEXTURE_2D);
+	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+	glPushMatrix();
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glBindTexture(GL_TEXTURE_2D, g.heal_button_texture);
+	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+	glTranslatef(50, 2.0f, 0.0f);
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 150);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(200, 150);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(200, 0);
+	glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+
+	glEnable(GL_TEXTURE_2D);
+	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+	glPushMatrix();
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glBindTexture(GL_TEXTURE_2D, g.run_button_texture);
+	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+	glTranslatef(m_xres - 250, 2.0f, 0.0f);
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 150);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(200, 150);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(200, 0);
 	glEnd();
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_ALPHA_TEST);
