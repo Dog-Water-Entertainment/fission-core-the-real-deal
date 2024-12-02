@@ -26,12 +26,13 @@ class TextureContainer {
         GLuint run_button_texture;
         GLuint heal_button_texture;
         TextureContainer() {}
-} g;
+} static g;
 
 BossScene::BossScene(int xres, int yres)
 {
     m_xres = xres;
     m_yres = yres;
+	m_pNextScene = nullptr;
 }
 
 BossScene::~BossScene()
