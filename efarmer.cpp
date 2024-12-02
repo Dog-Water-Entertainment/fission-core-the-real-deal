@@ -132,13 +132,11 @@ PauseMenu::PauseMenu()
 
 void PauseMenu::pause()
 {
-	std::cout << "The game is now paused\n";
 	PauseMenu::get()->state = PauseMenu::State::HOME;
 }
 
 void PauseMenu::resume()
 {
-	std::cout << "The game has been unpaused" << std::endl;
 	PauseMenu::setSelectedOption(PauseMenu::PauseMenuOption::RESUME);
 	PauseMenu::setState(PauseMenu::State::CLOSED);
 }
@@ -167,12 +165,17 @@ void PauseMenu::selectOption(PauseMenu::PauseMenuOption option)
 	}
 }
 
-void PauseMenu::setSelectedSetting(PauseMenu::SettingButton setting) 
+void PauseMenu::setSelectedSetting(PauseMenu::SettingButton setting)
 {
 	PauseMenu::get()->selectedSetting = setting;
 }
 
-void PauseMenu::displayPauseOptionButton(PauseMenu::PauseMenuOption correspondingOption, int bot, int left, const std::string &text)
+void PauseMenu::displayPauseOptionButton(
+	PauseMenu::PauseMenuOption correspondingOption, 
+	int bot, 
+	int left, 
+	const std::string &text
+)
 {
 	int color = correspondingOption == PauseMenu::getSelectedOption() 
 		? PauseMenu::SELECTED_BUTTON_COLOR 
@@ -181,7 +184,12 @@ void PauseMenu::displayPauseOptionButton(PauseMenu::PauseMenuOption correspondin
 	PauseMenu::get()->displayButton(bot, left, text, color);
 }
 
-void PauseMenu::displaySettingButton(PauseMenu::SettingButton settingButton, int bot, int left, const std::string &text)
+void PauseMenu::displaySettingButton(
+	PauseMenu::SettingButton settingButton, 
+	int bot, 
+	int left, 
+	const std::string &text
+)
 {
 	int color = settingButton == PauseMenu::getSelectedSetting() 
 		? PauseMenu::SELECTED_BUTTON_COLOR 
@@ -208,7 +216,12 @@ PauseMenu::SettingButton PauseMenu::getSelectedSetting()
 	return PauseMenu::get()->selectedSetting;
 }
 
-void PauseMenu::displayButton(int bot, int left, const std::string &text, int color) {
+void PauseMenu::displayButton(
+	int bot, 
+	int left, 
+	const std::string &text, 
+	int color
+) {
 	Rect r;
 	r.bot = bot;
 	r.left = left;
@@ -216,7 +229,7 @@ void PauseMenu::displayButton(int bot, int left, const std::string &text, int co
 	ggprint16(&r, 16, color, text.c_str());
 }
 
-float PauseMenu::getSettingValue(PauseMenu::Setting setting) 
+float PauseMenu::getSettingValue(PauseMenu::Setting setting)
 {
 	PauseMenu* instance = PauseMenu::get();
 
@@ -241,7 +254,7 @@ bool PauseMenu::isPaused()
 	return get()->state != PauseMenu::State::CLOSED;
 }
 
-void PauseMenu::toggleSetting(PauseMenu::SettingButton settingButton) 
+void PauseMenu::toggleSetting(PauseMenu::SettingButton settingButton)
 {
 	PauseMenu* instance = PauseMenu::get();
 
@@ -255,7 +268,6 @@ void PauseMenu::toggleSetting(PauseMenu::SettingButton settingButton)
 		auto setting = PauseMenu::settingButtonMap.at(settingButton);
 		std::string key = instance->settingKeys.at(setting);
 		float value = instance->m_config.getFloat(key);
-		std::cout << value << "\n";
 
 		if (value == 0) {
 			instance->m_config.setFloat(key, 1);

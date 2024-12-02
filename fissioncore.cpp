@@ -290,12 +290,8 @@ int main(void)
     auto startTime = std::chrono::high_resolution_clock::now();
     int frameCount = 0;
 
-    //Example usage of a config loading
-    std::cout << gl.cnfg.getString("key") << std::endl;
-
     int interFPS = gl.cnfg.getInt("targetFPS");
     if(interFPS != -1) {
-        std::cout << "doin sum" << std::endl;
         gl.TARGET_FPS = interFPS;
     }
 
@@ -885,7 +881,7 @@ void render(void)
     
     DeadHelp(gl.which);
     DeadCheck(gl.dead, gl.xres, gl.yres, gl.which);
-    
+
     [[maybe_unused]] double delta_time = (TimeUtils::get_time() - gl.last_elapsed) / 1000;
     
     gl.last_elapsed = TimeUtils::get_time();
