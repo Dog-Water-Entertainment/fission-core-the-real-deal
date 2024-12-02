@@ -10,14 +10,28 @@
 
 // Origin: Mykull Guillory
 
+Image bossImages[5] = {
+    "./assets/gameplay/enemy.png", // 9:21
+    "./assets/gameplay/fight_radial.png", // 21:9
+    "./assets/gameplay/fight_button.png", // 4:3
+    "./assets/gameplay/run_button.png", // 4:3
+    "./assets/gameplay/heal_button.png" // 4:3
+};
+
+class TextureContainer {
+    public:
+        GLuint enemy_texture;
+        GLuint fight_radial_texture;
+        GLuint fight_button_texture;
+        GLuint run_button_texture;
+        GLuint heal_button_texture;
+        TextureContainer() {}
+} g;
+
 BossScene::BossScene(int xres, int yres)
 {
-    degubLine = Line(Vec2(100, 200), Vec2(400, 500), 5);
     m_xres = xres;
     m_yres = yres;
-    sceneObjects.push_back(Rectangle(Vec2(m_xres/2, m_yres/2), 50, 50));
-    m_pNextScene = nullptr;
-    texture = 0;
 }
 
 BossScene::~BossScene()
@@ -27,25 +41,92 @@ BossScene::~BossScene()
 
 void BossScene::Init()
 {
+    // Todo SETUP HEALTH STUFF
 
-    Image img = Image("./images/walk.gif");
 
-    int w = img.width;
-	int h = img.height;
+    glGenTextures(1, &g.enemy_texture);
+    // For grass
 
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    int w = bossImages[0].width;
+	int h = bossImages[0].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.enemy_texture);
 	//
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	//
 	//must build a new set of data...
-	unsigned char *imgData = buildAlphaData(&img);	
+	unsigned char *enemyData = buildAlphaData(&bossImages[0]);	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-		GL_RGBA, GL_UNSIGNED_BYTE, imgData);
-	free(imgData);
+		GL_RGBA, GL_UNSIGNED_BYTE, enemyData);
+	free(enemyData);
 
-    sceneObjects[0].setTexture(&texture);
+    // Stuff right here to next comment
+    w = bossImages[1].width;
+	h = bossImages[1].height;
+
+    glGenTextures(1, &g.fight_radial_texture);
+    glBindTexture(GL_TEXTURE_2D, g.fight_radial_texture);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	//
+	//must build a new set of data...
+	unsigned char *fightData = buildAlphaData(&bossImages[1]);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, fightData);
+	free(fightData);
+
+    
+    // New Textures
+    // for the tile map
+    w = bossImages[2].width;
+	h = bossImages[2].height;
+
+    glGenTextures(1, &g.fight_button_texture);
+    glBindTexture(GL_TEXTURE_2D, g.fight_button_texture);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	//
+	//must build a new set of data...
+	unsigned char *fightbData = buildAlphaData(&bossImages[2]);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, fightbData);
+	free(fightbData);
+
+    
+    w = bossImages[3].width;
+	h = bossImages[3].height;
+
+    glGenTextures(1, &g.run_button_texture);
+    glBindTexture(GL_TEXTURE_2D, g.run_button_texture);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	//
+	//must build a new set of data...
+	unsigned char *runData = buildAlphaData(&bossImages[3]);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, runData);
+	free(runData);
+
+
+    // Texture Here
+    w = bossImages[4].width;
+	h = bossImages[4].height;
+
+    glGenTextures(1, &g.heal_button_texture);
+    glBindTexture(GL_TEXTURE_2D, g.heal_button_texture);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	//
+	//must build a new set of data...
+	unsigned char *healData = buildAlphaData(&bossImages[4]);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, healData);
+	free(healData);
 }
 
 const static float speed = 2.0f;
@@ -56,31 +137,29 @@ void BossScene::Update()
         m_pNextScene = new MapScreen(m_xres, m_yres);
     }
 
-    // MOVEMENT 
-    if(get_key(XK_w)) {
-        sceneObjects[0].move(Vec2(0, speed));
-    }
-    if(get_key(XK_s)) {
-        sceneObjects[0].move(Vec2(0, -speed));
-    }
-    if(get_key(XK_a)) {
-        sceneObjects[0].move(Vec2(-speed, 0));
-    }
-    if(get_key(XK_d)) {
-        sceneObjects[0].move(Vec2(speed, 0));
-    }
-
-    // get the angle from the rectangle to the mouse
-
-    // ROTATION
-    Vec2 mousePos = get_mouse_pos();
-    sceneObjects[0].rotation = atan2(mousePos.y - m_rectangle.getPosition().y, mousePos.x - m_rectangle.getPosition().x);
+    // TODO Implement space bar for attacking
 }
 
 void BossScene::Render()
 {
-    sceneObjects[0].draw();
-    degubLine.draw();
+	glEnable(GL_TEXTURE_2D);
+	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+	glPushMatrix();
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glBindTexture(GL_TEXTURE_2D, g.fight_button_texture);
+	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+	glTranslatef(m_xres - 200, 0.0f, 0.0f);
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 250);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(250, 250);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(250, 0);
+	glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
 }
 
 void BossScene::Release()

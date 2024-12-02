@@ -13,61 +13,62 @@ enum class ItemList;
 class Item
 {
     public:
-   /* int itemID;       // 1 = heals, 2 = super heals, 3 = buff (+10 max health 
-    int duration;     //duration of the effect (if buff/debuff)
-    Item(int ID);
-    */
-//    ItemList item;
- //   int quantity;
+        void Use(ItemList item, Player& a); //will check if you have it in inv 
+                                            //first
+        void Use(ItemList item, Enemy& a); //wont check you can use any potion
+        void Equip(ItemList item, Player& a); // will check if you have it, if 
+                                              // you have anything already 
+                                              // equipped it will unequip and 
+                                              // equip new thing 
+        void Unequip(Player& a);       // will check if anything is equipped 
+                                       // at all before it tries unequipping
 
-    void Use(ItemList item, Player& a);
-    void Use(ItemList item, Enemy& a);
-    void Equip(ItemList item, Player& a);
-    void Unequip(Player& a);
-
-//ill figure a system out eventually
 };
-// get the logic for the holding and getEquippedItem stuff here and in 
-// cpp file too
 class Player
 {
     public:
-        Stat MaxHP;
-        Stat HP;
-        Stat baseDmg;  
-        Stat dmgDeal;  
-        ItemList Holding;
-        std::vector<ItemList> Inventory;
-        Player(Stat hp, Stat dmg);
+        Stat MaxHP;              
+        Stat HP;                       
+        Stat baseDmg;                //dmg dealt without any weapons
+        Stat dmgDeal;                //used in attack function, can be base 
+                                     //+ weapon dmg
+        ItemList Holding;            // item list held, could be 
+                                     // ItemList::None
+        std::vector<ItemList> Inventory;  //when deleting or using item, 
+                                          //switches index
+                                          //that held that item to None
+        Player(Stat hp, Stat dmg);     
         Player();
-        void Attack(Enemy& a, Stat dmg);
-        void AddItem(Player& a, ItemList item);
-        void RemoveItem(Player& a, int spot); // 0-9 for spot.
-       // void Heal (Stat heals);
-        ItemList getEquippedItem();
-        //friend void Item::Use(int ID, Player& a); 
-        friend void Item::Use(ItemList item, Player&a); 
+        void Attack(Enemy& a, Stat dmg); // subtracts dmg deal from enemy hp
+        void AddItem(Player& a, ItemList item); // checks if item is in 
+                                                // inventory first
+        void RemoveItem(Player& a, ItemList item); //^
+        ItemList getEquippedItem();    //returns whatever is equippped
+        friend void Item::Use(ItemList item, Player&a);
 };
 
 class Enemy
 {
-    public:
+    public:            //most everything same as player 
         Stat MaxHP;
         Stat HP;
         Stat dmgDeal;
         Enemy(Stat hp, Stat dmg);
         Enemy();
-        void Attack(Player &a, Stat dmg, bool& dead);
+        void Attack(Player &a, Stat dmg, bool& dead); // when player health 
+                                                      // reaches 0 dead is set 
+                                                      // to 1.
         //void Heal(Stat heals);
         //friend void Item::Use(int ID, Enemy& a); 
-        friend void Item::Use(ItemList item, Player&a); 
+        friend void Item::Use(ItemList item, Enemy& a); //no inventory so this
+                                                        //doesnt check anything,
+                                                        //if you pass 
+                                                        //it a potion it'll work
 };
 
-
-
-void darkMode(bool click, int xres, int yres);
-void DeadCheck(bool& state, int xres, int yres, int which);
-int DeadHelp(int& which);
-bool getDead();
-//void supaspeed();
+void dialoguebackground(bool& speaking);
+void darkMode(bool click, int xres, int yres); //dim the lights 
+void DeadCheck(bool& state, int xres, int yres, int which); // dead scene 
+int DeadHelp(int& which); // helps choose which quip will be displayed
+bool getDead(); // returns if youre dead or not
 #endif

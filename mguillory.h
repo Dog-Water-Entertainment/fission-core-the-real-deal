@@ -125,6 +125,10 @@ class WallEdgeRight : public Tile {
     ~WallEdgeRight() {};
 };
 
+class ChestClosed : public Tile {
+    ~ChestClosed() {};
+};
+
 
 class MapLoader
 {

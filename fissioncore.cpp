@@ -138,6 +138,7 @@ class Global {
         bool walking;
         bool dark;
         bool dead;
+        bool speaking;
         int which;
         int xres, yres;
         int movie, movieStep;
@@ -164,6 +165,7 @@ class Global {
             walking_left = false;
             dark = false;
             dead = false;
+            speaking = false;
             gameStarted = false;
             logOpen();
             which = 0;
@@ -754,6 +756,7 @@ void render(void)
 
     gl.sceneManager.Render();
 
+
     // If current screen is instanceof MapScreen, render player
     if(typeid(*gl.sceneManager.GetCurrentScene()) == typeid(MapScreen)) {
         
@@ -878,7 +881,7 @@ void render(void)
     
     DeadHelp(gl.which);
     DeadCheck(gl.dead, gl.xres, gl.yres, gl.which);
-    
+    dialoguebackground(gl.speaking);
     double delta_time = (TimeUtils::get_time() - gl.last_elapsed) / 1000;
     
     gl.last_elapsed = TimeUtils::get_time();
