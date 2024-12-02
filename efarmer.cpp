@@ -19,10 +19,13 @@ const std::map<PauseMenu::Setting, float> PauseMenu::defaultSettingValues{
 const std::map<PauseMenu::Setting, std::string> PauseMenu::settingKeys{
 	{PauseMenu::Setting::DISPLAY_FPS, "displayFPS"},
 };
-const std::map<PauseMenu::SettingButton, PauseMenu::Setting> PauseMenu::settingButtonMap{
+
+const std::map<PauseMenu::SettingButton, PauseMenu::Setting> 
+PauseMenu::settingButtonMap{
 	{PauseMenu::SettingButton::DISPLAY_FPS, PauseMenu::Setting::DISPLAY_FPS},
 	{PauseMenu::SettingButton::BACK, PauseMenu::Setting::SETTING_NULL},
 };
+
 DialogManager* DialogManager::instance = nullptr;
 
 PauseMenu* PauseMenu::get()
@@ -33,7 +36,8 @@ PauseMenu* PauseMenu::get()
 	return m_instance;
 }
 
-void PauseMenu::initialize() {
+void PauseMenu::initialize() 
+{
 	PauseMenu* instance = PauseMenu::get();
 
 	if (instance->initialized) {
@@ -73,14 +77,39 @@ void PauseMenu::render(int xRes, int yRes)
 
 	switch (state) {
 		case PauseMenu::State::HOME: {
-			instance->displayPauseOptionButton(Option::RESUME, yRes - 50, 50, "Resume");
-			instance->displayPauseOptionButton(Option::OPTIONS, yRes - 100, 50, "Options");
-			instance->displayPauseOptionButton(Option::QUIT, yRes - 150, 50, "Quit");
+			instance->displayPauseOptionButton(
+				Option::RESUME, 
+				yRes - 50, 
+				50, 
+				"Resume"
+			);
+			instance->displayPauseOptionButton(
+				Option::OPTIONS, 
+				yRes - 100, 
+				50, 
+				"Options"
+			);
+			instance->displayPauseOptionButton(
+				Option::QUIT, 
+				yRes - 150, 
+				50, 
+				"Quit"
+			);
 			break;
 		}
 		case PauseMenu::State::SETTINGS: {
-			instance->displaySettingButton(SettingButton::DISPLAY_FPS, yRes - 50, 50, "Toggle FPS");
-			instance->displaySettingButton(SettingButton::BACK, yRes - 100, 50, "Back");
+			instance->displaySettingButton(
+				SettingButton::DISPLAY_FPS, 
+				yRes - 50, 
+				50, 
+				"Toggle FPS"
+			);
+			instance->displaySettingButton(
+				SettingButton::BACK, 
+				yRes - 100, 
+				50, 
+				"Back"
+			);
 			break;
 		}
 		default: {
@@ -138,7 +167,8 @@ void PauseMenu::selectOption(PauseMenu::PauseMenuOption option)
 	}
 }
 
-void PauseMenu::setSelectedSetting(PauseMenu::SettingButton setting) {
+void PauseMenu::setSelectedSetting(PauseMenu::SettingButton setting) 
+{
 	PauseMenu::get()->selectedSetting = setting;
 }
 
@@ -173,7 +203,8 @@ void PauseMenu::displaySettingButton(PauseMenu::SettingButton settingButton, int
 	PauseMenu::get()->displayButton(bot, left, textToDraw, color);
 }
 
-PauseMenu::SettingButton PauseMenu::getSelectedSetting() {
+PauseMenu::SettingButton PauseMenu::getSelectedSetting() 
+{
 	return PauseMenu::get()->selectedSetting;
 }
 
@@ -185,31 +216,43 @@ void PauseMenu::displayButton(int bot, int left, const std::string &text, int co
 	ggprint16(&r, 16, color, text.c_str());
 }
 
-float PauseMenu::getSettingValue(PauseMenu::Setting setting) {
-	return get()->m_config.getFloat(PauseMenu::settingKeys.at(setting), PauseMenu::defaultSettingValues.at(setting));
+float PauseMenu::getSettingValue(PauseMenu::Setting setting) 
+{
+	PauseMenu* instance = PauseMenu::get();
+
+	return instance->m_config.getFloat(
+		PauseMenu::settingKeys.at(setting), 
+		PauseMenu::defaultSettingValues.at(setting)
+	);
 }
 
-void PauseMenu::setState(PauseMenu::State state) {
+void PauseMenu::setState(PauseMenu::State state) 
+{
 	get()->state = state;
 }
 
-PauseMenu::State PauseMenu::getState() {
+PauseMenu::State PauseMenu::getState() 
+{
 	return get()->state;
 }
 
-bool PauseMenu::isPaused() {
+bool PauseMenu::isPaused() 
+{
 	return get()->state != PauseMenu::State::CLOSED;
 }
 
-void PauseMenu::toggleSetting(PauseMenu::SettingButton settingButton) {
+void PauseMenu::toggleSetting(PauseMenu::SettingButton settingButton) 
+{
 	PauseMenu* instance = PauseMenu::get();
 
 	if (settingButton == PauseMenu::SettingButton::BACK) {
-		PauseMenu::setSelectedSetting(PauseMenu::SettingButton::DISPLAY_FPS);
+		PauseMenu::setSelectedSetting(
+			PauseMenu::SettingButton::DISPLAY_FPS
+			);
 		PauseMenu::setState(PauseMenu::State::HOME);
 	}
 	else {
-		PauseMenu::Setting setting = PauseMenu::settingButtonMap.at(settingButton); 
+		auto setting = PauseMenu::settingButtonMap.at(settingButton);
 		std::string key = instance->settingKeys.at(setting);
 		float value = instance->m_config.getFloat(key);
 		std::cout << value << "\n";
@@ -248,7 +291,8 @@ bool Termination::IsTerminated()
 	return Termination::GetInstance()->isTerminated;
 }
 
-DialogManager::DialogManager() {
+DialogManager::DialogManager() 
+{
 	this->dialogActive = false;
 	this->current_dialog = {};
 	this->current_dialog_index = 0;
@@ -258,7 +302,13 @@ DialogManager::DialogManager() {
 	this->time_prompted = 0;
 }
 
-void DialogManager::promptDialog(std::string speaker, std::vector<std::string> dialog, int x, int y, int dialogColor) {
+void DialogManager::promptDialog(
+	std::string speaker, 
+	std::vector<std::string> dialog, 
+	int x, 
+	int y, 
+	int dialogColor
+) {
 	DialogManager* instance = DialogManager::getInstance();
 
 	if (DialogManager::isDialogActive()) {
@@ -273,7 +323,8 @@ void DialogManager::promptDialog(std::string speaker, std::vector<std::string> d
 	instance->time_prompted = TimeUtils::get_time();
 }
 
-DialogManager* DialogManager::getInstance() {
+DialogManager* DialogManager::getInstance() 
+{
 	if (!DialogManager::instance) {
 		DialogManager::instance = new DialogManager();
 	}
@@ -281,11 +332,13 @@ DialogManager* DialogManager::getInstance() {
 	return DialogManager::instance;
 }
 
-bool DialogManager::isDialogActive() {
+bool DialogManager::isDialogActive() 
+{
 	return DialogManager::getInstance()->dialogActive;
 }
 
-void DialogManager::render(int dt) {
+void DialogManager::render(int dt) 
+{
 	if (!DialogManager::isDialogActive()) {
 		return;
 	}
@@ -296,7 +349,8 @@ void DialogManager::render(int dt) {
 		instance->current_dialog.at(instance->current_dialog_index);
 
 	double current_time = TimeUtils::get_time();
-	double time_difference = (current_time - instance->time_prompted) / 1000;
+	double time_difference = 
+		(current_time - instance->time_prompted) / 1000;
 	
 	/**
 	 * Do not update the character index in case the user skipped the 
@@ -310,7 +364,9 @@ void DialogManager::render(int dt) {
 			);		
 	}
 
-	std::string text_to_render = "* " + current_text.substr(0, instance->current_character_index + 1);
+	std::string text_to_render = 
+		"* " 
+		+ current_text.substr(0, instance->current_character_index + 1);
 
 	Rect r;
 	r.bot = instance->y_pos;
@@ -319,17 +375,23 @@ void DialogManager::render(int dt) {
 	ggprint16(&r, 16, 0x00ffffff, text_to_render.c_str());
 }
 
-void DialogManager::tryAdvanceDialog(bool force) {
+void DialogManager::tryAdvanceDialog(bool force) 
+{
 	if (!DialogManager::isDialogActive()) {
 		return;
 	}
 
 	DialogManager* instance = DialogManager::getInstance();
 
-	std::string current_text = instance->current_dialog.at(instance->current_dialog_index);
-
-	if (instance->current_character_index == current_text.size() - 1 || force) {
-		if (instance->current_dialog_index == instance->current_dialog.size() - 1) {
+	std::string current_text = 
+		instance->current_dialog.at(instance->current_dialog_index);
+	auto text_size = current_text.size();
+	
+	if (instance->current_character_index == text_size - 1 || force) {
+		bool last_character_index = 
+			(int)instance->current_dialog.size() - 1;
+			
+		if (instance->current_dialog_index == last_character_index) {
 			instance->dialogActive = false;
 		}
 		else {
