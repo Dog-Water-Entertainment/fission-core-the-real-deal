@@ -5,10 +5,9 @@ class Bckgr
 {
     private:
         static Bckgr* instance;
-        Bckgr() {}
-
+        
     public:
         static Bckgr* getInstance();
-        void dialoguebackground();
+        static void dialoguebackground();
 };
 #endif

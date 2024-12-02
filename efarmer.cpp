@@ -8,6 +8,7 @@
 #include "efarmer.h"
 #include "TimeUtils.h"
 #include <map>
+#include "Bckgr.h"
 #include <cmath>
 
 PauseMenu* PauseMenu::m_instance = nullptr;
@@ -20,8 +21,7 @@ const std::map<PauseMenu::Setting, std::string> PauseMenu::settingKeys{
 	{PauseMenu::Setting::DISPLAY_FPS, "displayFPS"},
 };
 
-const std::map<PauseMenu::SettingButton, PauseMenu::Setting> 
-PauseMenu::settingButtonMap{
+const std::map<PauseMenu::SettingButton, PauseMenu::Setting> PauseMenu::settingButtonMap{
 	{PauseMenu::SettingButton::DISPLAY_FPS, PauseMenu::Setting::DISPLAY_FPS},
 	{PauseMenu::SettingButton::BACK, PauseMenu::Setting::SETTING_NULL},
 };
@@ -356,6 +356,8 @@ void DialogManager::render()
 	if (!DialogManager::isDialogActive()) {
 		return;
 	}
+	
+	Bckgr::dialoguebackground();
 
 	DialogManager* instance = DialogManager::getInstance();
 
@@ -386,7 +388,7 @@ void DialogManager::render()
 	r.bot = instance->y_pos;
 	r.left = instance->x_pos;
 	r.center = 0;
-	ggprint16(&r, 16, 0x00ffffff, text_to_render.c_str());
+	ggprint16(&r, 16, instance->dialog_color, text_to_render.c_str());
 }
 
 void DialogManager::tryAdvanceDialog(bool force) 

@@ -24,6 +24,7 @@
 #include <set>
 #include <chrono>
 #include "log.h"
+#include "Bckgr.h"
 //#include "ppm.h"
 #include "Image.h"
 #include "fonts.h"
@@ -542,8 +543,8 @@ int checkKeys(XEvent *e)
                     "bye.",
                 }, 
                 gl.xres / 2 - 300, 
-                50, 
-                0x00000000
+                100, 
+                0x00ffffff
             );
             break;
         case XK_n:
