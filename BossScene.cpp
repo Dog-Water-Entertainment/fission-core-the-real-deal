@@ -18,6 +18,12 @@ Image bossImages[5] = {
     "./assets/gameplay/heal_button.png" // 4:3
 };
 
+enum Buttons {
+	FIGHT,
+	RUN,
+	HEAL
+};
+
 class TextureContainer {
     public:
         GLuint enemy_texture;
@@ -27,6 +33,21 @@ class TextureContainer {
         GLuint heal_button_texture;
         TextureContainer() {}
 } static g;
+
+static int fighting_offset = 0;
+
+
+class MouseContainer {
+	public:
+		Vec2 position;
+		bool leftButton;
+		bool rightButton;
+		MouseContainer() {
+			position = Vec2(0, 0);
+			leftButton = false;
+			rightButton = false;
+		}
+} static currMouse;
 
 BossScene::BossScene(int xres, int yres)
 {
@@ -132,17 +153,42 @@ void BossScene::Init()
 
 const static float speed = 2.0f;
 
+bool isFighting() 
+{
+	return true;
+}
+
 void BossScene::Update()
 {
     if(get_key(XK_y)) {
         m_pNextScene = new MapScreen(m_xres, m_yres);
     }
-
     // TODO Implement space bar for attacking
+
+
+
+
+	// End Track Mouse
+	currMouse.position = get_mouse_pos();
+}
+
+int getButtonHover() {
+	// Todo Implement me
+	// Check Fight
+
+	// Check Run
+
+
+	// Check Heal
+
+
+	// Return -1 if no button is hovered
+	return -1;
 }
 
 void BossScene::Render()
 {
+	// TODO add ggprint16 for health and other info
 
 	// Fight Button
 	glEnable(GL_TEXTURE_2D);
@@ -201,6 +247,60 @@ void BossScene::Render()
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
+
+	glEnable(GL_TEXTURE_2D);
+	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+	glPushMatrix();
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glBindTexture(GL_TEXTURE_2D, g.fight_radial_texture);
+	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+	glTranslatef(m_xres / 2 - 210, 170.0f, 0.0f);
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 100);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(420, 100);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(420, 0);
+	glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+
+	glEnable(GL_TEXTURE_2D);
+	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+	glPushMatrix();
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glBindTexture(GL_TEXTURE_2D, g.enemy_texture);
+	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+	glTranslatef(m_xres / 2 - 75, 200.0f, 0.0f);
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 400);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(150, 400);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(150, 0);
+	glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+
+	if(isFighting()) {
+		// Draw the little radial thing
+		glEnable(GL_TEXTURE_2D);
+		glPushMatrix();
+		glColor4f(1.0f, 1.0f, 0.0f, 0.8f);
+		glTranslatef(m_xres / 2 - 210 + fighting_offset, 170.0f, 0.0f);
+		glBegin(GL_QUADS);
+			glVertex2i(0, 0);
+			glVertex2i(0, 100);
+			glVertex2i(10, 100);
+			glVertex2i(10, 0);
+		glEnd();
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glPopMatrix();
+	}
 }
 
 void BossScene::Release()
