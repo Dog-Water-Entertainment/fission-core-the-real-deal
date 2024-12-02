@@ -16,6 +16,9 @@ class BossScene : public Scene
         Enemy enemy;
         float anglePlayerLook;
         Rectangle m_rectangle;
+        Vec2 oldPlayerPos;
+        bool fighting;
+        bool isFighting();
 
         Line degubLine;
     public:
@@ -26,6 +29,11 @@ class BossScene : public Scene
         void Update();
         void Render();
         void Release();
+
+
+        void setPlayerPos(float x, float y);
+        void exitScene();
+
 };
 
 #endif

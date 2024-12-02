@@ -56,11 +56,35 @@ BossScene::BossScene(int xres, int yres)
     m_xres = xres;
     m_yres = yres;
 	m_pNextScene = nullptr;
+	fighting = true;
 }
 
 BossScene::~BossScene()
 {
     Release();
+}
+
+int getButtonHover(int xres, int yres) {
+	// Todo Implement me
+	// Check Fight
+	if (currMouse.position.x >= (xres / 2) - 100 && currMouse.position.x <= (xres / 2) + 100 &&
+		currMouse.position.y >= yres-598 && currMouse.position.y <= 152.0f) {
+		return FIGHT;
+	}
+	// Check Run
+	if (currMouse.position.x >= xres - 250 && currMouse.position.x <= xres - 50 &&
+		currMouse.position.y >= 2.0f && currMouse.position.y <= 152.0f) {
+		return RUN;
+	}
+
+	// Check Heal
+	if (currMouse.position.x >= 50 && currMouse.position.x <= 250 &&
+		currMouse.position.y >= 2.0f && currMouse.position.y <= 152.0f) {
+		return HEAL;
+	}
+
+	// Return -1 if no button is hovered
+	return -1;
 }
 
 void BossScene::Init()
@@ -156,43 +180,39 @@ void BossScene::Init()
 
 const static float speed = 2.0f;
 
-bool isFighting() 
+bool BossScene::isFighting() 
 {
 	return true;
 }
 
 void BossScene::Update()
 {
+	currMouse.position = get_mouse_pos();
+	int mouseClick = get_mouse_inpulse();
     if(get_key(XK_y)) {
         m_pNextScene = new MapScreen(m_xres, m_yres);
     }
-    // TODO Implement space bar for attacking
+    // TODO: Implement space bar for attacking
 
 
-
-
-	// End Track Mouse
-	currMouse.position = get_mouse_pos();
-}
-
-int getButtonHover() {
-	// Todo Implement me
-	// Check Fight
-
-	// Check Run
-
-
-	// Check Heal
-
-
-	// Return -1 if no button is hovered
-	return -1;
+	// TODO: Implement a size modifier for the buttons
+	if(mouseClick) {
+		int button = getButtonHover(m_xres, m_yres);
+		printf("Button: %d\n", button);
+		if(button == FIGHT) {
+			// Fight
+			// TODO Implement fight logic
+		} else if(button == RUN) {
+			exitScene();
+		} else if(button == HEAL) {
+			// Heal
+			// TODO Implement heal logic
+		}
+	}
 }
 
 void BossScene::Render()
 {
-	// TODO add ggprint16 for health and other info
-
 	// Fight Button
 	glEnable(GL_TEXTURE_2D);
 	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
@@ -202,6 +222,10 @@ void BossScene::Render()
 	glBindTexture(GL_TEXTURE_2D, g.fight_button_texture);
 	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 	glTranslatef((m_xres / 2) - 100, 2.0f, 0.0f);
+	if(getButtonHover(m_xres, m_yres) == FIGHT) {
+		glScalef(1.1f, 1.1f, 1.1f);
+		glTranslatef(-10, -7.5, 0);
+	}
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
 		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 150);
@@ -222,6 +246,10 @@ void BossScene::Render()
 	glBindTexture(GL_TEXTURE_2D, g.heal_button_texture);
 	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 	glTranslatef(50, 2.0f, 0.0f);
+	if(getButtonHover(m_xres, m_yres) == HEAL) {
+		glScalef(1.1f, 1.1f, 1.1f);
+		glTranslatef(-10, -7.5, 0);
+	}
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
 		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 150);
@@ -242,6 +270,10 @@ void BossScene::Render()
 	glBindTexture(GL_TEXTURE_2D, g.run_button_texture);
 	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 	glTranslatef(m_xres - 250, 2.0f, 0.0f);
+	if(getButtonHover(m_xres, m_yres) == RUN) {
+		glScalef(1.1f, 1.1f, 1.1f);
+		glTranslatef(-10, -7.5, 0);
+	}
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
 		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 150);
@@ -325,6 +357,16 @@ void BossScene::Render()
 
 void BossScene::Release()
 {
+}
+
+void BossScene::exitScene()
+{
+	m_pNextScene = new MapScreen(m_xres, m_yres, oldPlayerPos);
+}
+
+void BossScene::setPlayerPos(float x, float y)
+{
+	oldPlayerPos = Vec2(x, y);
 }
 
 // #include "BossScene.h"

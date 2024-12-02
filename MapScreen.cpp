@@ -15,6 +15,15 @@ MapScreen::MapScreen(int xres, int yres)
     map = new MapLoader();
 }
 
+MapScreen::MapScreen(int xres, int yres, Vec2 playerPos)
+{
+    m_xres = xres;
+    m_yres = yres;
+    m_pNextScene = nullptr;
+    map = new MapLoader();
+    map->setPlayerPos(playerPos);
+}
+
 MapScreen::~MapScreen()
 {
     Release();
@@ -32,8 +41,12 @@ void MapScreen::Update()
 {
     Vec2 playerPos = map->getPlayerPos();
 
+
+    // TODO: Change this logic
     if(get_key(XK_t)) {
-        m_pNextScene = new BossScene(m_xres, m_yres);
+        BossScene * next = new BossScene(m_xres, m_yres);
+        next->setPlayerPos(playerPos.x, playerPos.y);
+        m_pNextScene = next;
     }
 
     Vec2 newPos = playerPos;
