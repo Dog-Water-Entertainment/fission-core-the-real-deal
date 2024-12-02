@@ -64,7 +64,7 @@ void MapScreen::Update()
         newPos.y += movement_speed;
     }
 
-    if(isWalkable(map->getTileAt(newPos.y + 1, newPos.x + 1))) {
+    if(isWalkable(map->getTileAt(newPos.y + 1, newPos.x))) {
         map->setPlayerPos(newPos);
     }
 

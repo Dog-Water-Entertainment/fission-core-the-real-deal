@@ -56,7 +56,7 @@ BossScene::BossScene(int xres, int yres)
     m_xres = xres;
     m_yres = yres;
 	m_pNextScene = nullptr;
-	fighting = true;
+	fighting = false;
 }
 
 BossScene::~BossScene()
@@ -182,7 +182,7 @@ const static float speed = 2.0f;
 
 bool BossScene::isFighting() 
 {
-	return true;
+	return false;
 }
 
 void BossScene::Update()
@@ -325,6 +325,8 @@ void BossScene::Render()
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
+
+	glEnable(GL_TEXTURE_2D);
 
 	if(isFighting()) {
 		// Draw the little radial thing
