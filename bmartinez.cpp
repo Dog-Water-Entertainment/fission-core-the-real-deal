@@ -463,7 +463,6 @@ void darkMode(bool click, int xres, int yres)
 /// dialogue background //////////////////////////////////////////////////////
 void dialoguebackground(bool& speaking)
 {
-    std::cout << "yo" << std::endl;
     if (get_key(XK_m))
         speaking = 1;
     if (speaking) {
@@ -483,6 +482,7 @@ void dialoguebackground(bool& speaking)
             glVertex2i(780, 20);
             glVertex2i(780, 150); //top right  (counter clockwise)
         glEnd(); 
+        glEnable(GL_TEXTURE_2D);
         if (get_key(XK_Return)) {
             speaking = 0;
             return;
