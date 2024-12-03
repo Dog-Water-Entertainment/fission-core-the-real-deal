@@ -68,7 +68,7 @@ void MapScreen::Update()
 
     if(playerPos.x >= 30 && playerPos.x <= 36 &&
        playerPos.y >= 11 && playerPos.y <= 16 && !foundFirst) {
-        BossScene * next = new BossScene(m_xres, m_yres, playerData, Enemy(200, 15));
+        BossScene * next = new BossScene(m_xres, m_yres, playerData, Enemy(100, 8));
         next->setPlayerPos(playerPos.x, playerPos.y);
         m_pNextScene = next;
         foundFirst = true;
@@ -76,7 +76,7 @@ void MapScreen::Update()
 
     if(playerPos.x >= 15 && playerPos.x <= 18 &&
        playerPos.y >= 12 && playerPos.y <= 16 && !foundSecond) {
-        BossScene * next = new BossScene(m_xres, m_yres, playerData, Enemy(100, 8));
+        BossScene * next = new BossScene(m_xres, m_yres, playerData, Enemy(200, 15));
         next->setPlayerPos(playerPos.x, playerPos.y);
         m_pNextScene = next;
         foundSecond = true;
@@ -100,12 +100,13 @@ void MapScreen::Update()
 
     Vec2 newPos = playerPos;
 
-    const int rarity = 1000;
+    const int rarity = 700;
 
     if(get_key(XK_a)) {
         int randy = getRandomNumberXX(0, rarity);
         if (randy == 1) {
-            BossScene * next = new BossScene(m_xres, m_yres, playerData, Enemy(getRandomNumberXX(10, 20), getRandomNumberXX(0, 3)));
+            BossScene * next = new BossScene(m_xres, m_yres, playerData, 
+                Enemy(getRandomNumberXX(10, 20), getRandomNumberXX(0, 3)));
             next->setPlayerPos(playerPos.x, playerPos.y);
             m_pNextScene = next;
         }
@@ -114,7 +115,8 @@ void MapScreen::Update()
     if(get_key(XK_d)) {        
         int randy = getRandomNumberXX(0, rarity);
         if (randy == 1) {
-            BossScene * next = new BossScene(m_xres, m_yres, playerData, Enemy(getRandomNumberXX(10, 20), getRandomNumberXX(0, 3)));
+            BossScene * next = new BossScene(m_xres, m_yres, playerData, 
+                Enemy(getRandomNumberXX(10, 20), getRandomNumberXX(0, 3)));
             next->setPlayerPos(playerPos.x, playerPos.y);
             m_pNextScene = next;
         }
