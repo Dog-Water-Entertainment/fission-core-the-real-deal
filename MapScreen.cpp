@@ -82,12 +82,6 @@ void MapScreen::Update()
         foundSecond = true;
     }
 
-    if (get_key(XK_y)) {
-        BossScene * next = new BossScene(m_xres, m_yres, playerData);
-        next->setPlayerPos(playerPos.x, playerPos.y);
-        m_pNextScene = next;
-    }
-
     // 15, 16
     // 15, 12
     // 18, 12

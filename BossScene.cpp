@@ -18,7 +18,7 @@
 static int backwards = 0;
 static int input_inpulse = 0;
 static int first = 1;
-static int difficulty = 12;
+static int difficulty = 20;
 static int playerTurn = 1;
 static int move = 0;
 static int counter = 0;
