@@ -422,6 +422,7 @@ void initOpengl(void)
 // Another Useful thing
 void init() {
     gl.sceneManager.ChangeScene(new MapScreen(gl.xres, gl.yres));
+    AudioManager::initialize();
 }
 
 void checkMouse(XEvent *e)

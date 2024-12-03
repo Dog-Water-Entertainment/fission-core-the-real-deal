@@ -1,7 +1,7 @@
 CC = g++
 
 CFLAGS = -I ./include
-LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm #-lXrandr
+LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm -lopenal #-lXrandr
 EFLAGS = -Wall -Wextra
 
 USELIBS = ./Image.cpp log.cpp

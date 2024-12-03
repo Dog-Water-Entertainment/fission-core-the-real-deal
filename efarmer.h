@@ -6,6 +6,8 @@
 #include <map>
 #include "Config.h"
 #include <array>
+#include <AL/al.h>
+#include <AL/alc.h>
 
 #ifndef EFARMER_H
 #define EFARMER_H
@@ -111,6 +113,19 @@ private:
 	int dialog_color;
 	std::string speaker;
 	double time_prompted;
+};
+
+class AudioManager {
+public:
+	static AudioManager* getInstance();
+	static void initialize();
+private:
+	AudioManager();
+
+	static AudioManager* instance;
+
+	bool initialized;
+	ALCdevice* device;
 };
 
 #endif

@@ -10,6 +10,10 @@
 #include <map>
 #include "Bckgr.h"
 #include <cmath>
+#include <AL/al.h>
+#include <AL/alc.h>
+
+AudioManager* AudioManager::instance = nullptr;
 
 PauseMenu* PauseMenu::m_instance = nullptr;
 const int PauseMenu::SELECTED_BUTTON_COLOR = 0x0000FF00;
@@ -417,4 +421,25 @@ void DialogManager::tryAdvanceDialog(bool force)
 	else {
 		instance->current_character_index = current_text.size() - 1;
 	}
+}
+
+AudioManager::AudioManager() {
+	this->initialized = false;
+	this->device = alcOpenDevice(NULL);
+
+	if (!device) {
+		std::cout << "Failed to open default device!\n";
+	}
+}
+
+AudioManager* AudioManager::getInstance() {
+	if (AudioManager::instance == nullptr) {
+		AudioManager::instance = new AudioManager();
+	}
+
+	return AudioManager::instance;
+}
+
+void AudioManager::initialize() {
+	AudioManager::getInstance()->initialized = true;
 }
