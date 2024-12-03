@@ -25,6 +25,8 @@ class BossScene : public Scene
         Line degubLine;
     public:
         BossScene(int xres, int yres);
+        BossScene(int xres, int yres, Player playerData);
+        BossScene(int xres, int yres, Player playerData, Enemy enemyData);
         ~BossScene();
 
         void Init();

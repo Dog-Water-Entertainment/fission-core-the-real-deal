@@ -15,6 +15,15 @@
 
 // Origin: Mykull Guillory
 
+static int backwards = 0;
+static int input_inpulse = 0;
+static int first = 1;
+static int difficulty = 12;
+static int playerTurn = 1;
+static int move = 0;
+static int counter = 0;
+static int firstPass = 1;
+
 Image bossImages[5] = {
     "./assets/gameplay/enemy.png", // 9:21
     "./assets/gameplay/fight_radial.png", // 21:9
@@ -56,7 +65,9 @@ class MouseContainer {
 			leftButton = false;
 			rightButton = false;
 		}
-} static currMouse;
+};
+
+static MouseContainer currMouse;
 
 BossScene::BossScene(int xres, int yres)
 {
@@ -64,6 +75,27 @@ BossScene::BossScene(int xres, int yres)
     m_yres = yres;
 	m_pNextScene = nullptr;
 	fighting = false;
+	player = Player(100, 10);
+	enemy = Enemy(200, 15);
+}
+
+BossScene::BossScene(int xres, int yres, Player playerData)
+{
+	m_xres = xres;
+	m_yres = yres;
+	m_pNextScene = nullptr;
+	player = playerData;
+	fighting = false;
+}
+
+BossScene::BossScene(int xres, int yres, Player playerData, Enemy enemyData)
+{
+	m_xres = xres;
+	m_yres = yres;
+	m_pNextScene = nullptr;
+	player = playerData;
+	fighting = false;
+	enemy = enemyData;
 }
 
 BossScene::~BossScene()
@@ -72,7 +104,6 @@ BossScene::~BossScene()
 }
 
 int getButtonHover(int xres, int yres) {
-	// Todo Implement me
 	// Check Fight
 	if (currMouse.position.x >= (xres / 2) - 100 && 
 		currMouse.position.x <= (xres / 2) + 100 &&
@@ -101,9 +132,14 @@ int getButtonHover(int xres, int yres) {
 void BossScene::Init()
 {
 	srand(time(NULL));
-    // Todo SETUP HEALTH STUFF
-	player = Player(100, 200);
-	enemy = Enemy(200, 15);
+
+	backwards = 0;
+	input_inpulse = 0;
+	first = 1;
+	playerTurn = 1;
+	move = 0;
+	counter = 0;
+	firstPass = 1;
 
     glGenTextures(1, &g.enemy_texture);
     // For grass
@@ -207,22 +243,10 @@ bool BossScene::isFighting()
 	return fighting;
 }
 
-void startAnimation() {
-	// TODO: Implement me
+std::string stringify(int num, Enemy e) {
+	return num == 1 ? "Enemy attacked the player for " + std::to_string(e.dmgDeal) + " damage!" : "Enemy missed!";
 }
 
-std::string stringify(int num) {
-	return num == 1 ? "Enemy attacked the player for 15 damage!" : "Enemy missed!";
-}
-
-static int backwards = 0;
-static int input_inpulse = 0;
-static int first = 1;
-static int difficulty = 12;
-static int playerTurn = 1;
-static int move = 0;
-static int counter = 0;
-static int firstPass = 1;
 
 void BossScene::Update()
 {
@@ -271,7 +295,6 @@ void BossScene::Update()
 		if(get_key(XK_y)) {
 			m_pNextScene = new MapScreen(m_xres, m_yres);
 		}
-		// TODO: Implement space bar for attacking
 		if(isFighting()) {
 			if (fighting_offset < 420 && backwards == 0) {
 				fighting_offset += difficulty;
@@ -286,7 +309,7 @@ void BossScene::Update()
 			}
 
 			if (input_inpulse) {
-				if (fighting_offset >= 200 && fighting_offset <= 220) {
+				if (fighting_offset >= 197 && fighting_offset <= 219) {
 					multiplier = 4;
 				} else if (fighting_offset <= 105 || fighting_offset >= 315) {
 					multiplier = 0;
@@ -309,7 +332,6 @@ void BossScene::Update()
 		}
 
 
-		// TODO: Implement a size modifier for the buttons
 		if(mouseClick && !fighting) {
 			int button = getButtonHover(m_xres, m_yres);
 			if(button == FIGHT) {
@@ -319,7 +341,6 @@ void BossScene::Update()
 				exitScene();
 			} else if(button == HEAL) {
 				// Heal
-				// TODO Implement heal logic
 				player.HP += 10;
 				move++;
 			}
@@ -342,9 +363,9 @@ void BossScene::Update()
 		DialogManager::promptDialog(
 			"Enemy", 
 			{
-				stringify(array[0]),
-				stringify(array[1]),
-				stringify(array[2])
+				stringify(array[0], enemy),
+				stringify(array[1], enemy),
+				stringify(array[2], enemy)
 			}, 
 			m_xres / 2 - 300, 
 			50, 
@@ -498,12 +519,12 @@ void BossScene::Render()
 	r.bot = 190;
 	r.left = m_xres / 2 + 230;
 	r.center = 0;
-	ggprint16(&r, 16, 0x00ffffff, "Health: %d/100", player.HP);
+	ggprint16(&r, 16, 0x00ffffff, "Health: %d/%d", player.HP, player.MaxHP);
 
 	r.bot = m_yres - 50;
 	r.left = 10;
 	r.center = 0;
-	ggprint16(&r, 16, 0x00ffffff, "Enemy Health: %d/200", enemy.HP);
+	ggprint16(&r, 16, 0x00ffffff, "Enemy Health: %d/%d", enemy.HP, enemy.MaxHP);
 }
 
 void BossScene::Release()
@@ -512,7 +533,7 @@ void BossScene::Release()
 
 void BossScene::exitScene()
 {
-	m_pNextScene = new MapScreen(m_xres, m_yres, oldPlayerPos);
+	m_pNextScene = new MapScreen(m_xres, m_yres, oldPlayerPos, player);
 }
 
 void BossScene::setPlayerPos(float x, float y)

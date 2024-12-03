@@ -1,11 +1,19 @@
 #include "MapScreen.h"
 #include "Inputs.h"
 #include "SceneManager.h"
+#include "bmartinez.h"
 #include "BossScene.h"
-
+#include <stdlib.h>
+#include <time.h>
 #include <X11/keysym.h>
 
 // Origin: Mykull Guillory
+
+static Player playerData;
+
+int getRandomNumberXX(int min, int max) {
+	return rand() % (max - min + 1) + min;
+}
 
 MapScreen::MapScreen(int xres, int yres)
 {
@@ -13,6 +21,7 @@ MapScreen::MapScreen(int xres, int yres)
     m_yres = yres;
     m_pNextScene = nullptr;
     map = new MapLoader();
+    playerData = Player(100, 10);
 }
 
 MapScreen::MapScreen(int xres, int yres, Vec2 playerPos)
@@ -22,6 +31,19 @@ MapScreen::MapScreen(int xres, int yres, Vec2 playerPos)
     m_pNextScene = nullptr;
     map = new MapLoader();
     map->setPlayerPos(playerPos);
+    playerData = Player(100, 10);
+}
+
+MapScreen::MapScreen(int xres, int yres, Vec2 playerPos, Player playerDataIn)
+{
+    srand(time(NULL));
+    m_xres = xres;
+    m_yres = yres;
+    m_pNextScene = nullptr;
+    map = new MapLoader();
+    map->setPlayerPos(playerPos);
+
+    playerData = playerDataIn;
 }
 
 MapScreen::~MapScreen()
@@ -46,7 +68,7 @@ void MapScreen::Update()
 
     if(playerPos.x >= 30 && playerPos.x <= 36 &&
        playerPos.y >= 11 && playerPos.y <= 16 && !foundFirst) {
-        BossScene * next = new BossScene(m_xres, m_yres);
+        BossScene * next = new BossScene(m_xres, m_yres, playerData, Enemy(200, 15));
         next->setPlayerPos(playerPos.x, playerPos.y);
         m_pNextScene = next;
         foundFirst = true;
@@ -54,10 +76,16 @@ void MapScreen::Update()
 
     if(playerPos.x >= 15 && playerPos.x <= 18 &&
        playerPos.y >= 12 && playerPos.y <= 16 && !foundSecond) {
-        BossScene * next = new BossScene(m_xres, m_yres);
+        BossScene * next = new BossScene(m_xres, m_yres, playerData, Enemy(100, 8));
         next->setPlayerPos(playerPos.x, playerPos.y);
         m_pNextScene = next;
         foundSecond = true;
+    }
+
+    if (get_key(XK_y)) {
+        BossScene * next = new BossScene(m_xres, m_yres, playerData);
+        next->setPlayerPos(playerPos.x, playerPos.y);
+        m_pNextScene = next;
     }
 
     // 15, 16
@@ -72,24 +100,50 @@ void MapScreen::Update()
 
     Vec2 newPos = playerPos;
 
+    const int rarity = 1000;
+
     if(get_key(XK_a)) {
+        int randy = getRandomNumberXX(0, rarity);
+        if (randy == 1) {
+            BossScene * next = new BossScene(m_xres, m_yres, playerData, Enemy(getRandomNumberXX(10, 20), getRandomNumberXX(0, 3)));
+            next->setPlayerPos(playerPos.x, playerPos.y);
+            m_pNextScene = next;
+        }
         newPos.x -= movement_speed;
     }
-    if(get_key(XK_d)) {
+    if(get_key(XK_d)) {        
+        int randy = getRandomNumberXX(0, rarity);
+        if (randy == 1) {
+            BossScene * next = new BossScene(m_xres, m_yres, playerData, Enemy(getRandomNumberXX(10, 20), getRandomNumberXX(0, 3)));
+            next->setPlayerPos(playerPos.x, playerPos.y);
+            m_pNextScene = next;
+        }
         newPos.x += movement_speed;
     }
     if(get_key(XK_w)) {
+        int randy = getRandomNumberXX(0, rarity);
+        if (randy == 1) {
+            BossScene * next = new BossScene(m_xres, m_yres, playerData,
+                Enemy(getRandomNumberXX(10, 20), getRandomNumberXX(0, 3)));
+            next->setPlayerPos(playerPos.x, playerPos.y);
+            m_pNextScene = next;
+        }
         newPos.y -= movement_speed;
     }
     if(get_key(XK_s)) {
+        int randy = getRandomNumberXX(0, rarity);
+        if (randy == 1) {
+            BossScene * next = new BossScene(m_xres, m_yres, playerData, 
+                Enemy(getRandomNumberXX(10, 20), getRandomNumberXX(0, 3)));
+            next->setPlayerPos(playerPos.x, playerPos.y);
+            m_pNextScene = next;
+        }
         newPos.y += movement_speed;
     }
 
     if(isWalkable(map->getTileAt(newPos.y + 1, newPos.x))) {
         map->setPlayerPos(newPos);
     }
-
-    std::cout << "Player Pos: " << playerPos.x << ", " << playerPos.y << std::endl;
 
     // Bounding box to enter next scene
     // 36, 16
@@ -102,6 +156,8 @@ void MapScreen::Update()
     //    movement_speed = 0.8;
     //}
 }
+
+
 
 void MapScreen::Render()
 {
