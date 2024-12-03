@@ -19,23 +19,8 @@
 
 //TODO:----------------------------------------------------------------------- 
 // X probably an inventory system should be ezpz, just an vector of item
-// - attack function could use the Stat variable for dmg to deal damage instead 
-// of passing it like a pareameter but that could be a pain in the ass, we'll
-// see
-// - Finish battle loop
-// - get health bars / health information to render during boss fights
-// - use elias' thing to retrieve what selection youve chosen during the 
-//   attack/potion/flee/whatever 
-// - get enemy "AI" done.
-// - undertale style textbox render
-// - get the hitbox thing made
+// x get enemy "AI" done.
 // X get the map made
-// - get the scene to switch upon touching hitbox
-// - get prompted to open chest and get sword/ potions 
-// - dialogue saying you got the item
-// - dev weapon cheatcode
-//
-// - dark souls boss vanquished scene 
 //---------------------------------------------------------------------------
 // Forward Declarations////////////////////////////////////////////////////////
 //class Bckgr;
@@ -57,7 +42,24 @@ enum class ItemList {
     DevWeapon,                  // for us: 9999999 dmg
     DevPotion                   // for us: 9999999 hp
 };
-
+std::string item2str(ItemList item)
+{
+    switch (item) {
+        case ItemList::Empty:
+            return "";
+        case ItemList::HealingPotion:
+            return "Healing Potion";
+        case ItemList::GreaterHealingPotion:
+            return "Greater Healing Potion";
+        case ItemList::Knife:
+            return "Knife";
+        case ItemList::Sword:
+            return "Sword";
+        default:
+            std::cout << "not recognized item" << std::endl;
+            return "";
+    }
+}
 void Item::Use(ItemList item, Player& a)
 {
     bool have = 0;
@@ -92,16 +94,13 @@ void Item::Use(ItemList item, Player& a)
                 a.HP = 999999;
                 break;
             default:
-                //no item what r u doing
                 std::cout << "not recognized item" << std::endl;
         }
     } else {
-        std::cout << "the player doesnt have that item to use, creature" << 
-            std::endl;
+        std::cout << "the player doesnt have that item" << std::endl;
     }
 }
-void Item::Use(ItemList item, Enemy& a) //no inventory, this is just a 
-                                        // healing for them
+void Item::Use(ItemList item, Enemy& a) 
 {
     switch (item) {
         case ItemList::HealingPotion:
@@ -115,7 +114,6 @@ void Item::Use(ItemList item, Enemy& a) //no inventory, this is just a
                 a.HP = a.MaxHP;
             break;
         default:
-            //no item what r u doing
             std::cout << "not recognized item" << std::endl;
     }
 }
@@ -130,16 +128,22 @@ void Item::Equip(ItemList item, Player& a)
     switch (item) {             //write check so that items cant be equipped 
                                 //multiple times to get +10+10+10 etc
         case ItemList::Knife:
-            if (a.dmgDeal >= a.baseDmg +8)
-                //msg that says nonono not good little fella
+            if (a.dmgDeal >= a.baseDmg +8) {
+                DialogManager::promptDialog("Player", 
+                    {"I can't hold both of these things in the same hand..."}, 
+                    800 / 2 - 300, 100, 0x00ffffff);
                 break;
+            }
             a.dmgDeal += 8;
             a.Holding = ItemList::Knife;
             break;
         case ItemList::Sword:
-            if (a.dmgDeal >= a.baseDmg +15)
-                //msg that says nonono not good little fella
+            if (a.dmgDeal >= a.baseDmg +15) {
+                DialogManager::promptDialog("Player", 
+                        {"I can't hold both of these things in the same hand..."},
+                        800 / 2 - 300, 100, 0x00ffffff);
                 break;
+            }
             a.dmgDeal +=15;
             a.Holding = ItemList::Sword;
             break;
@@ -151,7 +155,7 @@ void Item::Equip(ItemList item, Player& a)
             a.Holding = ItemList::DevWeapon;
             break;
         default: 
-            std::cout << "u cant equip that" << std::endl;
+            std::cout << "can not equip" << std::endl;
     }
 
 }
@@ -159,8 +163,8 @@ void Item::Equip(ItemList item, Player& a)
 void Item::Unequip(Player& a)
 {
     if (a.getEquippedItem() == ItemList::Empty) {
-        std::cout << "theres nothing to unequip monkey" << std::endl; // change
-                                             // to use dialogue stuff later
+        DialogManager::promptDialog("Player", 
+                {"Nothing there."}, 800 / 2 - 300, 100, 0x00ffffff);
         return;
     }
     a.Holding = ItemList::Empty;
@@ -170,27 +174,45 @@ void Item::Unequip(Player& a)
 ///
 //PLAYER STUFF/////////////////////////////////////////////////////////////////
 Player::Player(Stat hp, Stat dmg) : MaxHP(hp), HP(hp), baseDmg(dmg), 
-    dmgDeal(dmg){}
-Player::Player() : MaxHP(100), HP(100), baseDmg(10), dmgDeal(10), 
-    Holding(ItemList::Empty) 
+    dmgDeal(dmg), healAmt(4), currentAmt(0), Holding(ItemList::Empty) 
+{
+    Inventory = std::vector<ItemList>(10, ItemList::Empty);
+} 
+Player::Player() : MaxHP(100), HP(100), baseDmg(10), dmgDeal(10), healAmt(4),
+    currentAmt(0), Holding(ItemList::Empty) 
 {
     Inventory = std::vector<ItemList>(10, ItemList::Empty);
 }
 
 void Player::Attack(Enemy &a, Stat dmg) //always pass dmgDeal. not baseDmg
-                                        //unles u wanna get silly then 
-                                        //pass whatever u want
 {
     a.HP -= dmg;
     if (a.HP < 0)
         a.HP = 0;
 }
 
+void Player::Heal(Stat heals)
+{
+    if (healAmt > currentAmt) {
+        if (HP >= MaxHP) {
+            DialogManager::promptDialog("Player", 
+                    {"Already at maximum health capacity."}, 
+                    800 / 2 - 300, 100, 0x00ffffff);
+        }
+        HP += heals; 
+        if (MaxHP < HP)
+            HP = MaxHP;
+        currentAmt += 1;
+    } else {
+        DialogManager::promptDialog("Player", 
+                {"Out of potions..."}, 
+                800 / 2 - 300, 100, 0x00ffffff);
+    }
+}
+
 ItemList Player::getEquippedItem() //can be used even if nothing is equipped 
-                                   //(returns none)
 {
     return Holding;
-
 }
 
 void Player::AddItem(Player& a, ItemList item)
@@ -201,7 +223,6 @@ void Player::AddItem(Player& a, ItemList item)
             return;
         }
     }
-    //some message saying the inv is full, use or delete something
 }
 
 void RemoveItem(Player& a, ItemList item)       
@@ -210,31 +231,51 @@ void RemoveItem(Player& a, ItemList item)
     {
         if (a.Inventory[i] == item) {  //WIP, CHECK IF ITS EQUIPPED FIRST
             if (a.getEquippedItem() == item) {
-                //unequip the item weirdo
-                std::cout << "unequip first dork" << std::endl;
+                DialogManager::promptDialog("Player", 
+                    {"Can't remove equipped item."}, 
+                    800 / 2 - 300, 100, 0x00ffffff);
                 return;
             }
             a.Inventory[i] = ItemList::Empty;
             return;
         }
     }
-    std::cout << "that things not even in ur inventory" << std::endl;
+    DialogManager::promptDialog("Player", {"Nothing to remove..."}, 
+            800 / 2 - 300, 100, 0x00ffffff);
 }
-/*
-void Player::Heal(Stat heals) 
+void showInv()
 {
-    HP += heals;
-    if (HP > MaxHP)
-        HP = MaxHP;
+    if (get_key(XK_i)) {
+        DialogManager::promptDialog("Terrance", {"Empty pockets..."}, 
+                800 / 2 - 300, 100, 0x00ffffff);
+    }
+   /* 
+void showInv(Player& a)
+{
+    if (get_key(XK_i)) {
+        std::string output = "Items currently in your inventory: ";
+        bool first = 1;
+        for (int i = 0; i < 10; i++) {
+            std::string temp = item2str(a.Inventory[i]);
+            if (!temp.empty()){
+                if (!first)
+                    output += ", ";
+                output += temp;
+                first = 0;
+            }
+        }
+        DialogManager::promptDialog("Terrance", {output}, 
+                800 / 2 - 300, 100, 0xfff00000);
+    }
+  */
 }
-*/
+
 ///////////////////////////////////////////////////////////////////////////////
 ///
 //ENEMY STUFF//////////////////////////////////////////////////////////////////
 Enemy::Enemy(Stat hp, Stat dmgIn) : MaxHP(hp), HP(hp), dmgDeal(dmgIn) {}
 Enemy::Enemy() : MaxHP(50), HP(50), dmgDeal(8) {}
 void Enemy::Attack(Player &a, Stat dmg, bool& dead) // pass dead so that it can
-                                                    // be triggered`
 {
     a.HP -= dmg;
     if (a.HP <= 0) {
@@ -242,177 +283,54 @@ void Enemy::Attack(Player &a, Stat dmg, bool& dead) // pass dead so that it can
         dead = 1;
     }
 }
-///////////////////////////////////////////////////////////////////////////////
-///
-//BATTLE///////////////////////////////////////////////////////////////////////
-/*
-void Battle::BattleStart(Player& a, Enemy& b)
+void Enemy::Heal(Stat heals)
 {
-    this->player = &a;
-    this->enemy = &b;
-    inBattle = 1;
-    playerDead = 0;
-    beatEnemy = 0;
-    madeChoice = 0;
-    playerChoice = -1;
-
+    HP += heals;
+    if (HP > MaxHP)
+        HP = MaxHP;
+    return;
 }
-void Battle::Update(float deltaTime)
-{
-    if (!inBattle)
-        return;
-    if (!madeChoice)
-        //get the thing to render
-        //process the input somehow
-    bool fleed = 0
-        switch (playerChoice) 
-           // case fight:
-        //       (play animation);
-                Player::Attack(b, a.dmgDeal);
-                if (b.HP == 0) 
-                    beatEnemy = 1;
-                break;
-           // case flee:
-           //     (play animation);
-                bool erm = flee(); // 1/100 chance of fleeing maybe ? idk,its 
-                if (erm) {
-                    fleed = 1;
-                    break;  // cuz the only fight in this demo is the boss
-                } else {
-                    //no no no tsk tsk tsk
-                    break;
-                }
-               case heal:
-                   Item::Use(HealingPotion, this->player)
-                   dialogue saying u healed or something idk 
-                   break;
-            default:
-                std::cerr << "something went wrong, try again" << std::endl;
-         }
-        
-         if (beatEnemy) {
-             beatEnemy(); 
-        // dialogue maybe ? ()
-        }
-
-        enemySide(a, b, dead); //check if it kills you in the while loop 
-                               //( not in the function for readability's sake )
-        // maybe ill write a functino here that forces everythin to stop until
-        // you make a choice 
-        // back up to top of while
-        if (player
-    }
-
-*/
-/*
-void BattleStart(Player& a, Enemy& b, bool& dead)
-{
-    if (!inBattle)
-        return;
-    if (!madeChoice)
-        //get the thing to render
-        //process the input somehow
-    bool fleed = 0
-   @@@// while (dead == 0 || beatEnemy == 0) {
-        //wait for choice somehow ? or prompt choice or maybe wait at the end 
-        //
-        //of the loop for choice to be made before we continue back to thispoint
-        //
- @@@       //getChoice() 
-     
-        switch (playerChoice) 
-           // case fight:
-        //       (play animation);
-                Player::Attack(b, a.dmgDeal);
-                if (b.HP == 0) 
-                    beatEnemy = 1;
-                break;
-           // case flee:
-           //     (play animation);
-                bool erm = flee(); // 1/100 chance of fleeing maybe ? idk,its 
-                if (erm) {
-                    fleed = 1;
-                    break;  // cuz the only fight in this demo is the boss
-                } else {
-                    //no no no tsk tsk tsk
-                    break;
-                }
-         @ //  case item:
-         @      // ItemList::chosen = itemScreen();
-         @     // a.Use(chosen); |i think thats how i set it up lmfao, hopefully
-         @     // dialgoue for success| it deletes the item from the thing afte
-               case heal:
-                   Item::Use(HealingPotion, this->player)
-                   dialogue saying u healed or something idk 
-                   break;
-            default:
-                std::cerr << "something went wrong, try again" << std::endl;
-         }
-        
-         if (beatEnemy) {
-             beatEnemy(); 
-        // dialogue maybe ? ()
-        }
-
-        enemySide(a, b, dead); //check if it kills you in the while loop 
-                               //( not in the function for readability's sake )
-        // maybe ill write a functino here that forces everythin to stop until
-        // you make a choice 
-        // back up to top of while
-        if (player
-    }
-
-
-}
-
-Battle::Battle() : inBattle(0), madeChoice(0) {}
-
-static Battle& Battle::getInstance()
-{
-    static Battle instance;
-    return instance;
-}
-*/
-/*
-void switcher(); // presses T for you lmfao
-void enemySide(Player& a, Enemy& b, bool& dead)
+void Enemy::enemySide(Player& a, Enemy& b, bool& dead)
 {
     //random number that chooses attack or heal
     srand(time(NULL));
     int randNum = (rand() % 2) + 1;
     int maxHeals = 3;
-
-
+    int currentHeals = 0;
     switch (randNum)
     {
         case 1:
-            Enemy::Attack(a, b.dmgDeal, dead);
+            b.Attack(a, b.dmgDeal, dead);
+            if (!dead)
+                DialogManager::promptDialog("Enemy", {"..."}, 
+                800 / 2 - 300, 100, 0xfff00000);
             break;
         case 2:
-            Item::Use(
+            if (currentHeals < maxHeals) {
+                b.Heal(20);
+                currentHeals++;
+                DialogManager::promptDialog("Enemy", 
+                    {"Shouldn't have let me heal."}, 
+                    800 / 2 - 300, 100, 0xfff00000);
+            } else {
+                b.Attack(a, b.dmgDeal, dead);
+            if (!dead)
+                DialogManager::promptDialog("Enemy", {"..."}, 
+                800 / 2 - 300, 100, 0xfff00000);
+            }
             break;
         default:
-            //silly
+            std::cout << "something broke" << std::endl;
             break;
     }
     return;
 }
-int getChoice();
-void shakeAnimation(); //maybe ??? ? ? ? ?? 
-bool flee()
-{
-    //srand stuff 
-}
-void beatEnemy()
-{
-   //     breaks out of the battle scene somehow and prints boss killed
-}
-*/
 ///////////////////////////////////////////////////////////////////////////////
 ///
 // DEATH STUFF////////////////////////////////////////////////////////////////
 bool globalDead;  
-bool getDead()
+
+bool Death::getDead()
 {
     return globalDead;
 }
@@ -479,33 +397,15 @@ void DeadCheck(bool& state, int xres, int yres, int which)
         b.center = 0;
         ggprint12(&b, 16, 0x000FF000, "ENTER to RESTART");
         if (get_key(XK_Return)) {
-         //   state = 0;
-          //  globalDead=0;
-          
-          
             char* argv[] = {const_cast<char*>("./fissioncore"), nullptr};
             execvp(argv[0], argv);
 
             perror("failed to restart");
             exit(EXIT_FAILURE);
-           /* state = 0;
-            globalDead = 0;
-            m_pNextScene = new MapScreen(m_xres, m_yres);
-          */
         }
         if (get_key(XK_q))
             Termination::Terminate(); 
     }
-/*
-ggprint16(&d, 16, 0x000FF000, ); biggest
-ggprint12(&d, 16, 0x000FF000, );
-ggprint13(&d, 16, 0x000FF000, );
-ggprint10(&d, 16, 0x000FF000, ); good for quips
-ggprint08(&d, 16, 0x000FF000, );
-ggprint07(&d, 16, 0x000FF000, );
-ggprint06(&d, 16, 0x000FF000, );
-gprint8b(&d, 16, 0x000FF000, ;
-*/
 }
 ///////////////////////////////////////////////////////////////////////////////
 ///
@@ -531,44 +431,16 @@ void darkMode(bool click, int xres, int yres)
 };
 //////////////////////////////////////////////////////////////////////////////
 ///
-/// dialogue background //////////////////////////////////////////////////////
-/*
-Bckgr* Bckgr::getInstance()
+///extra//////////////////////////////////////////////////////////////////////
+void story(bool& first)
 {
-    if (instance == nullptr)
-        instance = new Bckgr();
-    return instance;
-}
-Bckgr* Bckgr::instance = nullptr;
-
-//void Bckgr::dialoguebackground(bool& speaking)
-void Bckgr::dialoguebackground()
-{
-    bool speaking = 1;
-    if (speaking) {
-    //  if (DialogManager::isDialogActive()) {
-        glDisable(GL_TEXTURE_2D);
-        glColor3ub(255, 255, 255);
-        glBegin(GL_QUADS);
-            glVertex2i(15, 155);  //topleft
-            glVertex2i(15, 15);
-            glVertex2i(785, 15);
-            glVertex2i(785, 155); //top right  (counter clockwise)
-        glEnd();
-
-        glColor3ub(0, 0, 0);
-        glBegin(GL_QUADS);
-            glVertex2i(20, 150);  //topleft
-            glVertex2i(20, 20);
-            glVertex2i(780, 20);
-            glVertex2i(780, 150); //top right  (counter clockwise)
-        glEnd(); 
-        glEnable(GL_TEXTURE_2D);
-        //if (get_key(XK_Return)) {
-	    if (DialogManager::isDialogActive() == 0) {
-            speaking = 0;
-            return;
-        }
+    if (first) {
+        DialogManager::promptDialog("Player", {"...", "argh", 
+                "What's going on? Why's my head pounding?", 
+                "What happened to this place?", "Something moved.", 
+                "...is that thing even human?", "I have to find a way out."}, 
+                800 / 2 - 300, 100, 0x00ffffff);
+    first = 0;
     }
 }
-*/
+

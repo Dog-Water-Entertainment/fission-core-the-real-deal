@@ -338,7 +338,19 @@ void BossScene::Update()
 				// Fight
 				fighting = true;
 			} else if(button == RUN) {
-				exitScene();
+				//Run (if lucky)
+                int randNum = (rand() % 10) + 1;
+                    if (randNum == 1) {
+                        exitScene();
+                        DialogManager::promptDialog("Terrance",
+                                { "Successfully ran!", "Quite lucky!"},
+                                m_xres / 2 - 300, 100, 0x00ffffff);
+                    } else {
+                        DialogManager::promptDialog("Terrance",
+                                {"You ran and slipped, not great."},
+                                m_xres / 2 - 300, 100, 0x00ffffff);
+                        move++;
+                    }
 			} else if(button == HEAL) {
 				// Heal
 				player.HP += 10;

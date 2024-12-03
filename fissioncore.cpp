@@ -141,6 +141,7 @@ class Global {
         bool dark;
         bool dead;
         bool speaking;
+        bool first;
         int which;
         int xres, yres;
         int movie, movieStep;
@@ -168,6 +169,7 @@ class Global {
             dark = false;
             dead = false;
             speaking = false;
+            first = 1;
             gameStarted = false;
             logOpen();
             which = 0;
@@ -886,7 +888,8 @@ void render(void)
     
     DeadHelp(gl.which);
     DeadCheck(gl.dead, gl.xres, gl.yres, gl.which);
-    
+    showInv();
+    story(gl.first);
     if(typeid(*gl.sceneManager.GetCurrentScene()) == typeid(BossScene)) {
         BossScene *bossScene = dynamic_cast<BossScene*>(gl.sceneManager.GetCurrentScene());
         bossScene->setDead(&gl.dead);

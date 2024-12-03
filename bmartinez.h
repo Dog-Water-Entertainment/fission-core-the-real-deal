@@ -9,6 +9,8 @@ class Enemy;
 class Player;
 class Battle;
 class Item;
+class Death;
+//class Helper;
 //class Bckgr;
 enum class ItemList;
 
@@ -60,6 +62,8 @@ class Player
         Stat baseDmg;                //dmg dealt without any weapons
         Stat dmgDeal;                //used in attack function, can be base 
                                      //+ weapon dmg
+        int healAmt;                 //if using Heals(), max 3 times to heal
+        int currentAmt;
         ItemList Holding;            // item list held, could be 
                                      // ItemList::None
         std::vector<ItemList> Inventory;  //when deleting or using item, 
@@ -67,6 +71,7 @@ class Player
                                           //that held that item to None
         Player(Stat hp, Stat dmg);     
         Player();
+        void Heal(Stat heals);
         void Attack(Enemy& a, Stat dmg); // subtracts dmg deal from enemy hp
         void AddItem(Player& a, ItemList item); // checks if item is in 
                                                 // inventory first
@@ -86,30 +91,33 @@ class Enemy
         void Attack(Player &a, Stat dmg, bool& dead); // when player health 
                                                       // reaches 0 dead is set 
                                                       // to 1.
-        //void Heal(Stat heals);
+        void Heal(Stat heals);
+        void enemySide(Player& a, Enemy& b, bool& dead);
         //friend void Item::Use(int ID, Enemy& a); 
         friend void Item::Use(ItemList item, Enemy& a); //no inventory so this
                                                         //doesnt check anything,
                                                         //if you pass 
                                                         //it a potion it'll work
 };
-/*
-class Bckgr
+class Death
 {
     private:
-        static Bckgr* instance;
-        Bckgr() {}
-
+        static Death* instance;
+        Death() {}
     public:
-        static Bckgr* getInstance();
-        void dialoguebackground();
-
-
+        static bool getDead();
 };
-*/
-//void dialoguebackground(bool& speaking);
+
+//class Helper : public BossScene
+//{
+//    public:
+//        void run();
+//};
+
 void darkMode(bool click, int xres, int yres); //dim the lights 
 void DeadCheck(bool& state, int xres, int yres, int which); // dead scene 
 int DeadHelp(int& which); // helps choose which quip will be displayed
 bool getDead(); // returns if youre dead or not
+void showInv();
+void story(bool& first);
 #endif
